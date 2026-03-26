@@ -24,9 +24,12 @@ import { LevelSelectModal } from '../src/components/LevelSelectModal';
 import { DailyRewardsWheel } from '../src/components/DailyRewardsWheel';
 import { LeaderboardModal } from '../src/components/LeaderboardModal';
 import { AdLoadingModal } from '../src/components/AdLoadingModal';
+import { PrivacyPolicyModal } from '../src/components/PrivacyPolicyModal';
+import { ConsentModal } from '../src/components/ConsentModal';
 import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
+import { privacyService } from '../src/services/privacyService';
 
 const { width, height } = Dimensions.get('window');
 
@@ -57,10 +60,33 @@ export default function GameScreen() {
   const [showAdLoading, setShowAdLoading] = useState(false);
   const [adMessage, setAdMessage] = useState('Loading ad...');
   const [showMenu, setShowMenu] = useState(false);
+  const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
+  const [showConsentModal, setShowConsentModal] = useState(false);
+  const [consentChecked, setConsentChecked] = useState(false);
+
+  // Check for privacy consent on first load
+  useEffect(() => {
+    const checkConsent = async () => {
+      const hasConsent = await privacyService.hasConsent();
+      if (!hasConsent) {
+        setShowConsentModal(true);
+      }
+      setConsentChecked(true);
+    };
+    checkConsent();
+  }, []);
 
   useEffect(() => {
-    initialize();
-  }, []);
+    if (consentChecked) {
+      initialize();
+    }
+  }, [consentChecked]);
+
+  // Handle consent acceptance
+  const handleConsentAccept = async (adsConsent: boolean) => {
+    await privacyService.saveConsent(adsConsent);
+    setShowConsentModal(false);
+  };
 
   // Show word feedback animation
   useEffect(() => {
@@ -234,6 +260,16 @@ export default function GameScreen() {
               <Ionicons name={soundEnabled ? 'volume-high' : 'volume-mute'} size={20} color="#3498db" />
               <Text style={styles.menuItemText}>Sound {soundEnabled ? 'On' : 'Off'}</Text>
             </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.menuItem} 
+              onPress={() => {
+                setShowMenu(false);
+                setShowPrivacyPolicy(true);
+              }}
+            >
+              <Ionicons name="shield-checkmark" size={20} color="#27ae60" />
+              <Text style={styles.menuItemText}>Privacy Policy</Text>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={() => setShowMenu(false)}>
               <Ionicons name="close" size={20} color="#95a5a6" />
               <Text style={styles.menuItemText}>Close</Text>
@@ -345,6 +381,18 @@ export default function GameScreen() {
           onClose={() => setShowLeaderboard(false)}
         />
         <AdLoadingModal visible={showAdLoading} message={adMessage} />
+        <PrivacyPolicyModal
+          visible={showPrivacyPolicy}
+          onClose={() => setShowPrivacyPolicy(false)}
+        />
+        <ConsentModal
+          visible={showConsentModal}
+          onAccept={handleConsentAccept}
+          onViewPrivacyPolicy={() => {
+            setShowConsentModal(false);
+            setShowPrivacyPolicy(true);
+          }}
+        />
       </SafeAreaView>
     </GestureHandlerRootView>
   );
