@@ -14,15 +14,19 @@ import {
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
 import { useGameStore } from '../src/store/gameStore';
+import { useAuth } from '../src/contexts/AuthContext';
 import { LetterWheel } from '../src/components/LetterWheel';
 import { CrosswordGrid } from '../src/components/CrosswordGrid';
 import { LevelCompleteModal } from '../src/components/LevelCompleteModal';
 import { LevelSelectModal } from '../src/components/LevelSelectModal';
 import { DailyRewardsWheel } from '../src/components/DailyRewardsWheel';
+import { LeaderboardModal } from '../src/components/LeaderboardModal';
 import { AdLoadingModal } from '../src/components/AdLoadingModal';
 import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
+import { notificationService } from '../src/services/notificationService';
 
 const { width, height } = Dimensions.get('window');
 
@@ -48,6 +52,7 @@ export default function GameScreen() {
 
   const [showLevelSelect, setShowLevelSelect] = useState(false);
   const [showDailyWheel, setShowDailyWheel] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
   const [showWordFeedback, setShowWordFeedback] = useState(false);
   const [showAdLoading, setShowAdLoading] = useState(false);
   const [adMessage, setAdMessage] = useState('Loading ad...');
@@ -174,6 +179,14 @@ export default function GameScreen() {
           </TouchableOpacity>
 
           <View style={styles.headerRight}>
+            {/* Leaderboard Button */}
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => setShowLeaderboard(true)}
+            >
+              <Ionicons name="trophy" size={22} color="#FFD700" />
+            </TouchableOpacity>
+
             {/* Daily Wheel Button */}
             <TouchableOpacity
               style={[styles.iconButton, canSpin && styles.iconButtonGlow]}
@@ -326,6 +339,10 @@ export default function GameScreen() {
         <DailyRewardsWheel
           visible={showDailyWheel}
           onClose={() => setShowDailyWheel(false)}
+        />
+        <LeaderboardModal
+          visible={showLeaderboard}
+          onClose={() => setShowLeaderboard(false)}
         />
         <AdLoadingModal visible={showAdLoading} message={adMessage} />
       </SafeAreaView>

@@ -1,15 +1,18 @@
-from fastapi import FastAPI, APIRouter, HTTPException
+from fastapi import FastAPI, APIRouter, HTTPException, Header, Request, Response
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from typing import List, Optional, Dict, Any
 import uuid
-from datetime import datetime
+from datetime import datetime, timezone, timedelta
 import random
+import jwt
+from passlib.context import CryptContext
+import httpx
 
 # Import level data from separate file
 from levels_data import LEVEL_DATA
@@ -21,6 +24,14 @@ load_dotenv(ROOT_DIR / '.env')
 mongo_url = os.environ['MONGO_URL']
 client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
+
+# JWT Configuration
+JWT_SECRET = os.environ.get('JWT_SECRET', 'words-of-wonders-secret-key-2024')
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRATION_DAYS = 7
+
+# Password hashing
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Create the main app without a prefix
 app = FastAPI()
@@ -298,6 +309,40 @@ class MultiplayerMatch(BaseModel):
     status: str = "waiting"  # waiting, playing, finished
     winner: Optional[str] = None
     created_at: datetime = Field(default_factory=datetime.utcnow)
+
+# ============== AUTH MODELS ==============
+
+class UserRegister(BaseModel):
+    email: str
+    password: str
+    name: str
+
+class UserLogin(BaseModel):
+    email: str
+    password: str
+
+class GoogleCallbackRequest(BaseModel):
+    session_id: str
+
+class User(BaseModel):
+    user_id: str
+    email: str
+    name: str
+    picture: Optional[str] = None
+    provider: str = "email"  # "email" or "google"
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+class PushTokenRegister(BaseModel):
+    device_id: str
+    push_token: str
+    platform: str  # "ios", "android", "web"
+
+class NotificationSend(BaseModel):
+    user_id: Optional[str] = None
+    push_token: Optional[str] = None
+    title: str
+    body: str
+    data: Optional[Dict[str, Any]] = None
 
 class WordValidationRequest(BaseModel):
     word: str
@@ -827,6 +872,346 @@ async def get_match(match_id: str):
         "status": match.get("status", "playing"),
         "winner": match.get("winner")
     }
+
+# ============== AUTHENTICATION ENDPOINTS ==============
+
+def create_session_token(user_id: str) -> str:
+    """Create a JWT token for the user"""
+    expiration = datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRATION_DAYS)
+    payload = {
+        "user_id": user_id,
+        "exp": expiration,
+        "iat": datetime.now(timezone.utc)
+    }
+    return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
+
+def verify_session_token(token: str) -> Optional[str]:
+    """Verify a JWT token and return the user_id"""
+    try:
+        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        return payload.get("user_id")
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None
+
+async def get_current_user(authorization: Optional[str] = Header(None)) -> Optional[Dict]:
+    """Get current user from Authorization header"""
+    if not authorization:
+        return None
+    
+    token = authorization.replace("Bearer ", "") if authorization.startswith("Bearer ") else authorization
+    user_id = verify_session_token(token)
+    
+    if not user_id:
+        return None
+    
+    user = await db.users.find_one({"user_id": user_id}, {"_id": 0})
+    return user
+
+@api_router.post("/auth/register")
+async def register(input: UserRegister):
+    """Register a new user with email and password"""
+    # Check if user already exists
+    existing = await db.users.find_one({"email": input.email.lower()})
+    if existing:
+        raise HTTPException(status_code=400, detail="Email already registered")
+    
+    # Hash password and create user
+    hashed_password = pwd_context.hash(input.password)
+    user_id = f"user_{uuid.uuid4().hex[:12]}"
+    
+    user = {
+        "user_id": user_id,
+        "email": input.email.lower(),
+        "name": input.name,
+        "password_hash": hashed_password,
+        "provider": "email",
+        "picture": None,
+        "created_at": datetime.now(timezone.utc)
+    }
+    
+    await db.users.insert_one(user)
+    
+    # Create session token
+    session_token = create_session_token(user_id)
+    
+    # Store session
+    await db.user_sessions.insert_one({
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRATION_DAYS),
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "session_token": session_token,
+        "user": {
+            "user_id": user_id,
+            "email": user["email"],
+            "name": user["name"],
+            "picture": user["picture"],
+            "provider": "email"
+        }
+    }
+
+@api_router.post("/auth/login")
+async def login(input: UserLogin):
+    """Login with email and password"""
+    user = await db.users.find_one({"email": input.email.lower()}, {"_id": 0})
+    
+    if not user:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    if user.get("provider") == "google":
+        raise HTTPException(status_code=400, detail="This account uses Google login")
+    
+    if not pwd_context.verify(input.password, user.get("password_hash", "")):
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+    
+    # Create session token
+    session_token = create_session_token(user["user_id"])
+    
+    # Store session
+    await db.user_sessions.insert_one({
+        "user_id": user["user_id"],
+        "session_token": session_token,
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRATION_DAYS),
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "session_token": session_token,
+        "user": {
+            "user_id": user["user_id"],
+            "email": user["email"],
+            "name": user["name"],
+            "picture": user.get("picture"),
+            "provider": user.get("provider", "email")
+        }
+    }
+
+@api_router.post("/auth/google/callback")
+async def google_callback(input: GoogleCallbackRequest):
+    """Handle Google OAuth callback"""
+    try:
+        # Get user data from Emergent Auth
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                "https://demobackend.emergentagent.com/auth/v1/env/oauth/session-data",
+                headers={"X-Session-ID": input.session_id}
+            )
+            
+            if response.status_code != 200:
+                raise HTTPException(status_code=401, detail="Invalid session")
+            
+            google_data = response.json()
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=f"Failed to verify Google session: {str(e)}")
+    
+    email = google_data.get("email", "").lower()
+    name = google_data.get("name", "")
+    picture = google_data.get("picture", "")
+    
+    # Check if user exists
+    existing_user = await db.users.find_one({"email": email}, {"_id": 0})
+    
+    if existing_user:
+        user_id = existing_user["user_id"]
+        # Update user info if needed
+        await db.users.update_one(
+            {"email": email},
+            {"$set": {
+                "name": name,
+                "picture": picture,
+                "provider": "google"
+            }}
+        )
+    else:
+        # Create new user
+        user_id = f"user_{uuid.uuid4().hex[:12]}"
+        user = {
+            "user_id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+            "provider": "google",
+            "created_at": datetime.now(timezone.utc)
+        }
+        await db.users.insert_one(user)
+    
+    # Create session token
+    session_token = create_session_token(user_id)
+    
+    # Store session
+    await db.user_sessions.insert_one({
+        "user_id": user_id,
+        "session_token": session_token,
+        "expires_at": datetime.now(timezone.utc) + timedelta(days=JWT_EXPIRATION_DAYS),
+        "created_at": datetime.now(timezone.utc)
+    })
+    
+    return {
+        "session_token": session_token,
+        "user": {
+            "user_id": user_id,
+            "email": email,
+            "name": name,
+            "picture": picture,
+            "provider": "google"
+        }
+    }
+
+@api_router.get("/auth/me")
+async def get_me(authorization: Optional[str] = Header(None)):
+    """Get current authenticated user"""
+    user = await get_current_user(authorization)
+    
+    if not user:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    
+    return {
+        "user_id": user["user_id"],
+        "email": user["email"],
+        "name": user["name"],
+        "picture": user.get("picture"),
+        "provider": user.get("provider", "email")
+    }
+
+@api_router.post("/auth/logout")
+async def logout(authorization: Optional[str] = Header(None)):
+    """Logout the current user"""
+    if authorization:
+        token = authorization.replace("Bearer ", "") if authorization.startswith("Bearer ") else authorization
+        user_id = verify_session_token(token)
+        
+        if user_id:
+            # Delete session
+            await db.user_sessions.delete_one({"session_token": token})
+    
+    return {"success": True}
+
+# ============== PUSH NOTIFICATION ENDPOINTS ==============
+
+@api_router.post("/notifications/register")
+async def register_push_token(input: PushTokenRegister):
+    """Register a device for push notifications"""
+    await db.push_tokens.update_one(
+        {"device_id": input.device_id},
+        {"$set": {
+            "push_token": input.push_token,
+            "platform": input.platform,
+            "updated_at": datetime.now(timezone.utc)
+        }},
+        upsert=True
+    )
+    
+    return {"success": True}
+
+@api_router.post("/notifications/send")
+async def send_notification(input: NotificationSend, authorization: Optional[str] = Header(None)):
+    """Send a push notification (admin only - simplified for demo)"""
+    # In production, this should be protected with admin auth
+    
+    push_token = input.push_token
+    
+    if input.user_id and not push_token:
+        # Look up push token by user_id
+        token_doc = await db.push_tokens.find_one({"user_id": input.user_id})
+        if token_doc:
+            push_token = token_doc.get("push_token")
+    
+    if not push_token:
+        raise HTTPException(status_code=400, detail="No push token found")
+    
+    # Send via Expo Push API
+    try:
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                "https://exp.host/--/api/v2/push/send",
+                json={
+                    "to": push_token,
+                    "title": input.title,
+                    "body": input.body,
+                    "data": input.data or {},
+                    "sound": "default"
+                }
+            )
+            return {"success": True, "response": response.json()}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to send notification: {str(e)}")
+
+@api_router.post("/notifications/daily-reward")
+async def trigger_daily_reward_notification(device_id: str):
+    """Send daily reward reminder notification"""
+    token_doc = await db.push_tokens.find_one({"device_id": device_id})
+    
+    if not token_doc:
+        return {"success": False, "message": "No push token found"}
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                "https://exp.host/--/api/v2/push/send",
+                json={
+                    "to": token_doc["push_token"],
+                    "title": "🎁 Daily Reward Available!",
+                    "body": "Spin the wheel to win coins and hints!",
+                    "data": {"type": "daily_reward"},
+                    "sound": "default"
+                }
+            )
+            return {"success": True}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+
+@api_router.post("/notifications/level-unlock")
+async def trigger_level_unlock_notification(device_id: str, level: int, wonder_name: str):
+    """Send level unlock notification"""
+    token_doc = await db.push_tokens.find_one({"device_id": device_id})
+    
+    if not token_doc:
+        return {"success": False, "message": "No push token found"}
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                "https://exp.host/--/api/v2/push/send",
+                json={
+                    "to": token_doc["push_token"],
+                    "title": "🏆 New Level Unlocked!",
+                    "body": f"Level {level}: {wonder_name} is now available!",
+                    "data": {"type": "level_unlock", "level": level},
+                    "sound": "default"
+                }
+            )
+            return {"success": True}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
+
+@api_router.post("/notifications/match-invite")
+async def trigger_match_invite_notification(device_id: str, from_player: str):
+    """Send multiplayer match invite notification"""
+    token_doc = await db.push_tokens.find_one({"device_id": device_id})
+    
+    if not token_doc:
+        return {"success": False, "message": "No push token found"}
+    
+    try:
+        async with httpx.AsyncClient() as client:
+            await client.post(
+                "https://exp.host/--/api/v2/push/send",
+                json={
+                    "to": token_doc["push_token"],
+                    "title": "⚔️ Match Invitation",
+                    "body": f"{from_player} challenges you to a word battle!",
+                    "data": {"type": "match_invite", "from": from_player},
+                    "sound": "default"
+                }
+            )
+            return {"success": True}
+    except Exception as e:
+        return {"success": False, "message": str(e)}
 
 # Include the router in the main app
 app.include_router(api_router)
