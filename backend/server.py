@@ -11,6 +11,9 @@ import uuid
 from datetime import datetime
 import random
 
+# Import level data from separate file
+from levels_data import LEVEL_DATA
+
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
 
@@ -25,7 +28,7 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
-# English word dictionary for validation
+# Expanded English word dictionary for validation
 VALID_WORDS = set([
     # 3 letter words
     "the", "and", "for", "are", "but", "not", "you", "all", "can", "had",
@@ -53,7 +56,10 @@ VALID_WORDS = set([
     "rig", "rim", "rip", "rob", "rod", "rot", "rub", "rug", "rut", "sap",
     "saw", "sew", "shy", "sin", "sip", "sob", "sod", "sow", "spy", "tab",
     "tag", "tan", "tap", "tar", "tax", "tin", "tub", "tug", "urn", "wag",
-    "web", "wed", "wig", "wit", "woe", "yam", "yap", "zip", "zoo",
+    "web", "wed", "wig", "wit", "woe", "yam", "yap", "zip", "zoo", "ape",
+    "bee", "cab", "cud", "cod", "gal", "gee", "cop", "cub", "flo", "toe",
+    "ace", "ach", "bah", "gum", "rum", "ton", "tow", "sow", "vow", "wow",
+    "aim", "cob", "fad", "jab", "lob", "mob", "nab", "orb", "rib", "sob",
     # 4 letter words
     "that", "with", "have", "this", "will", "your", "from", "they", "been",
     "call", "come", "each", "find", "give", "good", "hand", "here", "just",
@@ -209,134 +215,6 @@ VALID_WORDS = set([
     "jordan", "christ", "rio", "brazil", "colosseum", "arena",
     "ancient", "stone", "stones", "temple", "temples", "ruin", "ruins"
 ])
-
-# Level data for the game
-LEVEL_DATA = [
-    {
-        "id": 1,
-        "wonder": "Great Pyramid of Giza",
-        "location": "Egypt",
-        "letters": ["S", "U", "N", "D", "A", "Y"],
-        "targetWords": ["SUN", "DAY", "AND", "SAD", "SAY", "SUNDAY"],
-        "grid": [
-            {"word": "SUN", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "DAY", "row": 0, "col": 3, "direction": "horizontal"},
-            {"word": "AND", "row": 1, "col": 1, "direction": "vertical"},
-            {"word": "SAD", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "SAY", "row": 2, "col": 3, "direction": "horizontal"},
-            {"word": "SUNDAY", "row": 4, "col": 0, "direction": "horizontal"}
-        ],
-        "bonusWords": ["SANDY", "ANUS", "DAYS", "YUAN", "UNDS"]
-    },
-    {
-        "id": 2,
-        "wonder": "Colosseum",
-        "location": "Rome, Italy",
-        "letters": ["W", "O", "R", "D", "S"],
-        "targetWords": ["ROW", "SOW", "WORD", "WORDS", "ROWS"],
-        "grid": [
-            {"word": "ROW", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "SOW", "row": 0, "col": 2, "direction": "vertical"},
-            {"word": "WORD", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "WORDS", "row": 4, "col": 0, "direction": "horizontal"},
-            {"word": "ROWS", "row": 1, "col": 3, "direction": "vertical"}
-        ],
-        "bonusWords": ["SWORD", "DORS", "RODS", "ORDS"]
-    },
-    {
-        "id": 3,
-        "wonder": "Great Wall of China",
-        "location": "China",
-        "letters": ["W", "A", "L", "L", "S"],
-        "targetWords": ["ALL", "SAW", "LAW", "WALL", "WALLS"],
-        "grid": [
-            {"word": "ALL", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "SAW", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "LAW", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "WALL", "row": 3, "col": 2, "direction": "horizontal"},
-            {"word": "WALLS", "row": 4, "col": 0, "direction": "horizontal"}
-        ],
-        "bonusWords": ["AWLS", "SLAW", "LAWS"]
-    },
-    {
-        "id": 4,
-        "wonder": "Machu Picchu",
-        "location": "Peru",
-        "letters": ["S", "T", "O", "N", "E"],
-        "targetWords": ["SON", "TON", "TEN", "SET", "TONE", "STONE"],
-        "grid": [
-            {"word": "SON", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "TON", "row": 0, "col": 3, "direction": "horizontal"},
-            {"word": "TEN", "row": 1, "col": 1, "direction": "vertical"},
-            {"word": "SET", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "TONE", "row": 3, "col": 2, "direction": "horizontal"},
-            {"word": "STONE", "row": 5, "col": 0, "direction": "horizontal"}
-        ],
-        "bonusWords": ["ONES", "NEST", "NETS", "SENT", "NOTE", "NOTES", "ONSET", "TONES"]
-    },
-    {
-        "id": 5,
-        "wonder": "Taj Mahal",
-        "location": "India",
-        "letters": ["L", "O", "V", "E", "S"],
-        "targetWords": ["LOVE", "LOSE", "SOLE", "VOLE", "LOVES"],
-        "grid": [
-            {"word": "LOVE", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "LOSE", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "SOLE", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "VOLE", "row": 3, "col": 0, "direction": "horizontal"},
-            {"word": "LOVES", "row": 5, "col": 0, "direction": "horizontal"}
-        ],
-        "bonusWords": ["VOLES", "SOLVE", "SOLES", "OLES", "OVEL"]
-    },
-    {
-        "id": 6,
-        "wonder": "Petra",
-        "location": "Jordan",
-        "letters": ["T", "R", "A", "I", "N"],
-        "targetWords": ["AIR", "ART", "RAT", "TAN", "RAIN", "TRAIN"],
-        "grid": [
-            {"word": "AIR", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "ART", "row": 0, "col": 4, "direction": "vertical"},
-            {"word": "RAT", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "TAN", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "RAIN", "row": 3, "col": 2, "direction": "horizontal"},
-            {"word": "TRAIN", "row": 5, "col": 0, "direction": "horizontal"}
-        ],
-        "bonusWords": ["ANTI", "RANT", "TARN", "RIANT"]
-    },
-    {
-        "id": 7,
-        "wonder": "Christ the Redeemer",
-        "location": "Rio de Janeiro, Brazil",
-        "letters": ["B", "E", "A", "C", "H"],
-        "targetWords": ["ACE", "BAH", "CAB", "ACH", "ACHE", "BEACH"],
-        "grid": [
-            {"word": "ACE", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "BAH", "row": 0, "col": 4, "direction": "vertical"},
-            {"word": "CAB", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "ACH", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "ACHE", "row": 3, "col": 2, "direction": "horizontal"},
-            {"word": "BEACH", "row": 5, "col": 0, "direction": "horizontal"}
-        ],
-        "bonusWords": ["EACH", "BACH", "BACHE"]
-    },
-    {
-        "id": 8,
-        "wonder": "Chichen Itza",
-        "location": "Mexico",
-        "letters": ["L", "I", "G", "H", "T"],
-        "targetWords": ["HIT", "LIT", "GIT", "GILT", "LIGHT"],
-        "grid": [
-            {"word": "HIT", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "LIT", "row": 0, "col": 4, "direction": "vertical"},
-            {"word": "GIT", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "GILT", "row": 2, "col": 2, "direction": "horizontal"},
-            {"word": "LIGHT", "row": 4, "col": 0, "direction": "horizontal"}
-        ],
-        "bonusWords": ["HILT", "GLIT", "TIGH"]
-    }
-]
 
 # Define Models
 class StatusCheck(BaseModel):
