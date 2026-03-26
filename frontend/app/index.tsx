@@ -152,6 +152,15 @@ export default function GameScreen() {
     );
   };
 
+  // Handle shuffle with ad
+  const handleShuffle = async () => {
+    setAdMessage('Loading ad...');
+    setShowAdLoading(true);
+    await adManager.showInterstitialAd();
+    setShowAdLoading(false);
+    shuffleLetters();
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -340,8 +349,11 @@ export default function GameScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actionButtons}>
-          <TouchableOpacity style={styles.actionButton} onPress={shuffleLetters}>
+          <TouchableOpacity style={[styles.actionButton, styles.shuffleButton]} onPress={handleShuffle}>
             <Ionicons name="shuffle" size={24} color="#fff" />
+            <View style={styles.adBadge}>
+              <Ionicons name="play" size={10} color="#fff" />
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -640,6 +652,9 @@ const styles = StyleSheet.create({
   },
   hintButton: {
     backgroundColor: 'rgba(241, 196, 15, 0.3)',
+  },
+  shuffleButton: {
+    backgroundColor: 'rgba(52, 152, 219, 0.3)',
   },
   adBadge: {
     position: 'absolute',

@@ -1,14 +1,24 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Dimensions, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useGameStore } from '../store/gameStore';
+import { adManager } from '../utils/adManager';
 
 const { width, height } = Dimensions.get('window');
 
 export const LevelCompleteModal: React.FC = () => {
   const { showLevelComplete, currentLevel, progress, completeLevel, bonusWordsFound } = useGameStore();
+  const [showingAd, setShowingAd] = useState(false);
   
   if (!showLevelComplete || !currentLevel) return null;
+
+  const handleContinue = async () => {
+    // Show interstitial ad before continuing
+    setShowingAd(true);
+    await adManager.showInterstitialAd();
+    setShowingAd(false);
+    completeLevel();
+  };
   
   return (
     <Modal
@@ -19,44 +29,54 @@ export const LevelCompleteModal: React.FC = () => {
     >
       <View style={styles.overlay}>
         <View style={styles.modal}>
-          {/* Stars */}
-          <View style={styles.starsContainer}>
-            <Ionicons name="star" size={40} color="#FFD700" />
-            <Ionicons name="star" size={56} color="#FFD700" style={styles.centerStar} />
-            <Ionicons name="star" size={40} color="#FFD700" />
-          </View>
-          
-          {/* Title */}
-          <Text style={styles.title}>Level Complete!</Text>
-          
-          {/* Wonder info */}
-          <Text style={styles.wonderName}>{currentLevel.wonder}</Text>
-          <Text style={styles.location}>{currentLevel.location}</Text>
-          
-          {/* Stats */}
-          <View style={styles.statsContainer}>
-            <View style={styles.statItem}>
-              <Ionicons name="checkmark-circle" size={24} color="#27ae60" />
-              <Text style={styles.statValue}>{currentLevel.targetWords.length}</Text>
-              <Text style={styles.statLabel}>Words Found</Text>
+          {showingAd ? (
+            <View style={styles.adContainer}>
+              <ActivityIndicator size="large" color="#3498db" />
+              <Text style={styles.adText}>Loading...</Text>
             </View>
-            <View style={styles.statItem}>
-              <Ionicons name="diamond" size={24} color="#9b59b6" />
-              <Text style={styles.statValue}>{bonusWordsFound.length}</Text>
-              <Text style={styles.statLabel}>Bonus Words</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Ionicons name="cash" size={24} color="#f1c40f" />
-              <Text style={styles.statValue}>+50</Text>
-              <Text style={styles.statLabel}>Coins</Text>
-            </View>
-          </View>
-          
-          {/* Continue button */}
-          <TouchableOpacity style={styles.continueButton} onPress={completeLevel}>
-            <Text style={styles.continueButtonText}>Continue</Text>
-            <Ionicons name="arrow-forward" size={24} color="#fff" />
-          </TouchableOpacity>
+          ) : (
+            <>
+              {/* Stars */}
+              <View style={styles.starsContainer}>
+                <Ionicons name="star" size={40} color="#FFD700" />
+                <Ionicons name="star" size={56} color="#FFD700" style={styles.centerStar} />
+                <Ionicons name="star" size={40} color="#FFD700" />
+              </View>
+              
+              {/* Title */}
+              <Text style={styles.title}>Level Complete!</Text>
+              
+              {/* Wonder info */}
+              <Text style={styles.wonderName}>{currentLevel.wonder}</Text>
+              <Text style={styles.location}>{currentLevel.location}</Text>
+              
+              {/* Stats */}
+              <View style={styles.statsContainer}>
+                <View style={styles.statItem}>
+                  <Ionicons name="checkmark-circle" size={24} color="#27ae60" />
+                  <Text style={styles.statValue}>{currentLevel.targetWords.length}</Text>
+                  <Text style={styles.statLabel}>Words Found</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Ionicons name="diamond" size={24} color="#9b59b6" />
+                  <Text style={styles.statValue}>{bonusWordsFound.length}</Text>
+                  <Text style={styles.statLabel}>Bonus Words</Text>
+                </View>
+                <View style={styles.statItem}>
+                  <Ionicons name="cash" size={24} color="#f1c40f" />
+                  <Text style={styles.statValue}>+50</Text>
+                  <Text style={styles.statLabel}>Coins</Text>
+                </View>
+              </View>
+              
+              {/* Continue button */}
+              <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+                <Ionicons name="play" size={16} color="#fff" />
+                <Text style={styles.continueButtonText}>Watch Ad & Continue</Text>
+                <Ionicons name="arrow-forward" size={20} color="#fff" />
+              </TouchableOpacity>
+            </>
+          )}
         </View>
       </View>
     </Modal>
@@ -82,6 +102,15 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 20,
     elevation: 15,
+  },
+  adContainer: {
+    padding: 40,
+    alignItems: 'center',
+  },
+  adText: {
+    marginTop: 15,
+    fontSize: 16,
+    color: '#7f8c8d',
   },
   starsContainer: {
     flexDirection: 'row',
