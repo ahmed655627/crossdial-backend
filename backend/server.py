@@ -254,11 +254,15 @@ class UserProgress(BaseModel):
     device_id: str
     current_level: int = 1
     coins: int = 100
+    hints: int = 3  # Free hints to start
     completed_levels: List[int] = []
     found_words: Dict[str, List[str]] = {}  # level_id -> list of found words
     bonus_words_found: Dict[str, List[str]] = {}  # level_id -> list of bonus words
     total_bonus_words: int = 0
     hints_used: int = 0
+    last_wheel_spin: Optional[datetime] = None
+    total_score: int = 0
+    username: str = "Player"
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -268,11 +272,32 @@ class UserProgressCreate(BaseModel):
 class UserProgressUpdate(BaseModel):
     current_level: Optional[int] = None
     coins: Optional[int] = None
+    hints: Optional[int] = None
     completed_levels: Optional[List[int]] = None
     found_words: Optional[Dict[str, List[str]]] = None
     bonus_words_found: Optional[Dict[str, List[str]]] = None
     total_bonus_words: Optional[int] = None
     hints_used: Optional[int] = None
+    username: Optional[str] = None
+
+class LeaderboardEntry(BaseModel):
+    username: str
+    score: int
+    levels_completed: int
+    rank: int
+
+class MultiplayerMatch(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    player1: str
+    player2: Optional[str] = None
+    level_id: int
+    player1_words: List[str] = []
+    player2_words: List[str] = []
+    player1_score: int = 0
+    player2_score: int = 0
+    status: str = "waiting"  # waiting, playing, finished
+    winner: Optional[str] = None
+    created_at: datetime = Field(default_factory=datetime.utcnow)
 
 class WordValidationRequest(BaseModel):
     word: str
@@ -541,18 +566,30 @@ async def use_hint(request: HintRequest):
                 "letterIndex": 0
             }
             
-            # Deduct coins
-            new_coins = coins - HINT_COST
-            hints_used = progress.get("hints_used", 0) + 1
-            
-            await db.user_progress.update_one(
-                {"device_id": request.device_id},
-                {"$set": {
-                    "coins": new_coins,
-                    "hints_used": hints_used,
-                    "updated_at": datetime.utcnow()
-                }}
-            )
+            # Deduct coins or hints
+            hints = progress.get("hints", 0)
+            if hints > 0:
+                # Use a free hint
+                await db.user_progress.update_one(
+                    {"device_id": request.device_id},
+                    {"$set": {
+                        "hints": hints - 1,
+                        "hints_used": progress.get("hints_used", 0) + 1,
+                        "updated_at": datetime.utcnow()
+                    }}
+                )
+                new_coins = coins
+            else:
+                # Deduct coins
+                new_coins = coins - HINT_COST
+                await db.user_progress.update_one(
+                    {"device_id": request.device_id},
+                    {"$set": {
+                        "coins": new_coins,
+                        "hints_used": progress.get("hints_used", 0) + 1,
+                        "updated_at": datetime.utcnow()
+                    }}
+                )
             
             return HintResponse(
                 success=True,
@@ -567,6 +604,229 @@ async def use_hint(request: HintRequest):
         coins_remaining=coins,
         message="All words already found!"
     )
+
+# ============== DAILY REWARDS ENDPOINTS ==============
+
+@api_router.post("/progress/{device_id}/spin-wheel")
+async def spin_wheel(device_id: str):
+    """Mark that the user has spun the daily wheel"""
+    progress = await db.user_progress.find_one({"device_id": device_id})
+    if not progress:
+        raise HTTPException(status_code=404, detail="Progress not found")
+    
+    await db.user_progress.update_one(
+        {"device_id": device_id},
+        {"$set": {
+            "last_wheel_spin": datetime.utcnow(),
+            "updated_at": datetime.utcnow()
+        }}
+    )
+    
+    return {"success": True, "message": "Wheel spin recorded"}
+
+@api_router.post("/progress/{device_id}/add-reward")
+async def add_reward(device_id: str, type: str, value: int):
+    """Add a reward from the daily wheel"""
+    progress = await db.user_progress.find_one({"device_id": device_id})
+    if not progress:
+        raise HTTPException(status_code=404, detail="Progress not found")
+    
+    update_data = {"updated_at": datetime.utcnow()}
+    
+    if type == "coins":
+        update_data["coins"] = progress.get("coins", 0) + value
+    elif type == "hint":
+        update_data["hints"] = progress.get("hints", 0) + value
+    
+    await db.user_progress.update_one(
+        {"device_id": device_id},
+        {"$set": update_data}
+    )
+    
+    return {"success": True, "type": type, "value": value}
+
+# ============== LEADERBOARD ENDPOINTS ==============
+
+@api_router.get("/leaderboard")
+async def get_leaderboard():
+    """Get top players on the leaderboard"""
+    players = await db.user_progress.find().sort("total_score", -1).limit(100).to_list(100)
+    
+    leaderboard = []
+    for i, player in enumerate(players):
+        leaderboard.append({
+            "username": player.get("username", "Player"),
+            "score": player.get("total_score", 0),
+            "levels_completed": len(player.get("completed_levels", [])),
+            "rank": i + 1
+        })
+    
+    return leaderboard
+
+@api_router.put("/progress/{device_id}/username")
+async def update_username(device_id: str, username: str = None):
+    """Update user's display name"""
+    progress = await db.user_progress.find_one({"device_id": device_id})
+    if not progress:
+        raise HTTPException(status_code=404, detail="Progress not found")
+    
+    if username:
+        await db.user_progress.update_one(
+            {"device_id": device_id},
+            {"$set": {
+                "username": username,
+                "updated_at": datetime.utcnow()
+            }}
+        )
+    
+    return {"success": True}
+
+# ============== MULTIPLAYER ENDPOINTS ==============
+
+# In-memory matchmaking queue (for demo purposes)
+matchmaking_queue = []
+
+@api_router.post("/multiplayer/search")
+async def search_match(device_id: str = None):
+    """Search for a multiplayer match"""
+    global matchmaking_queue
+    
+    if not device_id:
+        raise HTTPException(status_code=400, detail="device_id required")
+    
+    # Check if there's someone waiting
+    if matchmaking_queue and matchmaking_queue[0] != device_id:
+        opponent = matchmaking_queue.pop(0)
+        
+        # Create a match
+        match = MultiplayerMatch(
+            player1=opponent,
+            player2=device_id,
+            level_id=random.randint(1, min(10, len(LEVEL_DATA))),
+            status="playing"
+        )
+        
+        await db.multiplayer_matches.insert_one(match.dict())
+        
+        return {
+            "id": match.id,
+            "player1": match.player1,
+            "player2": match.player2,
+            "level_id": match.level_id,
+            "status": "playing",
+            "player1_words": [],
+            "player2_words": [],
+            "player1_score": 0,
+            "player2_score": 0
+        }
+    else:
+        # Add to queue
+        if device_id not in matchmaking_queue:
+            matchmaking_queue.append(device_id)
+        
+        return {
+            "status": "waiting",
+            "message": "Waiting for opponent..."
+        }
+
+@api_router.post("/multiplayer/cancel")
+async def cancel_match_search(device_id: str):
+    """Cancel match search"""
+    global matchmaking_queue
+    if device_id in matchmaking_queue:
+        matchmaking_queue.remove(device_id)
+    return {"success": True}
+
+@api_router.post("/multiplayer/submit-word")
+async def submit_multiplayer_word(match_id: str, device_id: str, word: str):
+    """Submit a word in a multiplayer match"""
+    match = await db.multiplayer_matches.find_one({"id": match_id})
+    if not match:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    word = word.upper()
+    
+    # Validate word against level
+    level = None
+    for l in LEVEL_DATA:
+        if l["id"] == match["level_id"]:
+            level = l
+            break
+    
+    if not level:
+        raise HTTPException(status_code=404, detail="Level not found")
+    
+    target_words = [w.upper() for w in level["targetWords"]]
+    
+    if word not in target_words:
+        return {"valid": False, "message": "Invalid word"}
+    
+    # Determine which player
+    is_player1 = match["player1"] == device_id
+    player_words_key = "player1_words" if is_player1 else "player2_words"
+    player_score_key = "player1_score" if is_player1 else "player2_score"
+    
+    current_words = match.get(player_words_key, [])
+    
+    if word in current_words:
+        return {"valid": False, "message": "Word already found"}
+    
+    # Add word
+    current_words.append(word)
+    new_score = match.get(player_score_key, 0) + 10
+    
+    update_data = {
+        player_words_key: current_words,
+        player_score_key: new_score
+    }
+    
+    # Check if match is complete (all words found by either player)
+    if len(current_words) >= len(target_words):
+        update_data["status"] = "finished"
+        update_data["winner"] = device_id
+    
+    await db.multiplayer_matches.update_one(
+        {"id": match_id},
+        {"$set": update_data}
+    )
+    
+    updated_match = await db.multiplayer_matches.find_one({"id": match_id})
+    
+    return {
+        "valid": True,
+        "match": {
+            "id": updated_match["id"],
+            "player1": updated_match["player1"],
+            "player2": updated_match["player2"],
+            "level_id": updated_match["level_id"],
+            "player1_words": updated_match.get("player1_words", []),
+            "player2_words": updated_match.get("player2_words", []),
+            "player1_score": updated_match.get("player1_score", 0),
+            "player2_score": updated_match.get("player2_score", 0),
+            "status": updated_match.get("status", "playing"),
+            "winner": updated_match.get("winner")
+        }
+    }
+
+@api_router.get("/multiplayer/match/{match_id}")
+async def get_match(match_id: str):
+    """Get current match state"""
+    match = await db.multiplayer_matches.find_one({"id": match_id})
+    if not match:
+        raise HTTPException(status_code=404, detail="Match not found")
+    
+    return {
+        "id": match["id"],
+        "player1": match["player1"],
+        "player2": match["player2"],
+        "level_id": match["level_id"],
+        "player1_words": match.get("player1_words", []),
+        "player2_words": match.get("player2_words", []),
+        "player1_score": match.get("player1_score", 0),
+        "player2_score": match.get("player2_score", 0),
+        "status": match.get("status", "playing"),
+        "winner": match.get("winner")
+    }
 
 # Include the router in the main app
 app.include_router(api_router)
