@@ -82,9 +82,9 @@ export default function GameScreen() {
     }
   }, [consentChecked]);
 
-  // Handle consent acceptance
-  const handleConsentAccept = async (adsConsent: boolean) => {
-    await privacyService.saveConsent(adsConsent);
+  // Handle consent acceptance - ads are always enabled
+  const handleConsentAccept = async () => {
+    await privacyService.saveConsent(true); // Always enable ads
     setShowConsentModal(false);
   };
 

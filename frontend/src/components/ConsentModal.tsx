@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   Modal,
   Dimensions,
-  Switch,
   Platform,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -16,7 +15,7 @@ const { width } = Dimensions.get('window');
 
 interface ConsentModalProps {
   visible: boolean;
-  onAccept: (adsConsent: boolean) => void;
+  onAccept: () => void;
   onViewPrivacyPolicy: () => void;
 }
 
@@ -25,10 +24,9 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({
   onAccept,
   onViewPrivacyPolicy 
 }) => {
-  const [adsConsent, setAdsConsent] = useState(true);
 
   const handleAccept = () => {
-    onAccept(adsConsent);
+    onAccept();
   };
 
   return (
@@ -54,27 +52,19 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({
                 <Text style={styles.sectionTitle}>Your Privacy Matters</Text>
               </View>
               <Text style={styles.sectionText}>
-                We collect minimal data to save your game progress and show you age-appropriate ads. We comply with COPPA for children's privacy.
+                We collect minimal data to save your game progress. We comply with COPPA for children's privacy.
               </Text>
             </View>
 
-            {/* Ads Consent */}
-            <View style={styles.consentRow}>
-              <View style={styles.consentInfo}>
-                <Ionicons name="videocam" size={20} color="#3498db" />
-                <View style={styles.consentTextContainer}>
-                  <Text style={styles.consentTitle}>Show Ads</Text>
-                  <Text style={styles.consentDescription}>
-                    Watch optional ads for rewards (coins & hints)
-                  </Text>
-                </View>
+            {/* Ads Notice - No toggle, mandatory */}
+            <View style={styles.adsNotice}>
+              <Ionicons name="videocam" size={24} color="#3498db" />
+              <View style={styles.adsTextContainer}>
+                <Text style={styles.adsTitle}>Free to Play with Ads</Text>
+                <Text style={styles.adsDescription}>
+                  This game is free! Ads help us keep it that way. You'll see age-appropriate ads during gameplay.
+                </Text>
               </View>
-              <Switch
-                value={adsConsent}
-                onValueChange={setAdsConsent}
-                trackColor={{ false: '#ddd', true: '#a8e6cf' }}
-                thumbColor={adsConsent ? '#27ae60' : '#999'}
-              />
             </View>
 
             {/* Privacy Policy Link */}
@@ -91,7 +81,7 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({
             <View style={styles.parentInfo}>
               <Ionicons name="information-circle" size={18} color="#f39c12" />
               <Text style={styles.parentInfoText}>
-                Parents: This game is suitable for all ages. We follow strict privacy guidelines for children under 13.
+                Parents: This game is suitable for all ages. Ads shown are child-friendly and age-appropriate.
               </Text>
             </View>
           </View>
@@ -102,12 +92,12 @@ export const ConsentModal: React.FC<ConsentModalProps> = ({
               style={styles.acceptButton}
               onPress={handleAccept}
             >
-              <Text style={styles.acceptButtonText}>Start Playing!</Text>
+              <Text style={styles.acceptButtonText}>I Agree & Start Playing!</Text>
               <Ionicons name="play" size={20} color="#fff" />
             </TouchableOpacity>
             
             <Text style={styles.footerNote}>
-              By continuing, you agree to our Privacy Policy
+              By continuing, you agree to our Privacy Policy and to see ads
             </Text>
           </View>
         </View>
@@ -169,33 +159,28 @@ const styles = StyleSheet.create({
     color: '#666',
     lineHeight: 20,
   },
-  consentRow: {
+  adsNotice: {
     flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f8f9fa',
+    alignItems: 'flex-start',
+    backgroundColor: '#e3f2fd',
     padding: 15,
     borderRadius: 12,
     marginBottom: 15,
-  },
-  consentInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
     gap: 12,
   },
-  consentTextContainer: {
+  adsTextContainer: {
     flex: 1,
   },
-  consentTitle: {
+  adsTitle: {
     fontSize: 15,
     fontWeight: '600',
-    color: '#2c3e50',
+    color: '#1565c0',
+    marginBottom: 4,
   },
-  consentDescription: {
-    fontSize: 12,
-    color: '#7f8c8d',
-    marginTop: 2,
+  adsDescription: {
+    fontSize: 13,
+    color: '#1976d2',
+    lineHeight: 18,
   },
   privacyLink: {
     flexDirection: 'row',
