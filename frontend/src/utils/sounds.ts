@@ -1,143 +1,91 @@
-import { Audio } from 'expo-av';
 import { Platform } from 'react-native';
+import * as Haptics from 'expo-haptics';
 
-// Sound effects manager
+// Sound effects manager - using haptics as fallback for reliable feedback
 class SoundManager {
-  private sounds: { [key: string]: Audio.Sound | null } = {};
   private isInitialized = false;
+  private soundEnabled = true;
 
   async initialize() {
     if (this.isInitialized) return;
+    this.isInitialized = true;
+  }
+
+  setEnabled(enabled: boolean) {
+    this.soundEnabled = enabled;
+  }
+
+  // Provide haptic feedback as a reliable cross-platform alternative
+  private async provideHapticFeedback(style: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light') {
+    if (!this.soundEnabled) return;
     
     try {
-      await Audio.setAudioModeAsync({
-        playsInSilentModeIOS: true,
-        staysActiveInBackground: false,
-        shouldDuckAndroid: true,
-      });
-      this.isInitialized = true;
+      if (Platform.OS === 'web') return; // No haptics on web
+      
+      switch (style) {
+        case 'success':
+          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          break;
+        case 'warning':
+          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+          break;
+        case 'error':
+          await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+          break;
+        case 'heavy':
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
+          break;
+        case 'medium':
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+          break;
+        default:
+          await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
     } catch (error) {
-      console.log('Audio initialization error:', error);
+      // Haptics not available, silently fail
     }
   }
 
   // Play a simple beep/tone for word found
   async playWordFound() {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3' },
-        { shouldPlay: true, volume: 0.5 }
-      );
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-    } catch (error) {
-      console.log('Play word found error:', error);
-    }
+    await this.provideHapticFeedback('success');
   }
 
   // Play bonus word sound
   async playBonusWord() {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: 'https://assets.mixkit.co/active_storage/sfx/2572/2572-preview.mp3' },
-        { shouldPlay: true, volume: 0.5 }
-      );
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-    } catch (error) {
-      console.log('Play bonus word error:', error);
-    }
+    await this.provideHapticFeedback('success');
+    // Double tap for bonus
+    setTimeout(() => this.provideHapticFeedback('success'), 100);
   }
 
   // Play level complete fanfare
   async playLevelComplete() {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: 'https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3' },
-        { shouldPlay: true, volume: 0.6 }
-      );
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-    } catch (error) {
-      console.log('Play level complete error:', error);
-    }
+    await this.provideHapticFeedback('heavy');
+    setTimeout(() => this.provideHapticFeedback('success'), 200);
+    setTimeout(() => this.provideHapticFeedback('success'), 400);
   }
 
   // Play wrong word sound
   async playWrongWord() {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: 'https://assets.mixkit.co/active_storage/sfx/2955/2955-preview.mp3' },
-        { shouldPlay: true, volume: 0.3 }
-      );
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-    } catch (error) {
-      console.log('Play wrong word error:', error);
-    }
+    await this.provideHapticFeedback('error');
   }
 
   // Play button click
   async playClick() {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3' },
-        { shouldPlay: true, volume: 0.3 }
-      );
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-    } catch (error) {
-      console.log('Play click error:', error);
-    }
+    await this.provideHapticFeedback('light');
   }
 
   // Play spin wheel
   async playSpinWheel() {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: 'https://assets.mixkit.co/active_storage/sfx/146/146-preview.mp3' },
-        { shouldPlay: true, volume: 0.4 }
-      );
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-    } catch (error) {
-      console.log('Play spin wheel error:', error);
+    // Multiple light taps to simulate spinning
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => this.provideHapticFeedback('light'), i * 100);
     }
   }
 
   // Play reward
   async playReward() {
-    try {
-      const { sound } = await Audio.Sound.createAsync(
-        { uri: 'https://assets.mixkit.co/active_storage/sfx/2019/2019-preview.mp3' },
-        { shouldPlay: true, volume: 0.5 }
-      );
-      sound.setOnPlaybackStatusUpdate((status) => {
-        if (status.isLoaded && status.didJustFinish) {
-          sound.unloadAsync();
-        }
-      });
-    } catch (error) {
-      console.log('Play reward error:', error);
-    }
+    await this.provideHapticFeedback('success');
   }
 }
 
