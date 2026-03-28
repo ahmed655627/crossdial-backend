@@ -122,20 +122,73 @@ async def complete_level(device_id: str, level_id: int):
 
 @router.post("/progress/{device_id}/spin-wheel")
 async def spin_wheel(device_id: str):
-    """Mark that the user has spun the daily wheel"""
+    """Mark that the user has spun the daily wheel (max 6 spins per day)"""
+    MAX_DAILY_SPINS = 6
+    
     progress = await db.user_progress.find_one({"device_id": device_id})
     if not progress:
         raise HTTPException(status_code=404, detail="Progress not found")
+    
+    # Check if it's a new day - reset spin count
+    last_spin = progress.get("last_wheel_spin")
+    daily_spins = progress.get("daily_spin_count", 0)
+    
+    if last_spin:
+        last_spin_date = last_spin.date() if hasattr(last_spin, 'date') else datetime.fromisoformat(str(last_spin).replace('Z', '+00:00')).date()
+        today = datetime.utcnow().date()
+        
+        if last_spin_date < today:
+            # New day - reset counter
+            daily_spins = 0
+    
+    # Check if user can spin
+    if daily_spins >= MAX_DAILY_SPINS:
+        return {"success": False, "message": "No more spins left today!", "spins_remaining": 0}
+    
+    # Increment spin count
+    new_spin_count = daily_spins + 1
     
     await db.user_progress.update_one(
         {"device_id": device_id},
         {"$set": {
             "last_wheel_spin": datetime.utcnow(),
+            "daily_spin_count": new_spin_count,
             "updated_at": datetime.utcnow()
         }}
     )
     
-    return {"success": True, "message": "Wheel spin recorded"}
+    return {
+        "success": True, 
+        "message": "Wheel spin recorded",
+        "spins_remaining": MAX_DAILY_SPINS - new_spin_count,
+        "spins_used": new_spin_count
+    }
+
+@router.get("/progress/{device_id}/spin-status")
+async def get_spin_status(device_id: str):
+    """Get current spin status for the day"""
+    MAX_DAILY_SPINS = 6
+    
+    progress = await db.user_progress.find_one({"device_id": device_id})
+    if not progress:
+        raise HTTPException(status_code=404, detail="Progress not found")
+    
+    last_spin = progress.get("last_wheel_spin")
+    daily_spins = progress.get("daily_spin_count", 0)
+    
+    if last_spin:
+        last_spin_date = last_spin.date() if hasattr(last_spin, 'date') else datetime.fromisoformat(str(last_spin).replace('Z', '+00:00')).date()
+        today = datetime.utcnow().date()
+        
+        if last_spin_date < today:
+            # New day - reset counter
+            daily_spins = 0
+    
+    return {
+        "spins_remaining": MAX_DAILY_SPINS - daily_spins,
+        "spins_used": daily_spins,
+        "max_daily_spins": MAX_DAILY_SPINS
+    }
 
 @router.post("/progress/{device_id}/add-reward")
 async def add_reward(device_id: str, type: str, value: int):

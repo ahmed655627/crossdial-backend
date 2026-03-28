@@ -36,7 +36,7 @@ interface DailyRewardsWheelProps {
 }
 
 export const DailyRewardsWheel: React.FC<DailyRewardsWheelProps> = ({ visible, onClose }) => {
-  const { addDailyReward, progress, canSpinWheel, markWheelSpun } = useGameStore();
+  const { addDailyReward, progress, canSpinWheel, markWheelSpun, spinsRemaining, fetchSpinStatus } = useGameStore();
   const [isSpinning, setIsSpinning] = useState(false);
   const [showingAd, setShowingAd] = useState(false);
   const [reward, setReward] = useState<{ type: string; value: number } | null>(null);
@@ -45,6 +45,13 @@ export const DailyRewardsWheel: React.FC<DailyRewardsWheelProps> = ({ visible, o
   const currentRotation = useRef(0);
 
   const canSpin = canSpinWheel();
+
+  // Fetch spin status when modal opens
+  useEffect(() => {
+    if (visible) {
+      fetchSpinStatus();
+    }
+  }, [visible]);
 
   const spinWheel = async () => {
     if (isSpinning || !canSpin) return;
@@ -180,13 +187,21 @@ export const DailyRewardsWheel: React.FC<DailyRewardsWheelProps> = ({ visible, o
               >
                 <Ionicons name="play" size={24} color="#fff" />
                 <Text style={styles.spinButtonText}>
-                  {isSpinning ? 'Spinning...' : canSpin ? 'Watch Ad & Spin!' : 'Come back tomorrow!'}
+                  {isSpinning ? 'Spinning...' : canSpin ? 'Watch Ad & Spin!' : 'No spins left!'}
                 </Text>
               </TouchableOpacity>
 
+              {/* Spins Remaining Counter */}
+              <View style={styles.spinsCounter}>
+                <Ionicons name="sync" size={18} color="#3498db" />
+                <Text style={styles.spinsCounterText}>
+                  {spinsRemaining}/6 spins remaining today
+                </Text>
+              </View>
+
               {!canSpin && (
                 <Text style={styles.cooldownText}>
-                  You've already spun today. Come back tomorrow!
+                  Come back tomorrow for 6 more spins!
                 </Text>
               )}
             </>
@@ -297,10 +312,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   cooldownText: {
-    marginTop: 15,
+    marginTop: 10,
     color: '#7f8c8d',
     fontSize: 14,
     textAlign: 'center',
+  },
+  spinsCounter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 12,
+    gap: 6,
+    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 20,
+  },
+  spinsCounterText: {
+    color: '#3498db',
+    fontSize: 14,
+    fontWeight: '600',
   },
   adContainer: {
     padding: 40,

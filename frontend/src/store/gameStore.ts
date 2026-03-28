@@ -88,6 +88,9 @@ interface GameState {
   currentMatch: MultiplayerMatch | null;
   isSearchingMatch: boolean;
   
+  // Daily Spin
+  spinsRemaining: number;
+  
   // Actions
   initialize: () => Promise<void>;
   loadLevels: () => Promise<void>;
@@ -105,8 +108,10 @@ interface GameState {
   
   // Daily rewards
   canSpinWheel: () => boolean;
+  getSpinsRemaining: () => number;
   markWheelSpun: () => Promise<void>;
   addDailyReward: (type: string, value: number) => Promise<void>;
+  fetchSpinStatus: () => Promise<void>;
   
   // Multiplayer
   loadLeaderboard: () => Promise<void>;
@@ -151,6 +156,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   leaderboard: [],
   currentMatch: null,
   isSearchingMatch: false,
+  spinsRemaining: 6,  // Track remaining spins for the day
 
   // Initialize the game
   initialize: async () => {
@@ -185,6 +191,9 @@ export const useGameStore = create<GameState>((set, get) => ({
       
       // Load leaderboard
       await get().loadLeaderboard();
+      
+      // Fetch daily spin status
+      await get().fetchSpinStatus();
       
     } catch (error) {
       console.error('Initialize error:', error);
@@ -479,24 +488,41 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   // Daily rewards
   canSpinWheel: () => {
-    const { progress } = get();
-    if (!progress?.last_wheel_spin) return true;
-    
-    const lastSpin = new Date(progress.last_wheel_spin);
-    const now = new Date();
-    const hoursSinceLastSpin = (now.getTime() - lastSpin.getTime()) / (1000 * 60 * 60);
-    
-    return hoursSinceLastSpin >= 24;
+    const { spinsRemaining } = get();
+    return spinsRemaining > 0;
   },
 
-  markWheelSpun: async () => {
+  getSpinsRemaining: () => {
+    const { spinsRemaining } = get();
+    return spinsRemaining;
+  },
+
+  fetchSpinStatus: async () => {
     const { deviceId } = get();
     if (!deviceId) return;
     
     try {
-      await fetch(`${API_URL}/api/progress/${deviceId}/spin-wheel`, {
+      const response = await fetch(`${API_URL}/api/progress/${deviceId}/spin-status`);
+      const status = await response.json();
+      set({ spinsRemaining: status.spins_remaining || 0 });
+    } catch (error) {
+      console.error('Fetch spin status error:', error);
+    }
+  },
+
+  markWheelSpun: async () => {
+    const { deviceId, spinsRemaining } = get();
+    if (!deviceId) return;
+    
+    try {
+      const response = await fetch(`${API_URL}/api/progress/${deviceId}/spin-wheel`, {
         method: 'POST',
       });
+      const result = await response.json();
+      
+      if (result.success) {
+        set({ spinsRemaining: result.spins_remaining || 0 });
+      }
       
       // Refresh progress
       const progressResponse = await fetch(`${API_URL}/api/progress/${deviceId}`);
