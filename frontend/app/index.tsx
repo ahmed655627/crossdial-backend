@@ -256,17 +256,24 @@ export default function GameScreen() {
         {showMenu && (
           <View style={styles.dropdownMenu}>
             <TouchableOpacity style={styles.menuItem} onPress={handleReset}>
-              <Ionicons name="refresh" size={20} color="#e74c3c" />
+              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(231, 76, 60, 0.15)' }]}>
+                <Ionicons name="refresh" size={22} color="#e74c3c" />
+              </View>
               <Text style={styles.menuItemText}>Reset Level</Text>
-              <Ionicons name="play-circle" size={16} color="#95a5a6" />
+              <Ionicons name="play-circle" size={18} color="#bdc3c7" />
             </TouchableOpacity>
             <TouchableOpacity style={styles.menuItem} onPress={handleRestart}>
-              <Ionicons name="reload" size={20} color="#f39c12" />
+              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(243, 156, 18, 0.15)' }]}>
+                <Ionicons name="reload" size={22} color="#f39c12" />
+              </View>
               <Text style={styles.menuItemText}>Restart Level</Text>
-              <Ionicons name="play-circle" size={16} color="#95a5a6" />
+              <Ionicons name="play-circle" size={18} color="#bdc3c7" />
             </TouchableOpacity>
+            <View style={styles.menuDivider} />
             <TouchableOpacity style={styles.menuItem} onPress={toggleSound}>
-              <Ionicons name={soundEnabled ? 'volume-high' : 'volume-mute'} size={20} color="#3498db" />
+              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(52, 152, 219, 0.15)' }]}>
+                <Ionicons name={soundEnabled ? 'volume-high' : 'volume-mute'} size={22} color="#3498db" />
+              </View>
               <Text style={styles.menuItemText}>Sound {soundEnabled ? 'On' : 'Off'}</Text>
             </TouchableOpacity>
             <TouchableOpacity 
@@ -276,12 +283,17 @@ export default function GameScreen() {
                 setShowPrivacyPolicy(true);
               }}
             >
-              <Ionicons name="shield-checkmark" size={20} color="#27ae60" />
+              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(39, 174, 96, 0.15)' }]}>
+                <Ionicons name="shield-checkmark" size={22} color="#27ae60" />
+              </View>
               <Text style={styles.menuItemText}>Privacy Policy</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={() => setShowMenu(false)}>
-              <Ionicons name="close" size={20} color="#95a5a6" />
-              <Text style={styles.menuItemText}>Close</Text>
+            <View style={styles.menuDivider} />
+            <TouchableOpacity style={[styles.menuItem, styles.menuItemClose]} onPress={() => setShowMenu(false)}>
+              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(149, 165, 166, 0.15)' }]}>
+                <Ionicons name="close" size={22} color="#7f8c8d" />
+              </View>
+              <Text style={[styles.menuItemText, { color: '#7f8c8d' }]}>Close</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -524,27 +536,51 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Platform.OS === 'android' ? 85 : 55,
     right: 15,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 8,
+    backgroundColor: '#ffffff',
+    borderRadius: 16,
+    padding: 12,
     zIndex: 1000,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    elevation: 15,
+    minWidth: 200,
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.08)',
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 15,
-    gap: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    gap: 14,
+    borderRadius: 10,
+    marginVertical: 2,
+    backgroundColor: 'rgba(0,0,0,0.02)',
   },
   menuItemText: {
     flex: 1,
-    fontSize: 14,
-    color: '#2c3e50',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1a1a2e',
+    letterSpacing: 0.3,
+  },
+  menuIconBg: {
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  menuDivider: {
+    height: 1,
+    backgroundColor: 'rgba(0,0,0,0.08)',
+    marginVertical: 6,
+    marginHorizontal: 10,
+  },
+  menuItemClose: {
+    backgroundColor: 'transparent',
   },
   wonderInfo: {
     alignItems: 'center',
