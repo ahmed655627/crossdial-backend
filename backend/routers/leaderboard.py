@@ -7,7 +7,10 @@ router = APIRouter(tags=["Leaderboard"])
 @router.get("/leaderboard")
 async def get_leaderboard():
     """Get top players on the leaderboard"""
-    players = await db.user_progress.find().sort("total_score", -1).limit(100).to_list(100)
+    players = await db.user_progress.find(
+        {},
+        {"username": 1, "total_score": 1, "completed_levels": 1, "_id": 0}
+    ).sort("total_score", -1).limit(100).to_list(100)
     
     leaderboard = []
     for i, player in enumerate(players):

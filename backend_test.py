@@ -1,456 +1,279 @@
 #!/usr/bin/env python3
 """
-Backend API Test Suite for Words of Wonders Game
-Tests all API endpoints with comprehensive validation
+Backend Authentication Testing for Words of Wonders
+Tests all authentication endpoints as specified in the review request
 """
 
 import requests
 import json
 import sys
-from typing import Dict, Any, List
+from typing import Dict, Any
 
-# Use the production URL from frontend .env
-BASE_URL = "https://crossword-solver-6.preview.emergentagent.com/api"
+# Backend URL from frontend .env
+BACKEND_URL = "https://crossword-solver-6.preview.emergentagent.com"
+BASE_URL = f"{BACKEND_URL}/api"
 
-class BackendTester:
+class AuthTester:
     def __init__(self):
-        self.base_url = BASE_URL
-        self.test_device_id = "test-device-123"
-        self.results = []
-        self.session = requests.Session()
+        self.session_token = None
+        self.test_user_email = "test@example.com"
+        self.test_user_password = "Test123!"
+        self.test_user_name = "Test User"
         
-    def log_result(self, test_name: str, success: bool, message: str, details: Dict = None):
-        """Log test result"""
-        result = {
-            "test": test_name,
-            "success": success,
-            "message": message,
-            "details": details or {}
-        }
-        self.results.append(result)
+    def log_test(self, test_name: str, success: bool, details: str = ""):
         status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status}: {test_name} - {message}")
-        if details and not success:
+        print(f"{status} {test_name}")
+        if details:
             print(f"   Details: {details}")
-    
-    def test_get_all_levels(self):
-        """Test GET /api/levels - Should return array of 8 levels"""
+        print()
+        
+    def make_request(self, method: str, endpoint: str, data: Dict = None, headers: Dict = None) -> tuple:
+        """Make HTTP request and return (success, response_data, status_code)"""
+        url = f"{BASE_URL}{endpoint}"
+        
         try:
-            response = self.session.get(f"{self.base_url}/levels")
+            if method.upper() == "GET":
+                response = requests.get(url, headers=headers, timeout=10)
+            elif method.upper() == "POST":
+                response = requests.post(url, json=data, headers=headers, timeout=10)
+            elif method.upper() == "PUT":
+                response = requests.put(url, json=data, headers=headers, timeout=10)
+            else:
+                return False, {"error": f"Unsupported method: {method}"}, 0
+                
+            try:
+                response_data = response.json()
+            except:
+                response_data = {"text": response.text}
+                
+            return response.status_code < 400, response_data, response.status_code
             
-            if response.status_code != 200:
-                self.log_result("GET /api/levels", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
-                return False
-            
-            data = response.json()
-            
-            # Validate structure
-            if not isinstance(data, list):
-                self.log_result("GET /api/levels", False, "Response is not a list")
-                return False
-            
-            if len(data) != 8:
-                self.log_result("GET /api/levels", False, 
-                              f"Expected 8 levels, got {len(data)}")
-                return False
-            
-            # Validate first level structure
-            level = data[0]
-            required_fields = ["id", "wonder", "location", "letters", "targetWords", "grid", "bonusWords"]
-            for field in required_fields:
-                if field not in level:
-                    self.log_result("GET /api/levels", False, 
-                                  f"Missing field '{field}' in level data")
+        except requests.exceptions.RequestException as e:
+            return False, {"error": str(e)}, 0
+    
+    def test_register_new_user(self):
+        """Test 1: Register a new user"""
+        print("🧪 Testing: Register new user")
+        
+        data = {
+            "email": self.test_user_email,
+            "password": self.test_user_password,
+            "name": self.test_user_name
+        }
+        
+        success, response, status_code = self.make_request("POST", "/auth/register", data)
+        
+        if success and status_code == 200:
+            if "session_token" in response and "user" in response:
+                self.session_token = response["session_token"]
+                user = response["user"]
+                if (user.get("email") == self.test_user_email.lower() and 
+                    user.get("name") == self.test_user_name):
+                    self.log_test("Register new user", True, 
+                                f"User registered successfully with session_token")
+                    return True
+                else:
+                    self.log_test("Register new user", False, 
+                                f"User data mismatch: {user}")
                     return False
-            
-            self.log_result("GET /api/levels", True, 
-                          f"Successfully returned {len(data)} levels with correct structure")
-            return True
-            
-        except Exception as e:
-            self.log_result("GET /api/levels", False, f"Exception: {str(e)}")
+            else:
+                self.log_test("Register new user", False, 
+                            f"Missing session_token or user in response: {response}")
+                return False
+        else:
+            self.log_test("Register new user", False, 
+                        f"Status: {status_code}, Response: {response}")
             return False
     
-    def test_get_specific_level(self):
-        """Test GET /api/levels/1 - Should return level 1 data"""
-        try:
-            response = self.session.get(f"{self.base_url}/levels/1")
-            
-            if response.status_code != 200:
-                self.log_result("GET /api/levels/1", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
+    def test_login_with_registered_user(self):
+        """Test 2: Login with the registered user"""
+        print("🧪 Testing: Login with registered user")
+        
+        data = {
+            "email": self.test_user_email,
+            "password": self.test_user_password
+        }
+        
+        success, response, status_code = self.make_request("POST", "/auth/login", data)
+        
+        if success and status_code == 200:
+            if "session_token" in response and "user" in response:
+                self.session_token = response["session_token"]
+                user = response["user"]
+                if (user.get("email") == self.test_user_email.lower() and 
+                    user.get("name") == self.test_user_name):
+                    self.log_test("Login with registered user", True, 
+                                f"Login successful with session_token")
+                    return True
+                else:
+                    self.log_test("Login with registered user", False, 
+                                f"User data mismatch: {user}")
+                    return False
+            else:
+                self.log_test("Login with registered user", False, 
+                            f"Missing session_token or user in response: {response}")
                 return False
-            
-            data = response.json()
-            
-            # Validate level 1 specific data
-            if data.get("id") != 1:
-                self.log_result("GET /api/levels/1", False, 
-                              f"Expected level id 1, got {data.get('id')}")
-                return False
-            
-            if data.get("wonder") != "Great Pyramid of Giza":
-                self.log_result("GET /api/levels/1", False, 
-                              f"Expected 'Great Pyramid of Giza', got '{data.get('wonder')}'")
-                return False
-            
-            expected_letters = ["S", "U", "N", "D", "A", "Y"]
-            if data.get("letters") != expected_letters:
-                self.log_result("GET /api/levels/1", False, 
-                              f"Expected letters {expected_letters}, got {data.get('letters')}")
-                return False
-            
-            self.log_result("GET /api/levels/1", True, 
-                          "Successfully returned level 1 data with correct structure")
-            return True
-            
-        except Exception as e:
-            self.log_result("GET /api/levels/1", False, f"Exception: {str(e)}")
+        else:
+            self.log_test("Login with registered user", False, 
+                        f"Status: {status_code}, Response: {response}")
             return False
     
-    def test_validate_word_target(self):
-        """Test POST /api/validate-word with target word SUN"""
-        try:
-            payload = {"word": "SUN", "level_id": 1}
-            response = self.session.post(f"{self.base_url}/validate-word", json=payload)
+    def test_get_current_user(self):
+        """Test 3: Get current user with token"""
+        print("🧪 Testing: Get current user with token")
+        
+        if not self.session_token:
+            self.log_test("Get current user", False, "No session token available")
+            return False
             
-            if response.status_code != 200:
-                self.log_result("POST /api/validate-word (SUN)", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        success, response, status_code = self.make_request("GET", "/auth/me", headers=headers)
+        
+        if success and status_code == 200:
+            if (response.get("email") == self.test_user_email.lower() and 
+                response.get("name") == self.test_user_name):
+                self.log_test("Get current user", True, 
+                            f"User details retrieved successfully")
+                return True
+            else:
+                self.log_test("Get current user", False, 
+                            f"User data mismatch: {response}")
                 return False
-            
-            data = response.json()
-            
-            if not data.get("valid"):
-                self.log_result("POST /api/validate-word (SUN)", False, 
-                              "SUN should be valid")
-                return False
-            
-            if not data.get("is_target_word"):
-                self.log_result("POST /api/validate-word (SUN)", False, 
-                              "SUN should be a target word")
-                return False
-            
-            if data.get("is_bonus_word"):
-                self.log_result("POST /api/validate-word (SUN)", False, 
-                              "SUN should not be a bonus word")
-                return False
-            
-            self.log_result("POST /api/validate-word (SUN)", True, 
-                          "SUN correctly validated as target word")
-            return True
-            
-        except Exception as e:
-            self.log_result("POST /api/validate-word (SUN)", False, f"Exception: {str(e)}")
+        else:
+            self.log_test("Get current user", False, 
+                        f"Status: {status_code}, Response: {response}")
             return False
     
-    def test_validate_word_bonus(self):
-        """Test POST /api/validate-word with bonus word SANDY"""
-        try:
-            payload = {"word": "SANDY", "level_id": 1}
-            response = self.session.post(f"{self.base_url}/validate-word", json=payload)
+    def test_logout(self):
+        """Test 4: Logout"""
+        print("🧪 Testing: Logout")
+        
+        if not self.session_token:
+            self.log_test("Logout", False, "No session token available")
+            return False
             
-            if response.status_code != 200:
-                self.log_result("POST /api/validate-word (SANDY)", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
+        headers = {"Authorization": f"Bearer {self.session_token}"}
+        success, response, status_code = self.make_request("POST", "/auth/logout", headers=headers)
+        
+        if success and status_code == 200:
+            if response.get("success") == True:
+                self.log_test("Logout", True, "Logout successful")
+                return True
+            else:
+                self.log_test("Logout", False, f"Unexpected response: {response}")
                 return False
-            
-            data = response.json()
-            
-            if not data.get("valid"):
-                self.log_result("POST /api/validate-word (SANDY)", False, 
-                              "SANDY should be valid")
-                return False
-            
-            if data.get("is_target_word"):
-                self.log_result("POST /api/validate-word (SANDY)", False, 
-                              "SANDY should not be a target word")
-                return False
-            
-            if not data.get("is_bonus_word"):
-                self.log_result("POST /api/validate-word (SANDY)", False, 
-                              "SANDY should be a bonus word")
-                return False
-            
-            self.log_result("POST /api/validate-word (SANDY)", True, 
-                          "SANDY correctly validated as bonus word")
-            return True
-            
-        except Exception as e:
-            self.log_result("POST /api/validate-word (SANDY)", False, f"Exception: {str(e)}")
+        else:
+            self.log_test("Logout", False, 
+                        f"Status: {status_code}, Response: {response}")
             return False
     
-    def test_validate_word_invalid(self):
-        """Test POST /api/validate-word with invalid word XYZ"""
-        try:
-            payload = {"word": "XYZ", "level_id": 1}
-            response = self.session.post(f"{self.base_url}/validate-word", json=payload)
-            
-            if response.status_code != 200:
-                self.log_result("POST /api/validate-word (XYZ)", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
+    def test_login_wrong_password(self):
+        """Test 5: Login with wrong password"""
+        print("🧪 Testing: Login with wrong password")
+        
+        data = {
+            "email": self.test_user_email,
+            "password": "WrongPassword"
+        }
+        
+        success, response, status_code = self.make_request("POST", "/auth/login", data)
+        
+        if not success and status_code == 401:
+            if "Invalid email or password" in response.get("detail", ""):
+                self.log_test("Login with wrong password", True, 
+                            f"Correctly rejected with 401 error")
+                return True
+            else:
+                self.log_test("Login with wrong password", False, 
+                            f"Wrong error message: {response}")
                 return False
-            
-            data = response.json()
-            
-            if data.get("valid"):
-                self.log_result("POST /api/validate-word (XYZ)", False, 
-                              "XYZ should be invalid")
-                return False
-            
-            if data.get("is_target_word"):
-                self.log_result("POST /api/validate-word (XYZ)", False, 
-                              "XYZ should not be a target word")
-                return False
-            
-            if data.get("is_bonus_word"):
-                self.log_result("POST /api/validate-word (XYZ)", False, 
-                              "XYZ should not be a bonus word")
-                return False
-            
-            self.log_result("POST /api/validate-word (XYZ)", True, 
-                          "XYZ correctly validated as invalid")
-            return True
-            
-        except Exception as e:
-            self.log_result("POST /api/validate-word (XYZ)", False, f"Exception: {str(e)}")
+        else:
+            self.log_test("Login with wrong password", False, 
+                        f"Expected 401 error, got Status: {status_code}, Response: {response}")
             return False
     
-    def test_create_progress(self):
-        """Test POST /api/progress - Create progress"""
-        try:
-            payload = {"device_id": self.test_device_id}
-            response = self.session.post(f"{self.base_url}/progress", json=payload)
-            
-            if response.status_code != 200:
-                self.log_result("POST /api/progress", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
+    def test_register_existing_email(self):
+        """Test 6: Register with existing email"""
+        print("🧪 Testing: Register with existing email")
+        
+        data = {
+            "email": self.test_user_email,
+            "password": "Test456!",
+            "name": "Another User"
+        }
+        
+        success, response, status_code = self.make_request("POST", "/auth/register", data)
+        
+        if not success and status_code == 400:
+            if "Email already registered" in response.get("detail", ""):
+                self.log_test("Register with existing email", True, 
+                            f"Correctly rejected with 400 error")
+                return True
+            else:
+                self.log_test("Register with existing email", False, 
+                            f"Wrong error message: {response}")
                 return False
-            
-            data = response.json()
-            
-            if data.get("device_id") != self.test_device_id:
-                self.log_result("POST /api/progress", False, 
-                              f"Expected device_id {self.test_device_id}, got {data.get('device_id')}")
-                return False
-            
-            if data.get("current_level") != 1:
-                self.log_result("POST /api/progress", False, 
-                              f"Expected current_level 1, got {data.get('current_level')}")
-                return False
-            
-            if data.get("coins") != 100:
-                self.log_result("POST /api/progress", False, 
-                              f"Expected coins 100, got {data.get('coins')}")
-                return False
-            
-            self.log_result("POST /api/progress", True, 
-                          "Progress created successfully with correct initial values")
-            return True
-            
-        except Exception as e:
-            self.log_result("POST /api/progress", False, f"Exception: {str(e)}")
-            return False
-    
-    def test_get_progress(self):
-        """Test GET /api/progress/{device_id} - Get progress"""
-        try:
-            response = self.session.get(f"{self.base_url}/progress/{self.test_device_id}")
-            
-            if response.status_code != 200:
-                self.log_result("GET /api/progress/{device_id}", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
-                return False
-            
-            data = response.json()
-            
-            if data.get("device_id") != self.test_device_id:
-                self.log_result("GET /api/progress/{device_id}", False, 
-                              f"Expected device_id {self.test_device_id}, got {data.get('device_id')}")
-                return False
-            
-            self.log_result("GET /api/progress/{device_id}", True, 
-                          "Progress retrieved successfully")
-            return True
-            
-        except Exception as e:
-            self.log_result("GET /api/progress/{device_id}", False, f"Exception: {str(e)}")
-            return False
-    
-    def test_add_word(self):
-        """Test POST /api/progress/{device_id}/add-word - Add found word"""
-        try:
-            url = f"{self.base_url}/progress/{self.test_device_id}/add-word"
-            params = {"level_id": 1, "word": "SUN", "is_bonus": "false"}
-            response = self.session.post(url, params=params)
-            
-            if response.status_code != 200:
-                self.log_result("POST /api/progress/{device_id}/add-word", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
-                return False
-            
-            data = response.json()
-            
-            if not data.get("success"):
-                self.log_result("POST /api/progress/{device_id}/add-word", False, 
-                              "Expected success=true")
-                return False
-            
-            # Should have gained coins (initial 100 + 10 for target word)
-            if data.get("coins") != 110:
-                self.log_result("POST /api/progress/{device_id}/add-word", False, 
-                              f"Expected coins 110, got {data.get('coins')}")
-                return False
-            
-            self.log_result("POST /api/progress/{device_id}/add-word", True, 
-                          "Word added successfully, coins updated correctly")
-            return True
-            
-        except Exception as e:
-            self.log_result("POST /api/progress/{device_id}/add-word", False, f"Exception: {str(e)}")
-            return False
-    
-    def test_complete_level(self):
-        """Test POST /api/progress/{device_id}/complete-level - Complete level"""
-        try:
-            url = f"{self.base_url}/progress/{self.test_device_id}/complete-level"
-            params = {"level_id": 1}
-            response = self.session.post(url, params=params)
-            
-            if response.status_code != 200:
-                self.log_result("POST /api/progress/{device_id}/complete-level", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
-                return False
-            
-            data = response.json()
-            
-            if not data.get("success"):
-                self.log_result("POST /api/progress/{device_id}/complete-level", False, 
-                              "Expected success=true")
-                return False
-            
-            # Should have gained completion bonus (110 + 50)
-            if data.get("coins") != 160:
-                self.log_result("POST /api/progress/{device_id}/complete-level", False, 
-                              f"Expected coins 160, got {data.get('coins')}")
-                return False
-            
-            # Should advance to level 2
-            if data.get("current_level") != 2:
-                self.log_result("POST /api/progress/{device_id}/complete-level", False, 
-                              f"Expected current_level 2, got {data.get('current_level')}")
-                return False
-            
-            self.log_result("POST /api/progress/{device_id}/complete-level", True, 
-                          "Level completed successfully, coins and level updated correctly")
-            return True
-            
-        except Exception as e:
-            self.log_result("POST /api/progress/{device_id}/complete-level", False, f"Exception: {str(e)}")
-            return False
-    
-    def test_hint(self):
-        """Test POST /api/hint - Use hint"""
-        try:
-            payload = {"device_id": self.test_device_id, "level_id": 1}
-            response = self.session.post(f"{self.base_url}/hint", json=payload)
-            
-            if response.status_code != 200:
-                self.log_result("POST /api/hint", False, 
-                              f"Expected status 200, got {response.status_code}",
-                              {"response": response.text})
-                return False
-            
-            data = response.json()
-            
-            if not data.get("success"):
-                self.log_result("POST /api/hint", False, 
-                              f"Expected success=true, got message: {data.get('message')}")
-                return False
-            
-            # Should have deducted hint cost (160 - 20)
-            if data.get("coins_remaining") != 140:
-                self.log_result("POST /api/hint", False, 
-                              f"Expected coins_remaining 140, got {data.get('coins_remaining')}")
-                return False
-            
-            # Should have revealed a letter
-            if not data.get("letter"):
-                self.log_result("POST /api/hint", False, 
-                              "Expected a letter to be revealed")
-                return False
-            
-            # Should have position information
-            if not data.get("position"):
-                self.log_result("POST /api/hint", False, 
-                              "Expected position information")
-                return False
-            
-            self.log_result("POST /api/hint", True, 
-                          f"Hint used successfully, revealed letter '{data.get('letter')}', coins deducted correctly")
-            return True
-            
-        except Exception as e:
-            self.log_result("POST /api/hint", False, f"Exception: {str(e)}")
+        else:
+            self.log_test("Register with existing email", False, 
+                        f"Expected 400 error, got Status: {status_code}, Response: {response}")
             return False
     
     def run_all_tests(self):
-        """Run all backend tests"""
-        print(f"🚀 Starting Backend API Tests for Words of Wonders")
-        print(f"📍 Testing against: {self.base_url}")
+        """Run all authentication tests"""
+        print("=" * 60)
+        print("🚀 Starting Authentication Flow Tests")
+        print("=" * 60)
+        print()
+        
+        test_results = []
+        
+        # Test 1: Register new user
+        test_results.append(self.test_register_new_user())
+        
+        # Test 2: Login with registered user
+        test_results.append(self.test_login_with_registered_user())
+        
+        # Test 3: Get current user
+        test_results.append(self.test_get_current_user())
+        
+        # Test 4: Logout
+        test_results.append(self.test_logout())
+        
+        # Test 5: Login with wrong password
+        test_results.append(self.test_login_wrong_password())
+        
+        # Test 6: Register with existing email
+        test_results.append(self.test_register_existing_email())
+        
+        # Summary
+        print("=" * 60)
+        print("📊 TEST SUMMARY")
         print("=" * 60)
         
-        tests = [
-            self.test_get_all_levels,
-            self.test_get_specific_level,
-            self.test_validate_word_target,
-            self.test_validate_word_bonus,
-            self.test_validate_word_invalid,
-            self.test_create_progress,
-            self.test_get_progress,
-            self.test_add_word,
-            self.test_complete_level,
-            self.test_hint
-        ]
+        passed = sum(test_results)
+        total = len(test_results)
         
-        passed = 0
-        failed = 0
+        print(f"Total Tests: {total}")
+        print(f"Passed: {passed}")
+        print(f"Failed: {total - passed}")
+        print(f"Success Rate: {(passed/total)*100:.1f}%")
         
-        for test in tests:
-            try:
-                if test():
-                    passed += 1
-                else:
-                    failed += 1
-            except Exception as e:
-                print(f"❌ FAIL: {test.__name__} - Unexpected error: {str(e)}")
-                failed += 1
-            print()  # Add spacing between tests
-        
-        print("=" * 60)
-        print(f"📊 Test Results: {passed} passed, {failed} failed")
-        
-        if failed > 0:
-            print("\n🔍 Failed Tests Details:")
-            for result in self.results:
-                if not result["success"]:
-                    print(f"   ❌ {result['test']}: {result['message']}")
-                    if result["details"]:
-                        print(f"      Details: {result['details']}")
-        
-        return failed == 0
+        if passed == total:
+            print("\n🎉 All authentication tests PASSED!")
+            return True
+        else:
+            print(f"\n⚠️  {total - passed} authentication tests FAILED!")
+            return False
+
+def main():
+    """Main test execution"""
+    tester = AuthTester()
+    success = tester.run_all_tests()
+    
+    if success:
+        sys.exit(0)
+    else:
+        sys.exit(1)
 
 if __name__ == "__main__":
-    tester = BackendTester()
-    success = tester.run_all_tests()
-    sys.exit(0 if success else 1)
+    main()
