@@ -46,7 +46,7 @@ class NotificationService {
     // Get Expo push token
     try {
       const tokenData = await Notifications.getExpoPushTokenAsync({
-        projectId: 'your-project-id', // This will be auto-detected from app.json
+        projectId: 'words-of-wonders', // Matches app.json extra.eas.projectId
       });
       token = tokenData.data;
       this.pushToken = token;

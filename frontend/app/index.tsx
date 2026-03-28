@@ -79,6 +79,36 @@ export default function GameScreen() {
   useEffect(() => {
     if (consentChecked) {
       initialize();
+      
+      // Register for push notifications
+      const setupNotifications = async () => {
+        try {
+          await notificationService.registerForPushNotifications();
+          
+          // Schedule daily reward reminder
+          await notificationService.scheduleDailyRewardReminder();
+        } catch (error) {
+          console.log('Notification setup error:', error);
+        }
+      };
+      setupNotifications();
+      
+      // Set up notification listeners
+      const cleanup = notificationService.addNotificationListeners(
+        (notification) => {
+          // Handle notification received while app is open
+          console.log('Notification received:', notification);
+        },
+        (response) => {
+          // Handle notification tap
+          const data = response.notification.request.content.data;
+          if (data?.type === 'daily_reward') {
+            setShowDailyRewards(true);
+          }
+        }
+      );
+      
+      return cleanup;
     }
   }, [consentChecked]);
 
