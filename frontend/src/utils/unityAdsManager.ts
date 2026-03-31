@@ -6,10 +6,10 @@ import { Platform } from 'react-native';
 // https://dashboard.unity3d.com
 // ============================================
 
-// Unity Ads Game IDs - REPLACE WITH YOUR IDs
+// Unity Ads Game IDs - YOUR REAL IDs
 const UNITY_GAME_IDS = {
-  android: '5678901', // Replace with your Android Game ID
-  ios: '5678902',     // Replace with your iOS Game ID
+  android: '6078412', // Your Android Game ID
+  ios: '6078412',     // Use same for iOS or update when you have iOS ID
 };
 
 // Unity Ads Placement IDs
