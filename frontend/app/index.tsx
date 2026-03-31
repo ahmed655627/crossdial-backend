@@ -140,29 +140,37 @@ export default function GameScreen() {
     }
   }, [lastWordResult]);
 
-  // Handle hint with ad
+  // Handle hint with ad (REWARDED - user chooses)
   const handleHint = async () => {
-    setAdMessage('Watch ad for hint...');
-    setShowAdLoading(true);
-    await adManager.showRewardedAd();
-    setShowAdLoading(false);
-    await useHint();
-  };
-
-  // Handle reset with ad
-  const handleReset = async () => {
     Alert.alert(
-      'Reset Level',
-      'Watch an ad to reset your progress for this level?',
+      'Use Hint',
+      'Watch a short video to get a hint?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Watch Ad & Reset',
+          text: 'Watch & Get Hint',
           onPress: async () => {
-            setAdMessage('Loading reset ad...');
+            setAdMessage('Watch ad for hint...');
             setShowAdLoading(true);
-            await adManager.showInterstitialAd();
+            await adManager.showRewardedAd();
             setShowAdLoading(false);
+            await useHint();
+          },
+        },
+      ]
+    );
+  };
+
+  // Handle reset - NO AD (free action)
+  const handleReset = async () => {
+    Alert.alert(
+      'Reset Level',
+      'Reset your progress for this level?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Reset',
+          onPress: () => {
             resetLevel();
             setShowMenu(false);
           },
@@ -171,20 +179,16 @@ export default function GameScreen() {
     );
   };
 
-  // Handle restart with ad
+  // Handle restart - NO AD (free action)
   const handleRestart = async () => {
     Alert.alert(
       'Restart Level',
-      'Watch an ad to restart this level?',
+      'Restart this level from the beginning?',
       [
         { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Watch Ad & Restart',
-          onPress: async () => {
-            setAdMessage('Loading restart ad...');
-            setShowAdLoading(true);
-            await adManager.showInterstitialAd();
-            setShowAdLoading(false);
+          text: 'Restart',
+          onPress: () => {
             restartLevel();
             setShowMenu(false);
           },
@@ -193,12 +197,8 @@ export default function GameScreen() {
     );
   };
 
-  // Handle shuffle with ad
-  const handleShuffle = async () => {
-    setAdMessage('Loading ad...');
-    setShowAdLoading(true);
-    await adManager.showInterstitialAd();
-    setShowAdLoading(false);
+  // Handle shuffle - NO AD (free action)
+  const handleShuffle = () => {
     shuffleLetters();
   };
 

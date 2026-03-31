@@ -13,7 +13,7 @@ export const LevelCompleteModal: React.FC = () => {
   if (!showLevelComplete || !currentLevel) return null;
 
   const handleContinue = async () => {
-    // Show interstitial ad before continuing
+    // Show interstitial ad between levels (Play Store compliant)
     setShowingAd(true);
     await adManager.showInterstitialAd();
     setShowingAd(false);
@@ -71,8 +71,7 @@ export const LevelCompleteModal: React.FC = () => {
               
               {/* Continue button */}
               <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-                <Ionicons name="play" size={16} color="#fff" />
-                <Text style={styles.continueButtonText}>Watch Ad & Continue</Text>
+                <Text style={styles.continueButtonText}>Continue</Text>
                 <Ionicons name="arrow-forward" size={20} color="#fff" />
               </TouchableOpacity>
             </>

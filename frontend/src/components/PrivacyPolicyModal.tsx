@@ -20,7 +20,7 @@ interface PrivacyPolicyModalProps {
 }
 
 export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible, onClose }) => {
-  const lastUpdated = 'March 26, 2025';
+  const lastUpdated = 'March 28, 2025';
   const appName = 'Words of Wonders';
   const contactEmail = 'privacy@wordsofwonders.app';
 
@@ -52,8 +52,24 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
             {/* Introduction */}
             <Text style={styles.sectionTitle}>Welcome to {appName}</Text>
             <Text style={styles.paragraph}>
-              This Privacy Policy explains how we collect, use, and protect your information when you use our word puzzle game. We are committed to protecting your privacy, especially for our younger players.
+              This Privacy Policy explains how we collect, use, and protect your information when you use our word puzzle game. We are committed to protecting your privacy and complying with applicable data protection laws including GDPR, CCPA, and COPPA.
             </Text>
+
+            {/* GDPR Compliance */}
+            <View style={styles.importantSection}>
+              <Ionicons name="globe" size={20} color="#3498db" />
+              <Text style={styles.importantTitleBlue}>GDPR Compliance (EU Users)</Text>
+            </View>
+            <Text style={styles.paragraph}>
+              If you are located in the European Economic Area (EEA), you have specific rights under the General Data Protection Regulation (GDPR):
+            </Text>
+            <Text style={styles.bulletPoint}>• Right to access your personal data</Text>
+            <Text style={styles.bulletPoint}>• Right to rectification of inaccurate data</Text>
+            <Text style={styles.bulletPoint}>• Right to erasure ("right to be forgotten")</Text>
+            <Text style={styles.bulletPoint}>• Right to restrict processing</Text>
+            <Text style={styles.bulletPoint}>• Right to data portability</Text>
+            <Text style={styles.bulletPoint}>• Right to object to processing</Text>
+            <Text style={styles.bulletPoint}>• Right to withdraw consent at any time</Text>
 
             {/* Children's Privacy - COPPA */}
             <View style={styles.importantSection}>
@@ -83,6 +99,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
             <Text style={styles.subTitle}>Device Information</Text>
             <Text style={styles.bulletPoint}>• Anonymous device identifier for game progress</Text>
             <Text style={styles.bulletPoint}>• Device type and operating system</Text>
+            <Text style={styles.bulletPoint}>• IP address (for analytics and fraud prevention)</Text>
 
             {/* How We Use Information */}
             <Text style={styles.sectionTitle}>How We Use Your Information</Text>
@@ -91,15 +108,43 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
             <Text style={styles.bulletPoint}>• To show age-appropriate advertisements</Text>
             <Text style={styles.bulletPoint}>• To improve our game and fix issues</Text>
             <Text style={styles.bulletPoint}>• To send game-related notifications (with your permission)</Text>
+            <Text style={styles.bulletPoint}>• To prevent fraud and ensure security</Text>
 
-            {/* Advertising */}
-            <Text style={styles.sectionTitle}>Advertising</Text>
+            {/* Advertising - AdMob + Unity Ads */}
+            <View style={styles.importantSection}>
+              <Ionicons name="megaphone" size={20} color="#9b59b6" />
+              <Text style={styles.importantTitlePurple}>Advertising Partners</Text>
+            </View>
             <Text style={styles.paragraph}>
-              We show advertisements to support our free game. We use Google AdMob for advertising.
+              We display advertisements to support our free game. We work with the following advertising partners:
             </Text>
-            <Text style={styles.bulletPoint}>• Ads are age-appropriate (rated G for General audiences)</Text>
-            <Text style={styles.bulletPoint}>• We do not use behavioral targeting for children</Text>
-            <Text style={styles.bulletPoint}>• You can watch optional rewarded ads for in-game rewards</Text>
+            
+            <Text style={styles.subTitle}>Google AdMob</Text>
+            <Text style={styles.paragraph}>
+              We use Google AdMob to display advertisements. AdMob may collect and use data in accordance with Google's Privacy Policy.
+            </Text>
+            <Text style={styles.bulletPoint}>• Privacy Policy: https://policies.google.com/privacy</Text>
+            <Text style={styles.bulletPoint}>• Opt-out: https://adssettings.google.com</Text>
+
+            <Text style={styles.subTitle}>Unity Ads</Text>
+            <Text style={styles.paragraph}>
+              We use Unity Ads to display video advertisements. Unity may collect and use data in accordance with Unity's Privacy Policy.
+            </Text>
+            <Text style={styles.bulletPoint}>• Privacy Policy: https://unity.com/legal/privacy-policy</Text>
+            <Text style={styles.bulletPoint}>• Opt-out available in device settings</Text>
+
+            <Text style={styles.subTitle}>Ad Types Used</Text>
+            <Text style={styles.bulletPoint}>• Rewarded Video Ads - Optional, you choose to watch for rewards</Text>
+            <Text style={styles.bulletPoint}>• Interstitial Ads - Shown between levels only</Text>
+            <Text style={styles.paragraph}>
+              We do NOT show ads that cover buttons, trick users into clicking, or appear every few seconds. All ads respect user experience.
+            </Text>
+
+            <Text style={styles.subTitle}>Data Collected by Ad Partners</Text>
+            <Text style={styles.bulletPoint}>• Device identifiers (Advertising ID)</Text>
+            <Text style={styles.bulletPoint}>• IP address</Text>
+            <Text style={styles.bulletPoint}>• Device and app information</Text>
+            <Text style={styles.bulletPoint}>• Ad interaction data</Text>
 
             {/* Data Sharing */}
             <Text style={styles.sectionTitle}>Data Sharing</Text>
@@ -107,27 +152,51 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
               We do not sell your personal information. We may share data with:
             </Text>
             <Text style={styles.bulletPoint}>• Service providers who help operate our game</Text>
-            <Text style={styles.bulletPoint}>• Advertising partners (limited, non-personal data)</Text>
+            <Text style={styles.bulletPoint}>• Advertising partners (Google AdMob, Unity Ads) - limited data for ad serving</Text>
+            <Text style={styles.bulletPoint}>• Analytics providers to improve our service</Text>
             <Text style={styles.bulletPoint}>• Legal authorities if required by law</Text>
+
+            {/* Data Retention */}
+            <Text style={styles.sectionTitle}>Data Retention</Text>
+            <Text style={styles.paragraph}>
+              We retain your data for as long as necessary to provide our services:
+            </Text>
+            <Text style={styles.bulletPoint}>• Game progress: Until you delete your account or request deletion</Text>
+            <Text style={styles.bulletPoint}>• Account data: Until account deletion</Text>
+            <Text style={styles.bulletPoint}>• Analytics data: Up to 26 months</Text>
+            <Text style={styles.bulletPoint}>• Ad interaction data: As per our partners' policies</Text>
 
             {/* Data Security */}
             <Text style={styles.sectionTitle}>Data Security</Text>
             <Text style={styles.paragraph}>
-              We implement appropriate security measures to protect your information. Game data is stored securely on our servers. However, no method of transmission over the internet is 100% secure.
+              We implement appropriate security measures to protect your information:
             </Text>
+            <Text style={styles.bulletPoint}>• Encryption in transit (HTTPS/TLS)</Text>
+            <Text style={styles.bulletPoint}>• Secure data storage</Text>
+            <Text style={styles.bulletPoint}>• Regular security audits</Text>
+            <Text style={styles.bulletPoint}>• Access controls and authentication</Text>
 
             {/* Your Rights */}
             <Text style={styles.sectionTitle}>Your Rights</Text>
-            <Text style={styles.paragraph}>You have the right to:</Text>
+            <Text style={styles.paragraph}>Depending on your location, you have the right to:</Text>
             <Text style={styles.bulletPoint}>• Access your personal data</Text>
+            <Text style={styles.bulletPoint}>• Request correction of inaccurate data</Text>
             <Text style={styles.bulletPoint}>• Request deletion of your data</Text>
             <Text style={styles.bulletPoint}>• Opt-out of personalized advertising</Text>
+            <Text style={styles.bulletPoint}>• Data portability (receive your data in a portable format)</Text>
             <Text style={styles.bulletPoint}>• Withdraw consent at any time</Text>
+            <Text style={styles.bulletPoint}>• Lodge a complaint with a supervisory authority (EU users)</Text>
+
+            {/* International Transfers */}
+            <Text style={styles.sectionTitle}>International Data Transfers</Text>
+            <Text style={styles.paragraph}>
+              Your data may be transferred to and processed in countries outside your jurisdiction. We ensure appropriate safeguards are in place, including Standard Contractual Clauses (SCCs) for EU data transfers.
+            </Text>
 
             {/* Contact */}
             <Text style={styles.sectionTitle}>Contact Us</Text>
             <Text style={styles.paragraph}>
-              If you have questions about this Privacy Policy or wish to exercise your rights, please contact us:
+              If you have questions about this Privacy Policy, wish to exercise your rights, or have concerns about our data practices, please contact us:
             </Text>
             <TouchableOpacity 
               style={styles.contactButton}
@@ -140,7 +209,7 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
             {/* Changes */}
             <Text style={styles.sectionTitle}>Changes to This Policy</Text>
             <Text style={styles.paragraph}>
-              We may update this Privacy Policy from time to time. We will notify you of any significant changes through the app or by other means.
+              We may update this Privacy Policy from time to time. We will notify you of any significant changes through the app or by other means. Continued use of the app after changes constitutes acceptance of the updated policy.
             </Text>
 
             <View style={styles.bottomPadding} />
@@ -244,6 +313,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#e74c3c',
+    flex: 1,
+  },
+  importantTitleBlue: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#3498db',
+    flex: 1,
+  },
+  importantTitlePurple: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#9b59b6',
     flex: 1,
   },
   contactButton: {
