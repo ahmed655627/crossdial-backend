@@ -1,18 +1,18 @@
 import { Platform } from 'react-native';
-import { unityAdsManager, UNITY_ADS_CONFIG } from './unityAdsManager';
 
 // ============================================
-// AD MANAGER - Supports Unity Ads + AdMob
-// Priority: Unity Ads first, AdMob as fallback
+// AD MANAGER - Google AdMob Only
+// Unity Ads removed due to Gradle compatibility issues
 // ============================================
 
-// AdMob Configuration (fallback)
+// AdMob Configuration - Your Real IDs
 const ADMOB_IDS = {
   REWARDED: 'ca-app-pub-9950221390211328/2786348652',
   INTERSTITIAL: 'ca-app-pub-9950221390211328/2786348652',
+  BANNER: 'ca-app-pub-9950221390211328/2786348652',
 };
 
-// Test Ad IDs for AdMob
+// Test Ad IDs for development
 const TEST_AD_IDS = {
   REWARDED: Platform.select({
     ios: 'ca-app-pub-3940256099942544/1712485313',
@@ -26,15 +26,20 @@ const TEST_AD_IDS = {
   }),
 };
 
+// Use production IDs
+const IS_PRODUCTION = true;
+
+export const AD_UNIT_IDS = {
+  REWARDED: IS_PRODUCTION ? ADMOB_IDS.REWARDED : TEST_AD_IDS.REWARDED,
+  INTERSTITIAL: IS_PRODUCTION ? ADMOB_IDS.INTERSTITIAL : TEST_AD_IDS.INTERSTITIAL,
+};
+
 // COPPA Configuration
 export const AD_CONFIG = {
   tagForChildDirectedTreatment: true,
   tagForUnderAgeOfConsent: true,
   maxAdContentRating: 'G',
 };
-
-// Ad network preference
-type AdNetwork = 'unity' | 'admob';
 
 // Dynamically import AdMob
 let MobileAds: any = null;
@@ -62,74 +67,75 @@ const initAdMobModule = async () => {
 
 class AdManager {
   private isInitialized: boolean = false;
-  private unityReady: boolean = false;
   private admobReady: boolean = false;
   private admobModuleLoaded: boolean = false;
   private rewardedAd: any = null;
   private interstitialAd: any = null;
   private lastAdTime: number = 0;
-  private minAdInterval: number = 30000;
-  private preferredNetwork: AdNetwork = 'unity'; // Unity Ads first
+  private minAdInterval: number = 30000; // 30 seconds
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
-    console.log('Initializing Ad Manager...');
+    console.log('Initializing Ad Manager (AdMob only)...');
 
     try {
-      // Initialize Unity Ads first (preferred)
-      this.unityReady = await unityAdsManager.initialize();
-      console.log('Unity Ads ready:', this.unityReady);
-
-      // Initialize AdMob as fallback
       if (Platform.OS !== 'web') {
         this.admobModuleLoaded = await initAdMobModule();
         
         if (this.admobModuleLoaded && MobileAds) {
           await MobileAds().initialize();
-          await this.loadAdMobAds();
+          await this.loadAds();
           this.admobReady = true;
-          console.log('AdMob ready:', this.admobReady);
+          console.log('AdMob initialized successfully');
         }
       }
 
       this.isInitialized = true;
-      console.log('Ad Manager initialized - Unity:', this.unityReady, 'AdMob:', this.admobReady);
+      console.log('Ad Manager initialized - AdMob ready:', this.admobReady);
     } catch (error) {
       console.error('Ad Manager initialization error:', error);
       this.isInitialized = true;
     }
   }
 
-  private async loadAdMobAds(): Promise<void> {
+  private async loadAds(): Promise<void> {
     if (!this.admobModuleLoaded || !RewardedAd) return;
 
     try {
       // Load Rewarded Ad
-      this.rewardedAd = RewardedAd.createForAdRequest(ADMOB_IDS.REWARDED, {
+      this.rewardedAd = RewardedAd.createForAdRequest(AD_UNIT_IDS.REWARDED, {
         requestNonPersonalizedAdsOnly: true,
         keywords: ['game', 'puzzle', 'word'],
       });
       
       this.rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
-        console.log('AdMob rewarded ad loaded');
+        console.log('Rewarded ad loaded');
+      });
+      
+      this.rewardedAd.addAdEventListener(AdEventType.ERROR, (error: any) => {
+        console.log('Rewarded ad error:', error);
       });
       
       await this.rewardedAd.load();
 
       // Load Interstitial Ad
-      this.interstitialAd = InterstitialAd.createForAdRequest(ADMOB_IDS.INTERSTITIAL, {
+      this.interstitialAd = InterstitialAd.createForAdRequest(AD_UNIT_IDS.INTERSTITIAL, {
         requestNonPersonalizedAdsOnly: true,
         keywords: ['game', 'puzzle', 'word'],
       });
       
       this.interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-        console.log('AdMob interstitial ad loaded');
+        console.log('Interstitial ad loaded');
+      });
+      
+      this.interstitialAd.addAdEventListener(AdEventType.ERROR, (error: any) => {
+        console.log('Interstitial ad error:', error);
       });
       
       await this.interstitialAd.load();
     } catch (error) {
-      console.log('Failed to load AdMob ads:', error);
+      console.log('Failed to load ads:', error);
     }
   }
 
@@ -142,7 +148,7 @@ class AdManager {
     this.lastAdTime = Date.now();
   }
 
-  // Show rewarded ad - tries Unity first, then AdMob
+  // Show rewarded ad
   async showRewardedAd(): Promise<boolean> {
     // On web, simulate
     if (Platform.OS === 'web') {
@@ -155,20 +161,7 @@ class AdManager {
       });
     }
 
-    // Try Unity Ads first
-    if (this.unityReady) {
-      try {
-        const result = await unityAdsManager.showRewardedAd();
-        if (result) {
-          this.markAdShown();
-          return true;
-        }
-      } catch (error) {
-        console.log('Unity Ad failed, trying AdMob:', error);
-      }
-    }
-
-    // Fallback to AdMob
+    // Use AdMob
     if (this.admobReady && this.rewardedAd) {
       return new Promise(async (resolve) => {
         try {
@@ -185,16 +178,16 @@ class AdManager {
             () => {
               rewardListener();
               closeListener();
-              this.loadAdMobAds(); // Reload for next time
+              this.loadAds(); // Reload for next time
             }
           );
 
           await this.rewardedAd.show();
         } catch (error) {
-          console.log('AdMob rewarded ad error:', error);
+          console.log('Rewarded ad error:', error);
           this.markAdShown();
-          resolve(true);
-          this.loadAdMobAds();
+          resolve(true); // Give reward anyway on error
+          this.loadAds();
         }
       });
     }
@@ -216,20 +209,6 @@ class AdManager {
       });
     }
 
-    // Try Unity first
-    if (this.unityReady) {
-      try {
-        const result = await unityAdsManager.showInterstitialAd();
-        if (result) {
-          this.markAdShown();
-          return true;
-        }
-      } catch (error) {
-        console.log('Unity interstitial failed:', error);
-      }
-    }
-
-    // Fallback to AdMob
     if (this.admobReady && this.interstitialAd) {
       return new Promise(async (resolve) => {
         try {
@@ -239,16 +218,16 @@ class AdManager {
               this.markAdShown();
               closeListener();
               resolve(true);
-              this.loadAdMobAds();
+              this.loadAds();
             }
           );
 
           await this.interstitialAd.show();
         } catch (error) {
-          console.log('AdMob interstitial error:', error);
+          console.log('Interstitial error:', error);
           this.markAdShown();
           resolve(true);
-          this.loadAdMobAds();
+          this.loadAds();
         }
       });
     }
@@ -257,30 +236,19 @@ class AdManager {
     return true;
   }
 
-  // Set preferred ad network
-  setPreferredNetwork(network: AdNetwork): void {
-    this.preferredNetwork = network;
-  }
-
-  // Check which networks are available
-  getAvailableNetworks(): { unity: boolean; admob: boolean } {
-    return {
-      unity: this.unityReady,
-      admob: this.admobReady,
-    };
-  }
-
   // For consent
   setConsentGiven(consent: boolean): void {
-    // Both networks respect this
+    // AdMob respects this
   }
 
   hasConsent(): boolean {
     return true; // Mandatory ads
   }
+
+  // Check if ads are ready
+  isReady(): boolean {
+    return this.admobReady;
+  }
 }
 
 export const adManager = new AdManager();
-
-// Export Unity config for reference
-export const UNITY_CONFIG = UNITY_ADS_CONFIG;
