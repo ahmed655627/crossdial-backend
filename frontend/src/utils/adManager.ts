@@ -8,7 +8,7 @@ import { Platform } from 'react-native';
 // AdMob Configuration - Your Real IDs
 const ADMOB_IDS = {
   REWARDED: 'ca-app-pub-9950221390211328/2786348652',
-  INTERSTITIAL: 'ca-app-pub-9950221390211328/2786348652',
+  INTERSTITIAL: 'ca-app-pub-9950221390211328/8095491367',  // Rewarded Interstitial
   BANNER: 'ca-app-pub-9950221390211328/2786348652',
 };
 
