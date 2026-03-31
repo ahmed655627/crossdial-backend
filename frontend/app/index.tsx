@@ -80,6 +80,17 @@ export default function GameScreen() {
     if (consentChecked) {
       initialize();
       
+      // Initialize ad manager
+      const initAds = async () => {
+        try {
+          await adManager.initialize();
+          console.log('AdManager initialized');
+        } catch (error) {
+          console.log('AdManager init error:', error);
+        }
+      };
+      initAds();
+      
       // Register for push notifications
       const setupNotifications = async () => {
         try {
