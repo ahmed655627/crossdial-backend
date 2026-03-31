@@ -6,17 +6,26 @@ import { adManager } from '../utils/adManager';
 
 const { width, height } = Dimensions.get('window');
 
+// Show ads every N levels (better user experience)
+const AD_FREQUENCY = 3;
+
 export const LevelCompleteModal: React.FC = () => {
   const { showLevelComplete, currentLevel, progress, completeLevel, bonusWordsFound } = useGameStore();
   const [showingAd, setShowingAd] = useState(false);
   
   if (!showLevelComplete || !currentLevel) return null;
 
+  // Check if we should show an ad (every 3 levels)
+  const completedLevels = progress?.completed_levels?.length || 0;
+  const shouldShowAd = (completedLevels + 1) % AD_FREQUENCY === 0;
+
   const handleContinue = async () => {
-    // Show interstitial ad between levels (Play Store compliant)
-    setShowingAd(true);
-    await adManager.showInterstitialAd();
-    setShowingAd(false);
+    if (shouldShowAd) {
+      // Show interstitial ad every 3 levels (Play Store compliant)
+      setShowingAd(true);
+      await adManager.showInterstitialAd();
+      setShowingAd(false);
+    }
     completeLevel();
   };
   

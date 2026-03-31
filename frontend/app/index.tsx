@@ -26,6 +26,8 @@ import { LeaderboardModal } from '../src/components/LeaderboardModal';
 import { AdLoadingModal } from '../src/components/AdLoadingModal';
 import { PrivacyPolicyModal } from '../src/components/PrivacyPolicyModal';
 import { ConsentModal } from '../src/components/ConsentModal';
+import { HomeScreen } from '../src/components/HomeScreen';
+import { AchievementsModal } from '../src/components/AchievementsModal';
 import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
@@ -63,6 +65,9 @@ export default function GameScreen() {
   const [showPrivacyPolicy, setShowPrivacyPolicy] = useState(false);
   const [showConsentModal, setShowConsentModal] = useState(false);
   const [consentChecked, setConsentChecked] = useState(false);
+  const [showHomeScreen, setShowHomeScreen] = useState(true);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [levelsCompletedSinceAd, setLevelsCompletedSinceAd] = useState(0);
 
   // Check for privacy consent on first load
   useEffect(() => {
@@ -235,6 +240,43 @@ export default function GameScreen() {
   const progressPercent = (foundWordsCount / targetWordsCount) * 100;
   const canSpin = canSpinWheel();
 
+  // Show Home Screen if user hasn't started playing
+  if (showHomeScreen) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <HomeScreen
+          onPlay={() => setShowHomeScreen(false)}
+          onDailyRewards={() => setShowDailyWheel(true)}
+          onLeaderboard={() => setShowLeaderboard(true)}
+          onSettings={() => setShowPrivacyPolicy(true)}
+          onAchievements={() => setShowAchievements(true)}
+        />
+        
+        {/* Modals accessible from Home */}
+        <DailyRewardsWheel
+          visible={showDailyWheel}
+          onClose={() => setShowDailyWheel(false)}
+        />
+        <LeaderboardModal
+          visible={showLeaderboard}
+          onClose={() => setShowLeaderboard(false)}
+        />
+        <PrivacyPolicyModal
+          visible={showPrivacyPolicy}
+          onClose={() => setShowPrivacyPolicy(false)}
+        />
+        <AchievementsModal
+          visible={showAchievements}
+          onClose={() => setShowAchievements(false)}
+        />
+        <ConsentModal
+          visible={showConsentModal}
+          onAccept={handleConsentAccept}
+        />
+      </GestureHandlerRootView>
+    );
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaView style={styles.container}>
@@ -246,6 +288,14 @@ export default function GameScreen() {
 
         {/* Header */}
         <View style={styles.header}>
+          {/* Home Button */}
+          <TouchableOpacity
+            style={styles.homeButton}
+            onPress={() => setShowHomeScreen(true)}
+          >
+            <Ionicons name="home" size={22} color="#fff" />
+          </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.levelButton}
             onPress={() => setShowLevelSelect(true)}
@@ -255,6 +305,14 @@ export default function GameScreen() {
           </TouchableOpacity>
 
           <View style={styles.headerRight}>
+            {/* Achievements Button */}
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => setShowAchievements(true)}
+            >
+              <Ionicons name="medal" size={22} color="#f39c12" />
+            </TouchableOpacity>
+
             {/* Leaderboard Button */}
             <TouchableOpacity
               style={styles.iconButton}
@@ -445,6 +503,10 @@ export default function GameScreen() {
           visible={showLeaderboard}
           onClose={() => setShowLeaderboard(false)}
         />
+        <AchievementsModal
+          visible={showAchievements}
+          onClose={() => setShowAchievements(false)}
+        />
         <AdLoadingModal visible={showAdLoading} message={adMessage} />
         <PrivacyPolicyModal
           visible={showPrivacyPolicy}
@@ -503,6 +565,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingTop: Platform.OS === 'android' ? 35 : 5,
     paddingBottom: 8,
+  },
+  homeButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 8,
   },
   levelButton: {
     flexDirection: 'row',

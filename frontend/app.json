@@ -1,16 +1,16 @@
 {
   "expo": {
-    "name": "Words of Wonders",
-    "slug": "words-of-wonders",
+    "name": "Wonder Words Quest",
+    "slug": "wonder-words-quest",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "wordsofwonders",
+    "scheme": "wonderwordsquest",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.wordsofwonders.app",
+      "bundleIdentifier": "com.wonderwordsquest.app",
       "buildNumber": "1",
       "infoPlist": {
         "NSUserTrackingUsageDescription": "This helps us show relevant ads",
@@ -92,7 +92,7 @@
       }
     },
     "android": {
-      "package": "com.wordsofwonders.app",
+      "package": "com.wonderwordsquest.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
