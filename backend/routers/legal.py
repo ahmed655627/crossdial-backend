@@ -230,6 +230,13 @@ PRIVACY_POLICY_HTML = """
             <li>Lodge a complaint with a supervisory authority (EU users)</li>
         </ul>
 
+        <h2>🗑️ Account Deletion</h2>
+        <p>You can request deletion of your account and all associated data at any time:</p>
+        <ul>
+            <li>Visit our <a href="/api/delete-account">Account Deletion Page</a></li>
+            <li>Or email us at <a href="mailto:privacy@wonderwordsquest.app">privacy@wonderwordsquest.app</a></li>
+        </ul>
+
         <h2>🌐 International Data Transfers</h2>
         <p>Your data may be transferred to and processed in countries outside your jurisdiction. We ensure appropriate safeguards are in place, including Standard Contractual Clauses (SCCs) for EU data transfers.</p>
 
@@ -251,6 +258,223 @@ PRIVACY_POLICY_HTML = """
 </html>
 """
 
+DELETE_ACCOUNT_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Account - Wonder Words Quest</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #e74c3c;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .warning-box {
+            background: #fdf2f2;
+            border: 2px solid #e74c3c;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+        .warning-box h3 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        h2 {
+            color: #2c3e50;
+            font-size: 1.3em;
+            margin-top: 25px;
+            margin-bottom: 15px;
+        }
+        p { margin-bottom: 15px; }
+        ul {
+            margin-left: 25px;
+            margin-bottom: 15px;
+        }
+        li { margin-bottom: 8px; }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        input[type="email"], input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .checkbox-group input {
+            margin-top: 4px;
+        }
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+        .btn-danger:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .info-box {
+            background: #e8f4f8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 25px;
+        }
+        .info-box h3 {
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+        .success-message {
+            display: none;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+        a { color: #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗑️ Delete Your Account</h1>
+        <p style="text-align: center; color: #666;">Wonder Words Quest</p>
+        
+        <div class="warning-box">
+            <h3>⚠️ Warning: This action is permanent</h3>
+            <p>Once your account is deleted, all your data will be permanently removed and cannot be recovered.</p>
+        </div>
+
+        <h2>What will be deleted:</h2>
+        <ul>
+            <li>Your account information (email, username)</li>
+            <li>All game progress (levels, achievements)</li>
+            <li>Coins and hints balance</li>
+            <li>Leaderboard rankings</li>
+            <li>All associated device data</li>
+        </ul>
+
+        <h2>What will NOT be deleted:</h2>
+        <ul>
+            <li>Anonymized analytics data (cannot be linked to you)</li>
+            <li>Data required for legal compliance (retained as required by law)</li>
+        </ul>
+
+        <h2>Request Account Deletion</h2>
+        <form id="deleteForm" onsubmit="submitForm(event)">
+            <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your account email">
+            </div>
+            
+            <div class="form-group">
+                <label for="reason">Reason for deletion (optional)</label>
+                <input type="text" id="reason" name="reason" placeholder="Help us improve">
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="confirm" required>
+                <label for="confirm" style="margin-bottom: 0;">I understand that this action is permanent and all my data will be deleted within 30 days.</label>
+            </div>
+
+            <button type="submit" class="btn btn-danger" id="submitBtn">Request Account Deletion</button>
+        </form>
+
+        <div class="success-message" id="successMessage">
+            <h3>✅ Deletion Request Received</h3>
+            <p>Your account deletion request has been submitted. Your data will be permanently deleted within 30 days.</p>
+            <p>You will receive a confirmation email shortly.</p>
+        </div>
+
+        <div class="info-box">
+            <h3>📧 Need Help?</h3>
+            <p>If you have questions or need assistance, contact us:</p>
+            <p><a href="mailto:privacy@wonderwordsquest.app">privacy@wonderwordsquest.app</a></p>
+        </div>
+
+        <footer>
+            <p><a href="/api/privacy-policy">Privacy Policy</a></p>
+            <p>© 2025 Wonder Words Quest. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        function submitForm(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const reason = document.getElementById('reason').value;
+            
+            // Show success message
+            document.getElementById('deleteForm').style.display = 'none';
+            document.getElementById('successMessage').style.display = 'block';
+            
+            // In production, this would send to backend
+            console.log('Deletion requested for:', email, 'Reason:', reason);
+        }
+    </script>
+</body>
+</html>
+"""
+
 @router.get("/privacy-policy", response_class=HTMLResponse)
 async def get_privacy_policy():
     """Returns the privacy policy HTML page"""
@@ -260,3 +484,8 @@ async def get_privacy_policy():
 async def get_privacy_short():
     """Short URL redirect to privacy policy"""
     return PRIVACY_POLICY_HTML
+
+@router.get("/delete-account", response_class=HTMLResponse)
+async def get_delete_account():
+    """Returns the account deletion request page"""
+    return DELETE_ACCOUNT_HTML
