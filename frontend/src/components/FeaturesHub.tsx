@@ -26,15 +26,18 @@ interface FeatureItem {
 
 const FEATURES: FeatureItem[] = [
   // Rewards Category
+  { id: 'daily_login', name: 'Daily Login', icon: '📅', ionicon: 'calendar', color: '#27ae60', description: '7-day reward calendar', category: 'rewards' },
   { id: 'mystery_box', name: 'Mystery Box', icon: '📦', ionicon: 'cube', color: '#9b59b6', description: 'Open surprise rewards!', category: 'rewards' },
   { id: 'scratch_card', name: 'Scratch Card', icon: '🎫', ionicon: 'ticket', color: '#e74c3c', description: 'Scratch to win prizes', category: 'rewards' },
   { id: 'piggy_bank', name: 'Piggy Bank', icon: '🐷', ionicon: 'wallet', color: '#e91e63', description: 'Save coins for bonus', category: 'rewards' },
+  { id: 'free_hints', name: 'Free Hints', icon: '💡', ionicon: 'bulb', color: '#f39c12', description: 'Watch ad for hints', category: 'rewards' },
   
   // Gameplay Category
   { id: 'power_ups', name: 'Power-Ups', icon: '⚡', ionicon: 'flash', color: '#f39c12', description: 'Boost your gameplay', category: 'gameplay' },
   { id: 'combos', name: 'Combos', icon: '🔥', ionicon: 'flame', color: '#e74c3c', description: 'Chain words for bonus', category: 'gameplay' },
   { id: 'game_modes', name: 'Game Modes', icon: '🎮', ionicon: 'game-controller', color: '#3498db', description: 'Different ways to play', category: 'gameplay' },
   { id: 'time_challenge', name: 'Time Challenge', icon: '⏱️', ionicon: 'timer', color: '#e67e22', description: 'Race against time', category: 'gameplay' },
+  { id: 'level_skip', name: 'Skip Level', icon: '🚀', ionicon: 'rocket', color: '#e74c3c', description: 'Skip hard levels', category: 'gameplay' },
   
   // Collection Category
   { id: 'postcards', name: 'Postcards', icon: '🏛️', ionicon: 'images', color: '#1abc9c', description: 'Collect wonder cards', category: 'collection' },
@@ -48,6 +51,7 @@ const FEATURES: FeatureItem[] = [
   { id: 'celebrations', name: 'Celebrations', icon: '🎉', ionicon: 'sparkles', color: '#f1c40f', description: 'Victory effects', category: 'extras' },
   { id: 'mascot', name: 'Mascot', icon: '🦉', ionicon: 'paw', color: '#8e44ad', description: 'Your game buddy', category: 'extras' },
   { id: 'seasonal', name: 'Events', icon: '🎄', ionicon: 'calendar', color: '#27ae60', description: 'Seasonal content', category: 'extras' },
+  { id: 'themes', name: 'Themes', icon: '🎨', ionicon: 'color-palette', color: '#ec4899', description: 'Change app look', category: 'extras' },
 ];
 
 const CATEGORIES = [

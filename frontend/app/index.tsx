@@ -46,6 +46,8 @@ import { MusicThemeModal as MusicThemesModal } from '../src/components/MusicThem
 import { WonderFactModal as WonderFactsModal } from '../src/components/WonderFacts';
 import { WordPacksModal } from '../src/components/WordPacks';
 import { SeasonalEventModal as SeasonalEventsModal } from '../src/components/SeasonalEvents';
+import { DailyLoginCalendar } from '../src/components/DailyLoginCalendar';
+import { LevelSkipModal, FreeHintsModal } from '../src/components/AdRewardModals';
 import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
@@ -109,6 +111,13 @@ export default function GameScreen() {
   const [showSeasonalEvents, setShowSeasonalEvents] = useState(false);
   const [mysteryBoxesAvailable, setMysteryBoxesAvailable] = useState(3);
   const [canScratch, setCanScratch] = useState(true);
+  
+  // New feature states
+  const [showDailyLogin, setShowDailyLogin] = useState(false);
+  const [showLevelSkip, setShowLevelSkip] = useState(false);
+  const [showFreeHints, setShowFreeHints] = useState(false);
+  const [loginStreak, setLoginStreak] = useState(0);
+  const [lastLoginDate, setLastLoginDate] = useState<string | null>(null);
 
   // Check for privacy consent on first load
   useEffect(() => {
@@ -379,6 +388,18 @@ export default function GameScreen() {
       case 'seasonal':
         setShowSeasonalEvents(true);
         break;
+      case 'daily_login':
+        setShowDailyLogin(true);
+        break;
+      case 'free_hints':
+        setShowFreeHints(true);
+        break;
+      case 'level_skip':
+        setShowLevelSkip(true);
+        break;
+      case 'themes':
+        setShowThemes(true);
+        break;
       case 'combos':
       case 'time_challenge':
       case 'celebrations':
@@ -560,6 +581,43 @@ export default function GameScreen() {
           visible={showSeasonalEvents}
           onClose={() => setShowSeasonalEvents(false)}
           currentEvent={null}
+        />
+        
+        {/* New Ad-integrated Features */}
+        <DailyLoginCalendar
+          visible={showDailyLogin}
+          onClose={() => setShowDailyLogin(false)}
+          onClaim={(day, doubled) => {
+            const baseReward = day * 50;
+            const finalReward = doubled ? baseReward * 2 : baseReward;
+            Alert.alert('Reward!', `You claimed ${finalReward} coins!`);
+            setLoginStreak(day);
+            setLastLoginDate(new Date().toDateString());
+          }}
+          onWatchAd={() => adManager.showVideoRewardedAd()}
+          currentStreak={loginStreak}
+          lastClaimDate={lastLoginDate}
+        />
+        <LevelSkipModal
+          visible={showLevelSkip}
+          onClose={() => setShowLevelSkip(false)}
+          onSkip={() => {
+            setShowLevelSkip(false);
+            Alert.alert('Skipped!', 'Moving to next level!');
+          }}
+          onWatchAd={() => adManager.showVideoRewardedAd()}
+          currentLevel={progress?.current_level || 1}
+          skipCost={100}
+          coins={progress?.coins || 0}
+        />
+        <FreeHintsModal
+          visible={showFreeHints}
+          onClose={() => setShowFreeHints(false)}
+          onGetHints={(amount) => {
+            Alert.alert('Hints Added!', `You got ${amount} free hints!`);
+          }}
+          onWatchAd={() => adManager.showVideoRewardedAd()}
+          currentHints={progress?.hints_remaining || 0}
         />
         
         <ConsentModal
