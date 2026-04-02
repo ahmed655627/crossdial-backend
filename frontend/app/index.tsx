@@ -28,6 +28,10 @@ import { PrivacyPolicyModal } from '../src/components/PrivacyPolicyModal';
 import { ConsentModal } from '../src/components/ConsentModal';
 import { HomeScreen } from '../src/components/HomeScreen';
 import { AchievementsModal } from '../src/components/AchievementsModal';
+import { DailyChallengeModal } from '../src/components/DailyChallengeModal';
+import { WordOfDayModal } from '../src/components/WordOfDayModal';
+import { StatsModal } from '../src/components/StatsModal';
+import { ThemeSelectorModal, Theme, THEMES } from '../src/components/ThemeSelectorModal';
 import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
@@ -67,6 +71,12 @@ export default function GameScreen() {
   const [consentChecked, setConsentChecked] = useState(false);
   const [showHomeScreen, setShowHomeScreen] = useState(true);
   const [showAchievements, setShowAchievements] = useState(false);
+  const [showDailyChallenge, setShowDailyChallenge] = useState(false);
+  const [showWordOfDay, setShowWordOfDay] = useState(false);
+  const [showStats, setShowStats] = useState(false);
+  const [showThemes, setShowThemes] = useState(false);
+  const [currentTheme, setCurrentTheme] = useState('default');
+  const [unlockedThemes, setUnlockedThemes] = useState(['default', 'ocean', 'forest']);
   const [levelsCompletedSinceAd, setLevelsCompletedSinceAd] = useState(0);
 
   // Check for privacy consent on first load
@@ -240,6 +250,51 @@ export default function GameScreen() {
   const progressPercent = (foundWordsCount / targetWordsCount) * 100;
   const canSpin = canSpinWheel();
 
+  // Helper function to get daily challenge data
+  const getDailyChallengeData = () => {
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('en-US', { 
+      weekday: 'long', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+    const difficulties = ['Easy', 'Medium', 'Hard'];
+    const dayOfWeek = today.getDay();
+    return {
+      date: dateStr,
+      bonus: 50 + (dayOfWeek * 10),
+      difficulty: difficulties[dayOfWeek % 3],
+      completed: false,
+      streak: progress?.daily_streak || 1,
+    };
+  };
+
+  // Helper function to get stats
+  const getStats = () => ({
+    totalWordsFound: progress?.total_words_found || 0,
+    totalLevelsCompleted: progress?.completed_levels?.length || 0,
+    totalCoinsEarned: progress?.total_coins_earned || 0,
+    totalTimePlayed: progress?.total_time_played || 0,
+    currentStreak: progress?.daily_streak || 0,
+    bestStreak: progress?.best_streak || 0,
+    hintsUsed: progress?.hints_used || 0,
+    perfectLevels: progress?.perfect_levels || 0,
+  });
+
+  // Handle theme selection
+  const handleSelectTheme = (theme: Theme) => {
+    setCurrentTheme(theme.id);
+  };
+
+  // Handle theme unlock
+  const handleUnlockTheme = (theme: Theme) => {
+    if (progress?.coins >= (theme.unlockCoins || 0)) {
+      setUnlockedThemes([...unlockedThemes, theme.id]);
+      setCurrentTheme(theme.id);
+      // Deduct coins (would need to call backend in real implementation)
+    }
+  };
+
   // Show Home Screen if user hasn't started playing
   if (showHomeScreen) {
     return (
@@ -250,6 +305,10 @@ export default function GameScreen() {
           onLeaderboard={() => setShowLeaderboard(true)}
           onSettings={() => setShowPrivacyPolicy(true)}
           onAchievements={() => setShowAchievements(true)}
+          onDailyChallenge={() => setShowDailyChallenge(true)}
+          onWordOfDay={() => setShowWordOfDay(true)}
+          onStats={() => setShowStats(true)}
+          onThemes={() => setShowThemes(true)}
         />
         
         {/* Modals accessible from Home */}
@@ -268,6 +327,34 @@ export default function GameScreen() {
         <AchievementsModal
           visible={showAchievements}
           onClose={() => setShowAchievements(false)}
+        />
+        <DailyChallengeModal
+          visible={showDailyChallenge}
+          onClose={() => setShowDailyChallenge(false)}
+          onPlay={() => {
+            setShowDailyChallenge(false);
+            setShowHomeScreen(false);
+          }}
+          dailyChallenge={getDailyChallengeData()}
+        />
+        <WordOfDayModal
+          visible={showWordOfDay}
+          onClose={() => setShowWordOfDay(false)}
+          word={null}
+        />
+        <StatsModal
+          visible={showStats}
+          onClose={() => setShowStats(false)}
+          stats={getStats()}
+        />
+        <ThemeSelectorModal
+          visible={showThemes}
+          onClose={() => setShowThemes(false)}
+          currentTheme={currentTheme}
+          onSelectTheme={handleSelectTheme}
+          coins={progress?.coins || 0}
+          unlockedThemes={unlockedThemes}
+          onUnlockTheme={handleUnlockTheme}
         />
         <ConsentModal
           visible={showConsentModal}
