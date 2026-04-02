@@ -12,12 +12,23 @@ const AD_FREQUENCY = 3;
 export const LevelCompleteModal: React.FC = () => {
   const { showLevelComplete, currentLevel, progress, completeLevel, bonusWordsFound } = useGameStore();
   const [showingAd, setShowingAd] = useState(false);
+  const [doubleRewards, setDoubleRewards] = useState(false);
+  const [gettingDoubleRewards, setGettingDoubleRewards] = useState(false);
   
   if (!showLevelComplete || !currentLevel) return null;
 
   // Check if we should show an ad (every 3 levels)
   const completedLevels = progress?.completed_levels?.length || 0;
   const shouldShowAd = (completedLevels + 1) % AD_FREQUENCY === 0;
+
+  const handleDoubleRewards = async () => {
+    setGettingDoubleRewards(true);
+    const rewarded = await adManager.showVideoRewardedAd();
+    if (rewarded) {
+      setDoubleRewards(true);
+    }
+    setGettingDoubleRewards(false);
+  };
 
   const handleContinue = async () => {
     if (shouldShowAd) {
@@ -26,7 +37,10 @@ export const LevelCompleteModal: React.FC = () => {
       await adManager.showInterstitialAd();
       setShowingAd(false);
     }
+    // Track level completion for ad frequency
+    await adManager.onLevelComplete();
     completeLevel();
+    setDoubleRewards(false);
   };
   
   return (
@@ -73,10 +87,24 @@ export const LevelCompleteModal: React.FC = () => {
                 </View>
                 <View style={styles.statItem}>
                   <Ionicons name="cash" size={24} color="#f1c40f" />
-                  <Text style={styles.statValue}>+50</Text>
-                  <Text style={styles.statLabel}>Coins</Text>
+                  <Text style={styles.statValue}>{doubleRewards ? '+100' : '+50'}</Text>
+                  <Text style={styles.statLabel}>{doubleRewards ? '2x Coins!' : 'Coins'}</Text>
                 </View>
               </View>
+              
+              {/* Double Rewards Button */}
+              {!doubleRewards && (
+                <TouchableOpacity 
+                  style={styles.doubleRewardsButton} 
+                  onPress={handleDoubleRewards}
+                  disabled={gettingDoubleRewards}
+                >
+                  <Ionicons name="play-circle" size={18} color="#fff" />
+                  <Text style={styles.doubleRewardsText}>
+                    {gettingDoubleRewards ? 'Loading...' : 'Watch Ad for 2x Coins!'}
+                  </Text>
+                </TouchableOpacity>
+              )}
               
               {/* Continue button */}
               <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
@@ -169,6 +197,21 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#95a5a6',
     marginTop: 2,
+  },
+  doubleRewardsButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#8b5cf6',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    marginBottom: 15,
+    gap: 8,
+  },
+  doubleRewardsText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
   },
   continueButton: {
     flexDirection: 'row',

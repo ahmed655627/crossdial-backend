@@ -7,9 +7,11 @@ import { Platform } from 'react-native';
 
 // AdMob Configuration - Your Real IDs
 const ADMOB_IDS = {
-  REWARDED: 'ca-app-pub-1991020937935015/5344139286',      // Video/Rewarded
+  REWARDED: 'ca-app-pub-1991020937935015/5344139286',      // Original Rewarded
+  REWARDED_VIDEO: 'ca-app-pub-1991020937935015/7618310803', // Video Rewarded (for coins, spins, double rewards)
   INTERSTITIAL: 'ca-app-pub-1991020937935015/6481126982',  // Interstitial (Game)
-  BANNER: 'ca-app-pub-1991020937935015/5344139286',
+  BANNER: 'ca-app-pub-1991020937935015/3076430560',        // Banner Ad
+  NATIVE: 'ca-app-pub-1991020937935015/6824103881',        // Native Ad
 };
 
 // Test Ad IDs for development
@@ -31,7 +33,10 @@ const IS_PRODUCTION = true;
 
 export const AD_UNIT_IDS = {
   REWARDED: IS_PRODUCTION ? ADMOB_IDS.REWARDED : TEST_AD_IDS.REWARDED,
+  REWARDED_VIDEO: IS_PRODUCTION ? ADMOB_IDS.REWARDED_VIDEO : TEST_AD_IDS.REWARDED,
   INTERSTITIAL: IS_PRODUCTION ? ADMOB_IDS.INTERSTITIAL : TEST_AD_IDS.INTERSTITIAL,
+  BANNER: ADMOB_IDS.BANNER,
+  NATIVE: ADMOB_IDS.NATIVE,
 };
 
 // COPPA Configuration
@@ -45,6 +50,8 @@ export const AD_CONFIG = {
 let MobileAds: any = null;
 let RewardedAd: any = null;
 let InterstitialAd: any = null;
+let BannerAd: any = null;
+let BannerAdSize: any = null;
 let AdEventType: any = null;
 let RewardedAdEventType: any = null;
 
@@ -56,6 +63,8 @@ const initAdMobModule = async () => {
     MobileAds = adsModule.default;
     RewardedAd = adsModule.RewardedAd;
     InterstitialAd = adsModule.InterstitialAd;
+    BannerAd = adsModule.BannerAd;
+    BannerAdSize = adsModule.BannerAdSize;
     AdEventType = adsModule.AdEventType;
     RewardedAdEventType = adsModule.RewardedAdEventType;
     return true;
@@ -70,9 +79,12 @@ class AdManager {
   private admobReady: boolean = false;
   private admobModuleLoaded: boolean = false;
   private rewardedAd: any = null;
+  private rewardedVideoAd: any = null;
   private interstitialAd: any = null;
   private lastAdTime: number = 0;
   private minAdInterval: number = 30000; // 30 seconds
+  private levelsCompletedSinceAd: number = 0;
+  private LEVELS_BETWEEN_ADS: number = 3; // Show interstitial every 3 levels
 
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
@@ -103,7 +115,7 @@ class AdManager {
     if (!this.admobModuleLoaded || !RewardedAd) return;
 
     try {
-      // Load Rewarded Ad
+      // Load Rewarded Ad (for hints)
       this.rewardedAd = RewardedAd.createForAdRequest(AD_UNIT_IDS.REWARDED, {
         requestNonPersonalizedAdsOnly: true,
         keywords: ['game', 'puzzle', 'word'],
@@ -118,6 +130,22 @@ class AdManager {
       });
       
       await this.rewardedAd.load();
+
+      // Load Video Rewarded Ad (for coins, spins, double rewards)
+      this.rewardedVideoAd = RewardedAd.createForAdRequest(AD_UNIT_IDS.REWARDED_VIDEO, {
+        requestNonPersonalizedAdsOnly: true,
+        keywords: ['game', 'puzzle', 'word'],
+      });
+      
+      this.rewardedVideoAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
+        console.log('Video rewarded ad loaded');
+      });
+      
+      this.rewardedVideoAd.addAdEventListener(AdEventType.ERROR, (error: any) => {
+        console.log('Video rewarded ad error:', error);
+      });
+      
+      await this.rewardedVideoAd.load();
 
       // Load Interstitial Ad
       this.interstitialAd = InterstitialAd.createForAdRequest(AD_UNIT_IDS.INTERSTITIAL, {
@@ -248,6 +276,90 @@ class AdManager {
   // Check if ads are ready
   isReady(): boolean {
     return this.admobReady;
+  }
+
+  // Show video rewarded ad (for coins, spins, double rewards)
+  async showVideoRewardedAd(): Promise<boolean> {
+    // On web, simulate
+    if (Platform.OS === 'web') {
+      return new Promise((resolve) => {
+        console.log('Simulating video ad on web...');
+        setTimeout(() => {
+          this.markAdShown();
+          resolve(true);
+        }, 2000);
+      });
+    }
+
+    // Use AdMob Video Rewarded
+    if (this.admobReady && this.rewardedVideoAd) {
+      return new Promise(async (resolve) => {
+        try {
+          const rewardListener = this.rewardedVideoAd.addAdEventListener(
+            RewardedAdEventType.EARNED_REWARD,
+            () => {
+              this.markAdShown();
+              resolve(true);
+            }
+          );
+
+          const closeListener = this.rewardedVideoAd.addAdEventListener(
+            AdEventType.CLOSED,
+            () => {
+              rewardListener();
+              closeListener();
+              this.loadVideoRewardedAd(); // Reload for next time
+            }
+          );
+
+          await this.rewardedVideoAd.show();
+        } catch (error) {
+          console.log('Video rewarded ad error:', error);
+          this.markAdShown();
+          resolve(true); // Give reward anyway on error
+          this.loadVideoRewardedAd();
+        }
+      });
+    }
+
+    // No ads available, give reward anyway
+    console.log('No video ads available, giving reward');
+    this.markAdShown();
+    return true;
+  }
+
+  // Reload video rewarded ad separately
+  private async loadVideoRewardedAd(): Promise<void> {
+    if (!this.admobModuleLoaded || !RewardedAd) return;
+    
+    try {
+      this.rewardedVideoAd = RewardedAd.createForAdRequest(AD_UNIT_IDS.REWARDED_VIDEO, {
+        requestNonPersonalizedAdsOnly: true,
+        keywords: ['game', 'puzzle', 'word'],
+      });
+      await this.rewardedVideoAd.load();
+    } catch (error) {
+      console.log('Failed to reload video ad:', error);
+    }
+  }
+
+  // Track level completion and show interstitial every 3 levels
+  async onLevelComplete(): Promise<void> {
+    this.levelsCompletedSinceAd++;
+    
+    if (this.levelsCompletedSinceAd >= this.LEVELS_BETWEEN_ADS) {
+      console.log('Showing interstitial after', this.LEVELS_BETWEEN_ADS, 'levels');
+      await this.showInterstitialAd();
+      this.levelsCompletedSinceAd = 0;
+    }
+  }
+
+  // Get banner ad config (for components to use)
+  getBannerConfig() {
+    return {
+      unitId: AD_UNIT_IDS.BANNER,
+      size: 'BANNER', // Will be converted to BannerAdSize in component
+    };
   }
 }
 

@@ -25,6 +25,7 @@ interface HomeScreenProps {
   onWordOfDay?: () => void;
   onStats?: () => void;
   onThemes?: () => void;
+  onWatchAdForCoins?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -37,6 +38,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onWordOfDay,
   onStats,
   onThemes,
+  onWatchAdForCoins,
 }) => {
   const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
   const [titleAnim] = useState(new Animated.Value(0));
@@ -270,6 +272,23 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </TouchableOpacity>
       </View>
 
+      {/* Watch Ad for Coins Button */}
+      <TouchableOpacity style={styles.watchAdButton} onPress={onWatchAdForCoins}>
+        <LinearGradient
+          colors={['#22c55e', '#16a34a']}
+          style={styles.watchAdGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+        >
+          <Ionicons name="play-circle" size={20} color="#fff" />
+          <Text style={styles.watchAdText}>Watch Ad</Text>
+          <View style={styles.watchAdReward}>
+            <Ionicons name="cash" size={14} color="#FFD700" />
+            <Text style={styles.watchAdRewardText}>+50</Text>
+          </View>
+        </LinearGradient>
+      </TouchableOpacity>
+
       {/* Footer */}
       <View style={styles.footer}>
         <Text style={styles.footerText}>150 Levels • 7 World Wonders</Text>
@@ -489,6 +508,38 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 11,
     marginTop: 4,
+  },
+  watchAdButton: {
+    marginTop: 20,
+    marginHorizontal: 60,
+  },
+  watchAdGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 25,
+    gap: 10,
+  },
+  watchAdText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  watchAdReward: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.2)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    gap: 4,
+  },
+  watchAdRewardText: {
+    color: '#FFD700',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   footer: {
     position: 'absolute',

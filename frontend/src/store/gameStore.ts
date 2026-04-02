@@ -112,6 +112,7 @@ interface GameState {
   markWheelSpun: () => Promise<void>;
   addDailyReward: (type: string, value: number) => Promise<void>;
   fetchSpinStatus: () => Promise<void>;
+  addExtraSpin: () => void;
   
   // Multiplayer
   loadLeaderboard: () => Promise<void>;
@@ -508,6 +509,11 @@ export const useGameStore = create<GameState>((set, get) => ({
     } catch (error) {
       console.error('Fetch spin status error:', error);
     }
+  },
+
+  addExtraSpin: () => {
+    const { spinsRemaining } = get();
+    set({ spinsRemaining: spinsRemaining + 1 });
   },
 
   markWheelSpun: async () => {

@@ -36,11 +36,12 @@ interface DailyRewardsWheelProps {
 }
 
 export const DailyRewardsWheel: React.FC<DailyRewardsWheelProps> = ({ visible, onClose }) => {
-  const { addDailyReward, progress, canSpinWheel, markWheelSpun, spinsRemaining, fetchSpinStatus } = useGameStore();
+  const { addDailyReward, progress, canSpinWheel, markWheelSpun, spinsRemaining, fetchSpinStatus, addExtraSpin } = useGameStore();
   const [isSpinning, setIsSpinning] = useState(false);
   const [showingAd, setShowingAd] = useState(false);
   const [reward, setReward] = useState<{ type: string; value: number } | null>(null);
   const [showReward, setShowReward] = useState(false);
+  const [gettingExtraSpin, setGettingExtraSpin] = useState(false);
   const spinValue = useRef(new Animated.Value(0)).current;
   const currentRotation = useRef(0);
 
@@ -200,9 +201,30 @@ export const DailyRewardsWheel: React.FC<DailyRewardsWheelProps> = ({ visible, o
               </View>
 
               {!canSpin && (
-                <Text style={styles.cooldownText}>
-                  Come back tomorrow for 6 more spins!
-                </Text>
+                <>
+                  <Text style={styles.cooldownText}>
+                    Come back tomorrow for 6 more spins!
+                  </Text>
+                  
+                  {/* Watch Ad for Extra Spin Button */}
+                  <TouchableOpacity
+                    style={styles.extraSpinButton}
+                    onPress={async () => {
+                      setGettingExtraSpin(true);
+                      const rewarded = await adManager.showVideoRewardedAd();
+                      if (rewarded && addExtraSpin) {
+                        addExtraSpin();
+                      }
+                      setGettingExtraSpin(false);
+                    }}
+                    disabled={gettingExtraSpin}
+                  >
+                    <Ionicons name="play-circle" size={20} color="#fff" />
+                    <Text style={styles.extraSpinButtonText}>
+                      {gettingExtraSpin ? 'Loading...' : 'Watch Ad for +1 Spin'}
+                    </Text>
+                  </TouchableOpacity>
+                </>
               )}
             </>
           )}
@@ -367,6 +389,22 @@ const styles = StyleSheet.create({
   collectButtonText: {
     color: '#fff',
     fontSize: 18,
+    fontWeight: 'bold',
+  },
+  extraSpinButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#8b5cf6',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 25,
+    marginTop: 15,
+    gap: 8,
+  },
+  extraSpinButtonText: {
+    color: '#fff',
+    fontSize: 14,
     fontWeight: 'bold',
   },
 });

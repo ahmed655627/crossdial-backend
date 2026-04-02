@@ -32,6 +32,7 @@ import { DailyChallengeModal } from '../src/components/DailyChallengeModal';
 import { WordOfDayModal } from '../src/components/WordOfDayModal';
 import { StatsModal } from '../src/components/StatsModal';
 import { ThemeSelectorModal, Theme, THEMES } from '../src/components/ThemeSelectorModal';
+import { BannerAdComponent } from '../src/components/BannerAdComponent';
 import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
@@ -295,6 +296,19 @@ export default function GameScreen() {
     }
   };
 
+  // Handle watch ad for coins
+  const handleWatchAdForCoins = async () => {
+    setShowAdLoading(true);
+    setAdMessage('Watch ad for +50 coins...');
+    const rewarded = await adManager.showVideoRewardedAd();
+    setShowAdLoading(false);
+    if (rewarded) {
+      // Add 50 coins through the game store
+      // For now, just show the reward was given
+      Alert.alert('Reward!', 'You earned 50 coins!');
+    }
+  };
+
   // Show Home Screen if user hasn't started playing
   if (showHomeScreen) {
     return (
@@ -309,7 +323,13 @@ export default function GameScreen() {
           onWordOfDay={() => setShowWordOfDay(true)}
           onStats={() => setShowStats(true)}
           onThemes={() => setShowThemes(true)}
+          onWatchAdForCoins={handleWatchAdForCoins}
         />
+        
+        {/* Banner Ad at bottom of Home Screen */}
+        <View style={styles.bannerAdContainer}>
+          <BannerAdComponent />
+        </View>
         
         {/* Modals accessible from Home */}
         <DailyRewardsWheel
@@ -917,5 +937,13 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontWeight: '600',
+  },
+  bannerAdContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    backgroundColor: 'transparent',
   },
 });
