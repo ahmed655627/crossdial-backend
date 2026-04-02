@@ -46,7 +46,7 @@
             "SKAdNetworkIdentifier": "hs6bdukanm.skadnetwork"
           }
         ],
-        "GADApplicationIdentifier": "ca-app-pub-9950221390211328~3528584689",
+        "GADApplicationIdentifier": "ca-app-pub-1991020937935015~2593852865",
         "GADIsAdManagerApp": true,
         "ITSAppUsesNonExemptEncryption": false
       },
@@ -105,7 +105,7 @@
         "com.google.android.gms.permission.AD_ID"
       ],
       "config": {
-        "googleMobileAdsAppId": "ca-app-pub-9950221390211328~3528584689"
+        "googleMobileAdsAppId": "ca-app-pub-1991020937935015~2593852865"
       }
     },
     "web": {
@@ -128,8 +128,8 @@
       [
         "react-native-google-mobile-ads",
         {
-          "androidAppId": "ca-app-pub-9950221390211328~3528584689",
-          "iosAppId": "ca-app-pub-9950221390211328~3528584689",
+          "androidAppId": "ca-app-pub-1991020937935015~2593852865",
+          "iosAppId": "ca-app-pub-1991020937935015~2593852865",
           "userTrackingUsageDescription": "This helps us show relevant ads"
         }
       ],
