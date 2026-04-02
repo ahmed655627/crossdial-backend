@@ -21,6 +21,10 @@ interface HomeScreenProps {
   onLeaderboard: () => void;
   onSettings: () => void;
   onAchievements: () => void;
+  onDailyChallenge?: () => void;
+  onWordOfDay?: () => void;
+  onStats?: () => void;
+  onThemes?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -29,6 +33,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onLeaderboard,
   onSettings,
   onAchievements,
+  onDailyChallenge,
+  onWordOfDay,
+  onStats,
+  onThemes,
 }) => {
   const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
   const [titleAnim] = useState(new Animated.Value(0));
@@ -188,6 +196,20 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           },
         ]}
       >
+        {/* Daily Challenge */}
+        <TouchableOpacity style={styles.actionButton} onPress={onDailyChallenge}>
+          <LinearGradient
+            colors={['#ef4444', '#dc2626']}
+            style={styles.actionGradient}
+          >
+            <Ionicons name="calendar" size={28} color="#fff" />
+            <View style={styles.newBadge}>
+              <Text style={styles.newBadgeText}>!</Text>
+            </View>
+          </LinearGradient>
+          <Text style={styles.actionLabel}>Challenge</Text>
+        </TouchableOpacity>
+
         {/* Daily Rewards */}
         <TouchableOpacity style={styles.actionButton} onPress={onDailyRewards}>
           <LinearGradient
@@ -201,7 +223,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
               </View>
             )}
           </LinearGradient>
-          <Text style={styles.actionLabel}>Daily</Text>
+          <Text style={styles.actionLabel}>Spin</Text>
         </TouchableOpacity>
 
         {/* Achievements */}
@@ -226,6 +248,27 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <Text style={styles.actionLabel}>Ranks</Text>
         </TouchableOpacity>
       </Animated.View>
+
+      {/* Second Row of Actions */}
+      <View style={styles.secondRow}>
+        {/* Word of Day */}
+        <TouchableOpacity style={styles.miniAction} onPress={onWordOfDay}>
+          <Ionicons name="book" size={22} color="#8b5cf6" />
+          <Text style={styles.miniLabel}>Word</Text>
+        </TouchableOpacity>
+
+        {/* Stats */}
+        <TouchableOpacity style={styles.miniAction} onPress={onStats}>
+          <Ionicons name="stats-chart" size={22} color="#3b82f6" />
+          <Text style={styles.miniLabel}>Stats</Text>
+        </TouchableOpacity>
+
+        {/* Themes */}
+        <TouchableOpacity style={styles.miniAction} onPress={onThemes}>
+          <Ionicons name="color-palette" size={22} color="#ec4899" />
+          <Text style={styles.miniLabel}>Themes</Text>
+        </TouchableOpacity>
+      </View>
 
       {/* Footer */}
       <View style={styles.footer}>
@@ -410,6 +453,42 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: 8,
     fontWeight: '500',
+  },
+  newBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: '#22c55e',
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#fff',
+  },
+  newBadgeText: {
+    color: '#fff',
+    fontSize: 12,
+    fontWeight: 'bold',
+  },
+  secondRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+    gap: 40,
+  },
+  miniAction: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 12,
+  },
+  miniLabel: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 11,
+    marginTop: 4,
   },
   footer: {
     position: 'absolute',
