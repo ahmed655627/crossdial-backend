@@ -33,6 +33,19 @@ import { WordOfDayModal } from '../src/components/WordOfDayModal';
 import { StatsModal } from '../src/components/StatsModal';
 import { ThemeSelectorModal, Theme, THEMES } from '../src/components/ThemeSelectorModal';
 import { BannerAdComponent } from '../src/components/BannerAdComponent';
+import { FeaturesHub } from '../src/components/FeaturesHub';
+import { MysteryBoxModal } from '../src/components/MysteryBox';
+import { ScratchCardModal } from '../src/components/ScratchCard';
+import { PowerUpsModal } from '../src/components/PowerUps';
+import { PiggyBankModal } from '../src/components/PiggyBank';
+import { PostcardsModal } from '../src/components/Postcards';
+import { VocabularyBuilderModal } from '../src/components/VocabularyBuilder';
+import { EndlessModeModal as GameModesModal } from '../src/components/GameModes';
+import { PlayerProfileModal } from '../src/components/PlayerProfile';
+import { MusicThemeModal as MusicThemesModal } from '../src/components/MusicThemes';
+import { WonderFactModal as WonderFactsModal } from '../src/components/WonderFacts';
+import { WordPacksModal } from '../src/components/WordPacks';
+import { SeasonalEventModal as SeasonalEventsModal } from '../src/components/SeasonalEvents';
 import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
@@ -79,6 +92,23 @@ export default function GameScreen() {
   const [currentTheme, setCurrentTheme] = useState('default');
   const [unlockedThemes, setUnlockedThemes] = useState(['default', 'ocean', 'forest']);
   const [levelsCompletedSinceAd, setLevelsCompletedSinceAd] = useState(0);
+  
+  // Feature Hub modals state
+  const [showFeaturesHub, setShowFeaturesHub] = useState(false);
+  const [showMysteryBox, setShowMysteryBox] = useState(false);
+  const [showScratchCard, setShowScratchCard] = useState(false);
+  const [showPowerUps, setShowPowerUps] = useState(false);
+  const [showPiggyBank, setShowPiggyBank] = useState(false);
+  const [showPostcards, setShowPostcards] = useState(false);
+  const [showVocabulary, setShowVocabulary] = useState(false);
+  const [showGameModes, setShowGameModes] = useState(false);
+  const [showPlayerProfile, setShowPlayerProfile] = useState(false);
+  const [showMusicThemes, setShowMusicThemes] = useState(false);
+  const [showWonderFacts, setShowWonderFacts] = useState(false);
+  const [showWordPacks, setShowWordPacks] = useState(false);
+  const [showSeasonalEvents, setShowSeasonalEvents] = useState(false);
+  const [mysteryBoxesAvailable, setMysteryBoxesAvailable] = useState(3);
+  const [canScratch, setCanScratch] = useState(true);
 
   // Check for privacy consent on first load
   useEffect(() => {
@@ -309,6 +339,58 @@ export default function GameScreen() {
     }
   };
 
+  // Handle feature selection from Features Hub
+  const handleFeatureSelect = (featureId: string) => {
+    setShowFeaturesHub(false);
+    switch (featureId) {
+      case 'mystery_box':
+        setShowMysteryBox(true);
+        break;
+      case 'scratch_card':
+        setShowScratchCard(true);
+        break;
+      case 'power_ups':
+        setShowPowerUps(true);
+        break;
+      case 'piggy_bank':
+        setShowPiggyBank(true);
+        break;
+      case 'postcards':
+        setShowPostcards(true);
+        break;
+      case 'vocabulary':
+        setShowVocabulary(true);
+        break;
+      case 'game_modes':
+        setShowGameModes(true);
+        break;
+      case 'player_profile':
+        setShowPlayerProfile(true);
+        break;
+      case 'music_themes':
+        setShowMusicThemes(true);
+        break;
+      case 'wonder_facts':
+        setShowWonderFacts(true);
+        break;
+      case 'word_packs':
+        setShowWordPacks(true);
+        break;
+      case 'seasonal':
+        setShowSeasonalEvents(true);
+        break;
+      case 'combos':
+      case 'time_challenge':
+      case 'celebrations':
+      case 'mascot':
+        // These are gameplay effects, not modals
+        Alert.alert('Coming Soon!', 'This feature will be active during gameplay.');
+        break;
+      default:
+        break;
+    }
+  };
+
   // Show Home Screen if user hasn't started playing
   if (showHomeScreen) {
     return (
@@ -324,6 +406,7 @@ export default function GameScreen() {
           onStats={() => setShowStats(true)}
           onThemes={() => setShowThemes(true)}
           onWatchAdForCoins={handleWatchAdForCoins}
+          onFeaturesHub={() => setShowFeaturesHub(true)}
         />
         
         {/* Banner Ad at bottom of Home Screen */}
@@ -376,6 +459,109 @@ export default function GameScreen() {
           unlockedThemes={unlockedThemes}
           onUnlockTheme={handleUnlockTheme}
         />
+        
+        {/* Features Hub */}
+        <FeaturesHub
+          visible={showFeaturesHub}
+          onClose={() => setShowFeaturesHub(false)}
+          onSelectFeature={handleFeatureSelect}
+        />
+        
+        {/* Feature Modals */}
+        <MysteryBoxModal
+          visible={showMysteryBox}
+          onClose={() => setShowMysteryBox(false)}
+          onClaim={(reward) => {
+            setMysteryBoxesAvailable(prev => prev - 1);
+            Alert.alert('Reward!', `You got ${reward.name}!`);
+          }}
+          boxesAvailable={mysteryBoxesAvailable}
+        />
+        <ScratchCardModal
+          visible={showScratchCard}
+          onClose={() => setShowScratchCard(false)}
+          onReveal={(reward) => {
+            setCanScratch(false);
+            if (reward.type !== 'nothing') {
+              Alert.alert('Congratulations!', reward.message);
+            }
+          }}
+          canScratch={canScratch}
+        />
+        <PowerUpsModal
+          visible={showPowerUps}
+          onClose={() => setShowPowerUps(false)}
+          coins={progress?.coins || 0}
+          onPurchase={(powerUp) => {
+            Alert.alert('Power-Up!', `${powerUp.name} activated!`);
+          }}
+        />
+        <PiggyBankModal
+          visible={showPiggyBank}
+          onClose={() => setShowPiggyBank(false)}
+          savedCoins={progress?.piggy_bank || 0}
+          onBreak={() => {
+            Alert.alert('Piggy Bank!', 'Coins collected!');
+          }}
+        />
+        <PostcardsModal
+          visible={showPostcards}
+          onClose={() => setShowPostcards(false)}
+          collectedCards={progress?.postcards || []}
+        />
+        <VocabularyBuilderModal
+          visible={showVocabulary}
+          onClose={() => setShowVocabulary(false)}
+          learnedWords={progress?.learned_words || []}
+        />
+        <GameModesModal
+          visible={showGameModes}
+          onClose={() => setShowGameModes(false)}
+          onSelectMode={(mode) => {
+            setShowGameModes(false);
+            setShowHomeScreen(false);
+            Alert.alert('Game Mode', `${mode.name} selected!`);
+          }}
+        />
+        <PlayerProfileModal
+          visible={showPlayerProfile}
+          onClose={() => setShowPlayerProfile(false)}
+          profile={{
+            username: progress?.username || 'Player',
+            level: Math.floor((progress?.completed_levels?.length || 0) / 10) + 1,
+            xp: (progress?.completed_levels?.length || 0) * 100,
+            totalWords: progress?.total_words_found || 0,
+            streak: progress?.daily_streak || 0,
+          }}
+        />
+        <MusicThemesModal
+          visible={showMusicThemes}
+          onClose={() => setShowMusicThemes(false)}
+          currentTheme="default"
+          onSelectTheme={(theme) => {
+            Alert.alert('Music', `${theme} theme selected!`);
+          }}
+        />
+        <WonderFactsModal
+          visible={showWonderFacts}
+          onClose={() => setShowWonderFacts(false)}
+          currentWonder={levels[progress?.current_level || 0]?.wonder || 'Great Wall'}
+        />
+        <WordPacksModal
+          visible={showWordPacks}
+          onClose={() => setShowWordPacks(false)}
+          ownedPacks={['classic']}
+          coins={progress?.coins || 0}
+          onPurchase={(pack) => {
+            Alert.alert('Word Pack', `${pack.name} purchased!`);
+          }}
+        />
+        <SeasonalEventsModal
+          visible={showSeasonalEvents}
+          onClose={() => setShowSeasonalEvents(false)}
+          currentEvent={null}
+        />
+        
         <ConsentModal
           visible={showConsentModal}
           onAccept={handleConsentAccept}

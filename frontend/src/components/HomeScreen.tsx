@@ -26,6 +26,7 @@ interface HomeScreenProps {
   onStats?: () => void;
   onThemes?: () => void;
   onWatchAdForCoins?: () => void;
+  onFeaturesHub?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -39,6 +40,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onStats,
   onThemes,
   onWatchAdForCoins,
+  onFeaturesHub,
 }) => {
   const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
   const [titleAnim] = useState(new Animated.Value(0));
@@ -265,10 +267,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <Text style={styles.miniLabel}>Stats</Text>
         </TouchableOpacity>
 
-        {/* Themes */}
-        <TouchableOpacity style={styles.miniAction} onPress={onThemes}>
-          <Ionicons name="color-palette" size={22} color="#ec4899" />
-          <Text style={styles.miniLabel}>Themes</Text>
+        {/* More Features */}
+        <TouchableOpacity style={[styles.miniAction, styles.moreAction]} onPress={onFeaturesHub}>
+          <Ionicons name="grid" size={22} color="#f39c12" />
+          <Text style={styles.miniLabel}>More</Text>
         </TouchableOpacity>
       </View>
 
@@ -508,6 +510,9 @@ const styles = StyleSheet.create({
     color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 11,
     marginTop: 4,
+  },
+  moreAction: {
+    backgroundColor: 'rgba(243, 156, 18, 0.2)',
   },
   watchAdButton: {
     marginTop: 20,
