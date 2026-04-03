@@ -96,7 +96,17 @@ class AdManager {
         this.admobModuleLoaded = await initAdMobModule();
         
         if (this.admobModuleLoaded && MobileAds) {
+          // Initialize AdMob with proper configuration
           await MobileAds().initialize();
+          
+          // Set request configuration for better ad fill
+          await MobileAds().setRequestConfiguration({
+            // Mark as NOT for children to get more ads
+            tagForChildDirectedTreatment: false,
+            tagForUnderAgeOfConsent: false,
+            maxAdContentRating: 'T', // Teen rating for more ad variety
+          });
+          
           await this.loadAds();
           this.admobReady = true;
           console.log('AdMob initialized successfully');
@@ -117,53 +127,92 @@ class AdManager {
     try {
       // Load Rewarded Ad (for hints)
       this.rewardedAd = RewardedAd.createForAdRequest(AD_UNIT_IDS.REWARDED, {
-        requestNonPersonalizedAdsOnly: true,
-        keywords: ['game', 'puzzle', 'word'],
+        requestNonPersonalizedAdsOnly: false, // Allow personalized for better fill rate
+        keywords: ['game', 'puzzle', 'word', 'brain', 'trivia'],
       });
       
       this.rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
-        console.log('Rewarded ad loaded');
+        console.log('✅ Rewarded ad loaded successfully');
       });
       
       this.rewardedAd.addAdEventListener(AdEventType.ERROR, (error: any) => {
-        console.log('Rewarded ad error:', error);
+        console.log('❌ Rewarded ad error:', error?.message || error);
+        // Retry loading after 30 seconds
+        setTimeout(() => this.loadRewardedAd(), 30000);
       });
       
       await this.rewardedAd.load();
 
       // Load Video Rewarded Ad (for coins, spins, double rewards)
       this.rewardedVideoAd = RewardedAd.createForAdRequest(AD_UNIT_IDS.REWARDED_VIDEO, {
-        requestNonPersonalizedAdsOnly: true,
-        keywords: ['game', 'puzzle', 'word'],
+        requestNonPersonalizedAdsOnly: false,
+        keywords: ['game', 'puzzle', 'word', 'brain', 'trivia'],
       });
       
       this.rewardedVideoAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
-        console.log('Video rewarded ad loaded');
+        console.log('✅ Video rewarded ad loaded successfully');
       });
       
       this.rewardedVideoAd.addAdEventListener(AdEventType.ERROR, (error: any) => {
-        console.log('Video rewarded ad error:', error);
+        console.log('❌ Video rewarded ad error:', error?.message || error);
+        // Retry loading after 30 seconds
+        setTimeout(() => this.loadVideoRewardedAd(), 30000);
       });
       
       await this.rewardedVideoAd.load();
 
       // Load Interstitial Ad
       this.interstitialAd = InterstitialAd.createForAdRequest(AD_UNIT_IDS.INTERSTITIAL, {
-        requestNonPersonalizedAdsOnly: true,
-        keywords: ['game', 'puzzle', 'word'],
+        requestNonPersonalizedAdsOnly: false,
+        keywords: ['game', 'puzzle', 'word', 'brain', 'trivia'],
       });
       
       this.interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
-        console.log('Interstitial ad loaded');
+        console.log('✅ Interstitial ad loaded successfully');
       });
       
       this.interstitialAd.addAdEventListener(AdEventType.ERROR, (error: any) => {
-        console.log('Interstitial ad error:', error);
+        console.log('❌ Interstitial ad error:', error?.message || error);
+        // Retry loading after 30 seconds
+        setTimeout(() => this.loadInterstitialAd(), 30000);
       });
       
       await this.interstitialAd.load();
     } catch (error) {
       console.log('Failed to load ads:', error);
+    }
+  }
+
+  // Separate reload methods for retry logic
+  private async loadRewardedAd(): Promise<void> {
+    if (!this.admobModuleLoaded || !RewardedAd) return;
+    try {
+      this.rewardedAd = RewardedAd.createForAdRequest(AD_UNIT_IDS.REWARDED, {
+        requestNonPersonalizedAdsOnly: false,
+        keywords: ['game', 'puzzle', 'word'],
+      });
+      this.rewardedAd.addAdEventListener(RewardedAdEventType.LOADED, () => {
+        console.log('✅ Rewarded ad reloaded');
+      });
+      await this.rewardedAd.load();
+    } catch (error) {
+      console.log('Failed to reload rewarded ad:', error);
+    }
+  }
+
+  private async loadInterstitialAd(): Promise<void> {
+    if (!this.admobModuleLoaded || !InterstitialAd) return;
+    try {
+      this.interstitialAd = InterstitialAd.createForAdRequest(AD_UNIT_IDS.INTERSTITIAL, {
+        requestNonPersonalizedAdsOnly: false,
+        keywords: ['game', 'puzzle', 'word'],
+      });
+      this.interstitialAd.addAdEventListener(AdEventType.LOADED, () => {
+        console.log('✅ Interstitial ad reloaded');
+      });
+      await this.interstitialAd.load();
+    } catch (error) {
+      console.log('Failed to reload interstitial ad:', error);
     }
   }
 
