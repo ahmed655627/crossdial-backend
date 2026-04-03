@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useGameStore, GridPosition } from '../store/gameStore';
 
 const { width } = Dimensions.get('window');
@@ -29,8 +30,8 @@ export const CrosswordGrid: React.FC = () => {
   const numCols = maxCol + 1;
   
   // Cell size calculation
-  const maxGridWidth = width - 40;
-  const cellSize = Math.min(Math.floor(maxGridWidth / numCols), 40);
+  const maxGridWidth = width - 50;
+  const cellSize = Math.min(Math.floor(maxGridWidth / numCols), 42);
   
   // Build grid cells
   const cells: (string | null)[][] = Array(numRows).fill(null).map(() => Array(numCols).fill(null));
@@ -69,7 +70,10 @@ export const CrosswordGrid: React.FC = () => {
   
   return (
     <View style={styles.container}>
-      <View style={[styles.grid, { width: cellSize * numCols, height: cellSize * numRows }]}>
+      {/* Decorative glow behind grid */}
+      <View style={styles.glowEffect} />
+      
+      <View style={[styles.grid, { width: cellSize * numCols + 10, height: cellSize * numRows + 10 }]}>
         {cells.map((row, rowIndex) => (
           <View key={rowIndex} style={styles.row}>
             {row.map((cell, colIndex) => {
@@ -81,24 +85,47 @@ export const CrosswordGrid: React.FC = () => {
               const isHinted = cellHinted[rowIndex][colIndex];
               const hintedLetter = hintedLetters[rowIndex][colIndex];
               
+              if (isFound) {
+                return (
+                  <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
+                    <LinearGradient
+                      colors={['#FFD700', '#FFA500', '#FF8C00']}
+                      style={[styles.cell, styles.cellFound]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                    >
+                      <Text style={[styles.cellText, styles.cellTextFound, { fontSize: cellSize * 0.55 }]}>
+                        {cell}
+                      </Text>
+                    </LinearGradient>
+                  </View>
+                );
+              }
+              
+              if (isHinted) {
+                return (
+                  <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
+                    <LinearGradient
+                      colors={['#74b9ff', '#0984e3']}
+                      style={[styles.cell, styles.cellHinted]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                    >
+                      <Text style={[styles.cellText, styles.cellTextHinted, { fontSize: cellSize * 0.55 }]}>
+                        {hintedLetter}
+                      </Text>
+                    </LinearGradient>
+                  </View>
+                );
+              }
+              
               return (
-                <View 
-                  key={colIndex} 
-                  style={[
-                    styles.cell, 
-                    { width: cellSize, height: cellSize },
-                    isFound && styles.cellFound,
-                    isHinted && styles.cellHinted
-                  ]}
-                >
-                  <Text style={[
-                    styles.cellText,
-                    { fontSize: cellSize * 0.55 },
-                    isFound && styles.cellTextFound,
-                    isHinted && styles.cellTextHinted
-                  ]}>
-                    {isFound ? cell : (isHinted ? hintedLetter : '')}
-                  </Text>
+                <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
+                  <View style={[styles.cell, styles.cellEmpty]}>
+                    <Text style={[styles.cellText, { fontSize: cellSize * 0.55 }]}>
+                      {''}
+                    </Text>
+                  </View>
                 </View>
               );
             })}
@@ -113,42 +140,70 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingVertical: 15,
+    position: 'relative',
+  },
+  glowEffect: {
+    position: 'absolute',
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: 'rgba(102, 126, 234, 0.15)',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -100 }, { translateY: -100 }],
   },
   grid: {
     backgroundColor: 'transparent',
+    padding: 5,
   },
   row: {
     flexDirection: 'row',
   },
   emptyCell: {
     backgroundColor: 'transparent',
+    margin: 2,
+  },
+  cellWrapper: {
+    margin: 2,
   },
   cell: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    borderWidth: 1,
-    borderColor: '#34495e',
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 1,
-    borderRadius: 4,
+    borderRadius: 8,
+  },
+  cellEmpty: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   cellFound: {
-    backgroundColor: '#FFD700',
-    borderColor: '#f39c12',
+    shadowColor: '#FFD700',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
   },
   cellHinted: {
-    backgroundColor: '#74b9ff',
-    borderColor: '#0984e3',
+    shadowColor: '#0984e3',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
   },
   cellText: {
-    fontWeight: 'bold',
-    color: '#2c3e50',
+    fontWeight: '800',
+    color: '#fff',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 2,
   },
   cellTextFound: {
     color: '#1a1a2e',
+    textShadowColor: 'rgba(255, 255, 255, 0.3)',
   },
   cellTextHinted: {
-    color: '#0984e3',
+    color: '#fff',
   },
 });
