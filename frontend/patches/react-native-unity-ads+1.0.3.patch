@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-unity-ads/android/build.gradle b/node_modules/react-native-unity-ads/android/build.gradle
+index 7c1ecc5..27c1ce8 100644
+--- a/node_modules/react-native-unity-ads/android/build.gradle
++++ b/node_modules/react-native-unity-ads/android/build.gradle
+@@ -23,6 +23,6 @@ android {
+ }
+ 
+ dependencies {
+-    compile 'com.facebook.react:react-native:+'
+-    compile fileTree(dir: "libs", include: ["*.jar"])
++    implementation 'com.facebook.react:react-native:+'
++    implementation fileTree(dir: "libs", include: ["*.jar"])
+ }
