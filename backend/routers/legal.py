@@ -1,7 +1,12 @@
 from fastapi import APIRouter
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, FileResponse, Response
+import os
+import zipfile
+import io
 
 router = APIRouter(tags=["Legal"])
+
+PLAYSTORE_ASSETS_PATH = "/app/frontend/assets/playstore"
 
 PRIVACY_POLICY_HTML = """
 <!DOCTYPE html>
@@ -489,3 +494,67 @@ async def get_privacy_short():
 async def get_delete_account():
     """Returns the account deletion request page"""
     return DELETE_ACCOUNT_HTML
+
+
+# ============================================
+# PLAYSTORE ASSETS DOWNLOAD ENDPOINTS
+# ============================================
+
+@router.get("/download/feature-graphic")
+async def download_feature_graphic():
+    """Download feature graphic"""
+    file_path = os.path.join(PLAYSTORE_ASSETS_PATH, "feature_graphic_1024x500.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path, filename="feature_graphic_1024x500.png", media_type="image/png")
+    return {"error": "File not found"}
+
+@router.get("/download/app-icon")
+async def download_app_icon():
+    """Download app icon"""
+    file_path = os.path.join(PLAYSTORE_ASSETS_PATH, "app_icon_512.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path, filename="app_icon_512.png", media_type="image/png")
+    return {"error": "File not found"}
+
+@router.get("/download/screenshot-{num}")
+async def download_screenshot(num: int):
+    """Download screenshot 1-4"""
+    file_path = os.path.join(PLAYSTORE_ASSETS_PATH, f"screenshot_{num}.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path, filename=f"screenshot_{num}.png", media_type="image/png")
+    return {"error": "File not found"}
+
+@router.get("/download/tablet-7-{num}")
+async def download_tablet_7(num: int):
+    """Download 7-inch tablet screenshot"""
+    file_path = os.path.join(PLAYSTORE_ASSETS_PATH, f"tablet_7inch_{num}.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path, filename=f"tablet_7inch_{num}.png", media_type="image/png")
+    return {"error": "File not found"}
+
+@router.get("/download/tablet-10-{num}")
+async def download_tablet_10(num: int):
+    """Download 10-inch tablet screenshot"""
+    file_path = os.path.join(PLAYSTORE_ASSETS_PATH, f"tablet_10inch_{num}.png")
+    if os.path.exists(file_path):
+        return FileResponse(file_path, filename=f"tablet_10inch_{num}.png", media_type="image/png")
+    return {"error": "File not found"}
+
+@router.get("/download/all-assets")
+async def download_all_assets():
+    """Download all assets as ZIP"""
+    zip_buffer = io.BytesIO()
+    
+    with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+        for filename in os.listdir(PLAYSTORE_ASSETS_PATH):
+            if filename.endswith('.png'):
+                file_path = os.path.join(PLAYSTORE_ASSETS_PATH, filename)
+                zip_file.write(file_path, filename)
+    
+    zip_buffer.seek(0)
+    
+    return Response(
+        content=zip_buffer.getvalue(),
+        media_type="application/zip",
+        headers={"Content-Disposition": "attachment; filename=playstore_assets.zip"}
+    )
