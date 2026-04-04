@@ -3,8 +3,10 @@ Words of Wonders Backend API
 Refactored modular structure
 """
 from fastapi import FastAPI, APIRouter
+from fastapi.staticfiles import StaticFiles
 from starlette.middleware.cors import CORSMiddleware
 import logging
+import os
 
 # Import routers
 from routers.levels import router as levels_router
@@ -64,3 +66,8 @@ logger = logging.getLogger(__name__)
 @app.on_event("shutdown")
 async def shutdown_db_client():
     client.close()
+
+# Mount static files for Play Store assets
+playstore_assets_path = "/app/frontend/assets/playstore"
+if os.path.exists(playstore_assets_path):
+    app.mount("/api/assets", StaticFiles(directory=playstore_assets_path, html=True), name="playstore_assets")

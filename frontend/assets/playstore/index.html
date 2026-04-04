@@ -1,48 +1,309 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Play Store Assets</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wonder Words Quest - Play Store Assets</title>
     <style>
-        body { background: #1a1a2e; color: white; font-family: Arial; padding: 20px; }
-        h1 { color: #FFD700; }
-        h2 { color: #74b9ff; margin-top: 30px; }
-        .gallery { display: flex; flex-wrap: wrap; gap: 20px; }
-        .item { background: #2d2d44; padding: 15px; border-radius: 10px; }
-        .item img { max-width: 200px; height: auto; border-radius: 8px; }
-        .item p { margin: 10px 0 0; font-size: 12px; color: #aaa; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #fff;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #ffd700, #ffaa00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .subtitle {
+            text-align: center;
+            color: #aaa;
+            margin-bottom: 40px;
+        }
+        .section {
+            margin-bottom: 50px;
+        }
+        .section h2 {
+            color: #ffd700;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255,200,50,0.2);
+        }
+        .card img {
+            width: 100%;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            background: #000;
+        }
+        .card h3 {
+            font-size: 1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+        .card p {
+            font-size: 0.85rem;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        .download-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700, #ffaa00);
+            color: #1a1a2e;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(255,200,50,0.4);
+        }
+        .instructions {
+            background: rgba(255,200,50,0.1);
+            border: 1px solid rgba(255,200,50,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 40px;
+        }
+        .instructions h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        .instructions ol {
+            padding-left: 20px;
+        }
+        .instructions li {
+            margin-bottom: 10px;
+            color: #ccc;
+        }
+        .download-all {
+            display: block;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 30px auto;
+            max-width: 300px;
+            transition: transform 0.2s;
+        }
+        .download-all:hover {
+            transform: scale(1.05);
+        }
+        .badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-left: 10px;
+        }
+        .feature-graphic {
+            grid-column: 1 / -1;
+        }
+        .feature-graphic img {
+            max-height: 300px;
+            object-fit: contain;
+        }
     </style>
 </head>
 <body>
-    <h1>📱 CrossDial Puzzles - Play Store Assets</h1>
-    
-    <h2>Phone Screenshots (1080x1920)</h2>
-    <div class="gallery">
-        <div class="item"><img src="phone_screenshot_1.png"><p>Screenshot 1</p></div>
-        <div class="item"><img src="phone_screenshot_2.png"><p>Screenshot 2</p></div>
-        <div class="item"><img src="phone_screenshot_3.png"><p>Screenshot 3</p></div>
-        <div class="item"><img src="phone_screenshot_4.png"><p>Screenshot 4</p></div>
-    </div>
-    
-    <h2>Feature Graphic (1024x500)</h2>
-    <div class="gallery">
-        <div class="item"><img src="feature_graphic.png" style="max-width:400px"><p>Feature Graphic</p></div>
-    </div>
-    
-    <h2>Logo (600x400)</h2>
-    <div class="gallery">
-        <div class="item"><img src="logo_600x400.png" style="max-width:300px; background:#333;"><p>Logo</p></div>
-    </div>
-    
-    <h2>7-inch Tablet (1200x1920)</h2>
-    <div class="gallery">
-        <div class="item"><img src="tablet_7inch_1.png"><p>Tablet 7" - 1</p></div>
-        <div class="item"><img src="tablet_7inch_2.png"><p>Tablet 7" - 2</p></div>
-    </div>
-    
-    <h2>10-inch Tablet (1600x2560)</h2>
-    <div class="gallery">
-        <div class="item"><img src="tablet_10inch_1.png"><p>Tablet 10" - 1</p></div>
-        <div class="item"><img src="tablet_10inch_2.png"><p>Tablet 10" - 2</p></div>
+    <div class="container">
+        <h1>Wonder Words Quest</h1>
+        <p class="subtitle">Play Store Assets - World Wonders Theme</p>
+
+        <div class="instructions">
+            <h3>How to Download</h3>
+            <ol>
+                <li><strong>Right-click</strong> on any image and select <strong>"Save Image As..."</strong></li>
+                <li>Or click the <strong>"Download"</strong> button below each image</li>
+                <li>Upload to <strong>Google Play Console</strong> > Store Listing > Graphics</li>
+            </ol>
+        </div>
+
+        <!-- Feature Graphic -->
+        <div class="section">
+            <h2>Feature Graphic <span class="badge">Required</span></h2>
+            <div class="grid">
+                <div class="card feature-graphic">
+                    <img src="feature_graphic_1024x500.png" alt="Feature Graphic">
+                    <h3>Feature Graphic</h3>
+                    <p>1024 x 500 px - Main banner for Play Store</p>
+                    <a href="feature_graphic_1024x500.png" download class="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- App Icon -->
+        <div class="section">
+            <h2>App Icon <span class="badge">Required</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <img src="app_icon_512.png" alt="App Icon" style="max-width: 200px; margin: 0 auto; display: block;">
+                    <h3>High-res Icon</h3>
+                    <p>512 x 512 px - App icon for store listing</p>
+                    <a href="app_icon_512.png" download class="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phone Screenshots -->
+        <div class="section">
+            <h2>Phone Screenshots <span class="badge">Min 2 Required</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <img src="screenshot_1.png" alt="Screenshot 1">
+                    <h3>Screenshot 1 - Pyramids</h3>
+                    <p>1080 x 1920 px - PYRAMID puzzle</p>
+                    <a href="screenshot_1.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="screenshot_2.png" alt="Screenshot 2">
+                    <h3>Screenshot 2 - Paris</h3>
+                    <p>1080 x 1920 px - TOWER puzzle</p>
+                    <a href="screenshot_2.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="screenshot_3.png" alt="Screenshot 3">
+                    <h3>Screenshot 3 - Rome</h3>
+                    <p>1080 x 1920 px - WONDER puzzle</p>
+                    <a href="screenshot_3.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="screenshot_4.png" alt="Screenshot 4">
+                    <h3>Screenshot 4 - Taj Mahal</h3>
+                    <p>1080 x 1920 px - WORLD puzzle</p>
+                    <a href="screenshot_4.png" download class="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Phone with Frames (Marketing) -->
+        <div class="section">
+            <h2>Phone Screenshots with Frames <span class="badge">Marketing</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <img src="phone_screenshot_1.png" alt="Framed Screenshot 1">
+                    <h3>Framed Screenshot 1</h3>
+                    <p>With phone mockup - Great for social media</p>
+                    <a href="phone_screenshot_1.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="phone_screenshot_2.png" alt="Framed Screenshot 2">
+                    <h3>Framed Screenshot 2</h3>
+                    <p>With phone mockup - Great for social media</p>
+                    <a href="phone_screenshot_2.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="phone_screenshot_3.png" alt="Framed Screenshot 3">
+                    <h3>Framed Screenshot 3</h3>
+                    <p>With phone mockup - Great for social media</p>
+                    <a href="phone_screenshot_3.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="phone_screenshot_4.png" alt="Framed Screenshot 4">
+                    <h3>Framed Screenshot 4</h3>
+                    <p>With phone mockup - Great for social media</p>
+                    <a href="phone_screenshot_4.png" download class="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 7-inch Tablet -->
+        <div class="section">
+            <h2>7-inch Tablet Screenshots <span class="badge">Optional</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <img src="tablet_7inch_1.png" alt="7-inch Tablet 1">
+                    <h3>7" Tablet Screenshot 1</h3>
+                    <p>1200 x 1920 px</p>
+                    <a href="tablet_7inch_1.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="tablet_7inch_2.png" alt="7-inch Tablet 2">
+                    <h3>7" Tablet Screenshot 2</h3>
+                    <p>1200 x 1920 px</p>
+                    <a href="tablet_7inch_2.png" download class="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 10-inch Tablet -->
+        <div class="section">
+            <h2>10-inch Tablet Screenshots <span class="badge">Optional</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <img src="tablet_10inch_1.png" alt="10-inch Tablet 1">
+                    <h3>10" Tablet Screenshot 1</h3>
+                    <p>1600 x 2560 px</p>
+                    <a href="tablet_10inch_1.png" download class="download-btn">Download</a>
+                </div>
+                <div class="card">
+                    <img src="tablet_10inch_2.png" alt="10-inch Tablet 2">
+                    <h3>10" Tablet Screenshot 2</h3>
+                    <p>1600 x 2560 px</p>
+                    <a href="tablet_10inch_2.png" download class="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Logo -->
+        <div class="section">
+            <h2>Logo <span class="badge">Marketing</span></h2>
+            <div class="grid">
+                <div class="card">
+                    <img src="logo_600x400.png" alt="Logo" style="background: transparent; max-width: 300px; margin: 0 auto; display: block;">
+                    <h3>Transparent Logo</h3>
+                    <p>600 x 400 px - For marketing materials</p>
+                    <a href="logo_600x400.png" download class="download-btn">Download</a>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; padding: 40px 0; color: #666;">
+            <p>Wonder Words Quest - World Wonders Crossword Puzzle Game</p>
+            <p style="margin-top: 10px;">Generated with Premium Assets Generator V3</p>
+        </div>
     </div>
 </body>
 </html>
