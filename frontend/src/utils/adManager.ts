@@ -1,9 +1,19 @@
 import { Platform } from 'react-native';
 
 // ============================================
-// AD MANAGER - Google AdMob Only
-// Unity Ads removed due to Gradle compatibility issues
+// AD MANAGER - Google AdMob + Unity Ads
 // ============================================
+
+// Unity Ads Configuration
+const UNITY_CONFIG = {
+  GAME_ID: '6078412',
+  AD_UNITS: {
+    REWARDED: 'Rewarded_Android',
+    INTERSTITIAL: 'Interstitial_Android',
+    BANNER: 'Banner_Android',
+  },
+  TEST_MODE: false, // Set to false for production
+};
 
 // AdMob Configuration - Your Real IDs
 const ADMOB_IDS = {
@@ -55,6 +65,9 @@ let BannerAdSize: any = null;
 let AdEventType: any = null;
 let RewardedAdEventType: any = null;
 
+// Unity Ads module
+let UnityAdsModule: any = null;
+
 const initAdMobModule = async () => {
   if (Platform.OS === 'web') return false;
   
@@ -74,10 +87,26 @@ const initAdMobModule = async () => {
   }
 };
 
+// Initialize Unity Ads module
+const initUnityAdsModule = async () => {
+  if (Platform.OS === 'web') return false;
+  
+  try {
+    const unityModule = require('react-native-unity-ads');
+    UnityAdsModule = unityModule.default || unityModule;
+    return true;
+  } catch (error) {
+    console.log('Unity Ads module not available:', error);
+    return false;
+  }
+};
+
 class AdManager {
   private isInitialized: boolean = false;
   private admobReady: boolean = false;
   private admobModuleLoaded: boolean = false;
+  private unityReady: boolean = false;
+  private unityModuleLoaded: boolean = false;
   private rewardedAd: any = null;
   private rewardedVideoAd: any = null;
   private interstitialAd: any = null;
@@ -89,32 +118,41 @@ class AdManager {
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
 
-    console.log('Initializing Ad Manager (AdMob only)...');
+    console.log('Initializing Ad Manager (AdMob + Unity Ads)...');
 
     try {
       if (Platform.OS !== 'web') {
+        // Initialize AdMob
         this.admobModuleLoaded = await initAdMobModule();
         
         if (this.admobModuleLoaded && MobileAds) {
-          // Initialize AdMob with proper configuration
           await MobileAds().initialize();
-          
-          // Set request configuration for better ad fill
           await MobileAds().setRequestConfiguration({
-            // Mark as NOT for children to get more ads
             tagForChildDirectedTreatment: false,
             tagForUnderAgeOfConsent: false,
-            maxAdContentRating: 'T', // Teen rating for more ad variety
+            maxAdContentRating: 'T',
           });
-          
           await this.loadAds();
           this.admobReady = true;
-          console.log('AdMob initialized successfully');
+          console.log('✅ AdMob initialized successfully');
+        }
+
+        // Initialize Unity Ads
+        this.unityModuleLoaded = await initUnityAdsModule();
+        
+        if (this.unityModuleLoaded && UnityAdsModule) {
+          try {
+            await UnityAdsModule.initialize(UNITY_CONFIG.GAME_ID, UNITY_CONFIG.TEST_MODE);
+            this.unityReady = true;
+            console.log('✅ Unity Ads initialized successfully');
+          } catch (unityError) {
+            console.log('Unity Ads initialization failed:', unityError);
+          }
         }
       }
 
       this.isInitialized = true;
-      console.log('Ad Manager initialized - AdMob ready:', this.admobReady);
+      console.log('Ad Manager initialized - AdMob:', this.admobReady, 'Unity:', this.unityReady);
     } catch (error) {
       console.error('Ad Manager initialization error:', error);
       this.isInitialized = true;
@@ -410,6 +448,88 @@ class AdManager {
       size: 'BANNER', // Will be converted to BannerAdSize in component
     };
   }
+
+  // ============================================
+  // UNITY ADS METHODS
+  // ============================================
+
+  /**
+   * Show Unity Rewarded Ad
+   */
+  async showUnityRewardedAd(): Promise<boolean> {
+    if (!this.unityReady || !UnityAdsModule) {
+      console.log('Unity Ads not ready');
+      return false;
+    }
+
+    try {
+      await UnityAdsModule.loadAd(UNITY_CONFIG.AD_UNITS.REWARDED);
+      const result = await UnityAdsModule.showAd(UNITY_CONFIG.AD_UNITS.REWARDED);
+      console.log('✅ Unity rewarded ad shown:', result);
+      this.markAdShown();
+      return result === 'COMPLETED' || result === true;
+    } catch (error) {
+      console.log('Unity rewarded ad error:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Show Unity Interstitial Ad
+   */
+  async showUnityInterstitialAd(): Promise<boolean> {
+    if (!this.unityReady || !UnityAdsModule) {
+      console.log('Unity Ads not ready');
+      return false;
+    }
+
+    try {
+      await UnityAdsModule.loadAd(UNITY_CONFIG.AD_UNITS.INTERSTITIAL);
+      await UnityAdsModule.showAd(UNITY_CONFIG.AD_UNITS.INTERSTITIAL);
+      console.log('✅ Unity interstitial ad shown');
+      this.markAdShown();
+      return true;
+    } catch (error) {
+      console.log('Unity interstitial ad error:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Show Unity Banner Ad
+   */
+  async showUnityBannerAd(): Promise<boolean> {
+    if (!this.unityReady || !UnityAdsModule) {
+      console.log('Unity Ads not ready');
+      return false;
+    }
+
+    try {
+      await UnityAdsModule.loadAd(UNITY_CONFIG.AD_UNITS.BANNER);
+      console.log('✅ Unity banner loaded');
+      return true;
+    } catch (error) {
+      console.log('Unity banner error:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Check if Unity Ads is ready
+   */
+  isUnityAdsReady(): boolean {
+    return this.unityReady;
+  }
+
+  /**
+   * Get Unity Ads config
+   */
+  getUnityConfig() {
+    return UNITY_CONFIG;
+  }
 }
 
 export const adManager = new AdManager();
+
+// Export Unity Ads config for direct access
+export { UNITY_CONFIG };
