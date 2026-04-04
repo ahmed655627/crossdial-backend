@@ -45,7 +45,7 @@ export const AnimatedLetterWheel: React.FC<AnimatedLetterWheelProps> = ({
   
   // Get wheel config based on level or custom selection
   const wheel = useMemo(() => {
-    if (customWheel) return wheelConfigs[customWheel];
+    if (customWheel && wheelConfigs[customWheel]) return wheelConfigs[customWheel];
     if (wheelDesign) return wheelDesign;
     return getWheelForLevel(level);
   }, [level, wheelDesign, customWheel]);

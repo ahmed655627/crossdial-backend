@@ -12,6 +12,14 @@ import {
   Alert,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+  withSequence,
+  withTiming,
+  runOnJS,
+} from 'react-native-reanimated';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
@@ -42,6 +50,13 @@ import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
 import { privacyService } from '../src/services/privacyService';
+
+// NEW: Import themed components and settings
+import { ThemedBackground } from '../src/components/ThemedBackground';
+import { AnimatedLetterWheel } from '../src/components/AnimatedLetterWheel';
+import { LanguageSelector } from '../src/components/LanguageSelector';
+import { useGameSettings } from '../src/stores/gameSettingsStore';
+import { getThemeForLevel, getBackgroundForLevel, getWheelForLevel } from '../src/utils/gameThemes';
 
 const { width, height } = Dimensions.get('window');
 
@@ -108,6 +123,22 @@ export default function GameScreen() {
   const [showFreeHints, setShowFreeHints] = useState(false);
   const [loginStreak, setLoginStreak] = useState(0);
   const [lastLoginDate, setLastLoginDate] = useState<string | null>(null);
+  
+  // NEW: Language selector state
+  const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+  
+  // NEW: Get settings and translations
+  const { t, language, animationsEnabled } = useGameSettings();
+  
+  // NEW: Word found animation values
+  const wordFoundScale = useSharedValue(0);
+  const wordFoundOpacity = useSharedValue(0);
+  
+  // NEW: Get current theme based on level
+  const currentLevelNumber = progress?.current_level || 1;
+  const levelTheme = getThemeForLevel(currentLevelNumber);
+  const backgroundConfig = getBackgroundForLevel(currentLevelNumber);
+  const wheelConfig = getWheelForLevel(currentLevelNumber);
 
   // Check for privacy consent on first load
   useEffect(() => {
@@ -530,12 +561,9 @@ export default function GameScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="light-content" />
-        <LinearGradient
-          colors={['#1a1a2e', '#16213e', '#0f3460']}
-          style={StyleSheet.absoluteFill}
-        />
+      <ThemedBackground level={currentLevelNumber} showParticles={animationsEnabled}>
+        <SafeAreaView style={styles.container}>
+          <StatusBar barStyle="light-content" />
 
         {/* Header */}
         <View style={styles.header}>
@@ -637,6 +665,19 @@ export default function GameScreen() {
                 <Ionicons name="shield-checkmark" size={22} color="#27ae60" />
               </View>
               <Text style={styles.menuItemText}>Privacy Policy</Text>
+            </TouchableOpacity>
+            {/* NEW: Language Selector Button */}
+            <TouchableOpacity 
+              style={styles.menuItem} 
+              onPress={() => {
+                setShowMenu(false);
+                setShowLanguageSelector(true);
+              }}
+            >
+              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(155, 89, 182, 0.15)' }]}>
+                <Ionicons name="language" size={22} color="#9b59b6" />
+              </View>
+              <Text style={styles.menuItemText}>{t('language')}</Text>
             </TouchableOpacity>
             <View style={styles.menuDivider} />
             <TouchableOpacity style={[styles.menuItem, styles.menuItemClose]} onPress={() => setShowMenu(false)}>
@@ -771,7 +812,13 @@ export default function GameScreen() {
             setShowPrivacyPolicy(true);
           }}
         />
-      </SafeAreaView>
+        {/* NEW: Language Selector Modal */}
+        <LanguageSelector
+          visible={showLanguageSelector}
+          onClose={() => setShowLanguageSelector(false)}
+        />
+        </SafeAreaView>
+      </ThemedBackground>
     </GestureHandlerRootView>
   );
 }
