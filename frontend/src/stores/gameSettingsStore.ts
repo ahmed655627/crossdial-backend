@@ -6,8 +6,8 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { SupportedLanguage, getTranslation, Translations } from './localization';
-import { BackgroundTheme, WheelDesign } from './gameThemes';
+import { SupportedLanguage, getTranslation, Translations } from '../utils/localization';
+import { BackgroundTheme, WheelDesign } from '../utils/gameThemes';
 
 interface GameSettings {
   // Language

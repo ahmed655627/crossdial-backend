@@ -46,10 +46,13 @@ import { MysteryBoxModal } from '../src/components/MysteryBox';
 import { ScratchCardModal } from '../src/components/ScratchCard';
 import { DailyLoginCalendar } from '../src/components/DailyLoginCalendar';
 import { LevelSkipModal, FreeHintsModal } from '../src/components/AdRewardModals';
-import { adManager } from '../src/utils/adManager';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
 import { privacyService } from '../src/services/privacyService';
+
+// Import web stub for adManager (native modules don't work on web preview)
+// Native builds will use the real adManager through the components
+import { adManager } from '../src/utils/adManager.web';
 
 // NEW: Import themed components and settings
 import { ThemedBackground } from '../src/components/ThemedBackground';

@@ -92,7 +92,7 @@ const initUnityAdsModule = async () => {
   if (Platform.OS === 'web') return false;
   
   try {
-    const unityModule = require('react-native-unity-ads');
+    const unityModule = await import('react-native-unity-ads');
     UnityAdsModule = unityModule.default || unityModule;
     return true;
   } catch (error) {
