@@ -161,6 +161,7 @@
     },
     "plugins": [
       "./plugins/withAdMobManifestFix",
+      "./plugins/withUnityAdsGradleFix",
       "expo-router",
       [
         "expo-splash-screen",
