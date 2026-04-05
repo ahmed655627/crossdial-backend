@@ -22,6 +22,7 @@ import Animated, {
   interpolate,
   runOnJS,
   cancelAnimation,
+  SharedValue,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as Haptics from 'expo-haptics';
@@ -32,6 +33,40 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const WHEEL_SIZE = Math.min(SCREEN_WIDTH * 0.85, 320);
 const LETTER_SIZE = 54;
 const LETTER_RADIUS = (WHEEL_SIZE / 2) - LETTER_SIZE / 2 - 30; // Keep letters inside wheel
+
+// Particle Component - Hooks must be called at top level
+const Particle: React.FC<{
+  anim: {
+    x: SharedValue<number>;
+    y: SharedValue<number>;
+    scale: SharedValue<number>;
+    opacity: SharedValue<number>;
+    rotation: SharedValue<number>;
+  };
+  color: string;
+  index: number;
+}> = ({ anim, color, index }) => {
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: anim.x.value - 8 },
+      { translateY: anim.y.value - 8 },
+      { scale: anim.scale.value },
+      { rotate: `${anim.rotation.value}deg` },
+    ],
+    opacity: anim.opacity.value,
+  }));
+  
+  return (
+    <Animated.View
+      key={`particle-${index}`}
+      style={[
+        styles.particle,
+        { backgroundColor: color },
+        animatedStyle,
+      ]}
+    />
+  );
+};
 
 // Premium wheel themes
 export const PREMIUM_WHEELS = {
@@ -346,29 +381,16 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
     });
   };
   
-  // Render particles
+  // Render particles using the separate Particle component
   const renderParticles = () => {
     return particleAnims.map((anim, i) => {
       const color = PARTICLE_COLORS[i % PARTICLE_COLORS.length];
-      
-      const animatedStyle = useAnimatedStyle(() => ({
-        transform: [
-          { translateX: anim.x.value - 8 },
-          { translateY: anim.y.value - 8 },
-          { scale: anim.scale.value },
-          { rotate: `${anim.rotation.value}deg` },
-        ],
-        opacity: anim.opacity.value,
-      }));
-      
       return (
-        <Animated.View
+        <Particle
           key={`particle-${i}`}
-          style={[
-            styles.particle,
-            { backgroundColor: color },
-            animatedStyle,
-          ]}
+          anim={anim}
+          color={color}
+          index={i}
         />
       );
     });
