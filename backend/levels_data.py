@@ -2266,5 +2266,583 @@ ADDITIONAL_LEVELS = [
     }
 ]
 
+# ============== EXTENDED LEVELS 151-300 ==============
+EXTENDED_LEVELS = [
+    # Northern Lights Theme (151-165)
+    {
+        "id": 151,
+        "wonder": "Northern Lights",
+        "location": "Iceland",
+        "letters": ["L", "I", "G", "H", "T", "S"],
+        "targetWords": ["LIT", "HIT", "SIT", "SLIT", "LIGHT", "LIGHTS"],
+        "grid": [
+            {"word": "LIT", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "HIT", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "SIT", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "SLIT", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "LIGHT", "row": 4, "col": 0, "direction": "horizontal"},
+            {"word": "LIGHTS", "row": 5, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["GILT", "HILT", "THIS", "GIST", "LIST", "TILS", "GITS"]
+    },
+    {
+        "id": 152,
+        "wonder": "Geysir Hot Springs",
+        "location": "Iceland",
+        "letters": ["S", "T", "E", "A", "M"],
+        "targetWords": ["TEA", "EAT", "SET", "SEAT", "MEAT", "STEAM"],
+        "grid": [
+            {"word": "TEA", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "EAT", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "SET", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "SEAT", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "MEAT", "row": 4, "col": 0, "direction": "horizontal"},
+            {"word": "STEAM", "row": 5, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["MATE", "TEAM", "TAME", "MAST", "MATS", "SAME", "MEATS", "TEAMS"]
+    },
+    {
+        "id": 153,
+        "wonder": "Blue Lagoon",
+        "location": "Iceland",
+        "letters": ["W", "A", "R", "M"],
+        "targetWords": ["ARM", "WAR", "MAR", "RAW", "WARM"],
+        "grid": [
+            {"word": "ARM", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "WAR", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "MAR", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "RAW", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "WARM", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["WARMS", "MARS", "WARS", "ARMS", "SWARM"]
+    },
+    {
+        "id": 154,
+        "wonder": "Thingvellir",
+        "location": "Iceland",
+        "letters": ["P", "L", "A", "T", "E"],
+        "targetWords": ["PAL", "LAP", "PET", "LATE", "PLATE"],
+        "grid": [
+            {"word": "PAL", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "LAP", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "PET", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "LATE", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "PLATE", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["TALE", "PETAL", "LEAP", "TAPE", "PALE", "PLEA"]
+    },
+    {
+        "id": 155,
+        "wonder": "Skogafoss Waterfall",
+        "location": "Iceland",
+        "letters": ["F", "A", "L", "L", "S"],
+        "targetWords": ["ALL", "FALL", "FALLS"],
+        "grid": [
+            {"word": "ALL", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "FALL", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "FALLS", "row": 2, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["ALFS", "FLAT", "SLAT"]
+    },
+    # Grand Canyon Theme (166-180)
+    {
+        "id": 166,
+        "wonder": "Grand Canyon",
+        "location": "Arizona, USA",
+        "letters": ["C", "A", "N", "Y", "O", "N"],
+        "targetWords": ["CAN", "CON", "ANY", "NAY", "CANYON"],
+        "grid": [
+            {"word": "CAN", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "CON", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "ANY", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "NAY", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "CANYON", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["CANNY", "ANNOY", "ANON", "NOON", "CANON"]
+    },
+    {
+        "id": 167,
+        "wonder": "Horseshoe Bend",
+        "location": "Arizona, USA",
+        "letters": ["B", "E", "N", "D", "S"],
+        "targetWords": ["BED", "END", "DEN", "BEND", "BENDS"],
+        "grid": [
+            {"word": "BED", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "END", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "DEN", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "BEND", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "BENDS", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["SEND", "DENS", "BEDS", "ENDS", "SNUB"]
+    },
+    {
+        "id": 168,
+        "wonder": "Antelope Canyon",
+        "location": "Arizona, USA",
+        "letters": ["S", "L", "O", "T"],
+        "targetWords": ["LOT", "SOT", "SLOT", "LOTS"],
+        "grid": [
+            {"word": "LOT", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "SOT", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "SLOT", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "LOTS", "row": 3, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["LOST", "SLOB", "BLOT", "BOLT"]
+    },
+    # Flower Meadow Theme (181-195)
+    {
+        "id": 181,
+        "wonder": "Keukenhof Gardens",
+        "location": "Netherlands",
+        "letters": ["F", "L", "O", "W", "E", "R"],
+        "targetWords": ["OWL", "ROW", "LOW", "FLOW", "LOWER", "FLOWER"],
+        "grid": [
+            {"word": "OWL", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "ROW", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "LOW", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "FLOW", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "LOWER", "row": 4, "col": 0, "direction": "horizontal"},
+            {"word": "FLOWER", "row": 5, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["FOWL", "FLEW", "WOLF", "WORE", "ROLE", "LORE"]
+    },
+    {
+        "id": 182,
+        "wonder": "Tulip Fields",
+        "location": "Netherlands",
+        "letters": ["T", "U", "L", "I", "P"],
+        "targetWords": ["LIT", "TIP", "PIT", "TULIP"],
+        "grid": [
+            {"word": "LIT", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "TIP", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "PIT", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "TULIP", "row": 3, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["UNIT", "PUTT", "TILT", "PULL"]
+    },
+    # Sunset Theme (196-210)
+    {
+        "id": 196,
+        "wonder": "Santorini Sunset",
+        "location": "Greece",
+        "letters": ["G", "O", "L", "D", "E", "N"],
+        "targetWords": ["GOD", "OLD", "LOG", "GOLD", "OLDEN", "GOLDEN"],
+        "grid": [
+            {"word": "GOD", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "OLD", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "LOG", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "GOLD", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "OLDEN", "row": 4, "col": 0, "direction": "horizontal"},
+            {"word": "GOLDEN", "row": 5, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["DONE", "GONE", "LONE", "NODE", "LODE", "OGLE"]
+    },
+    {
+        "id": 197,
+        "wonder": "Oia Village",
+        "location": "Greece",
+        "letters": ["B", "L", "U", "E"],
+        "targetWords": ["LUB", "BLUE"],
+        "grid": [
+            {"word": "BLUE", "row": 0, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["LUBE", "BULE"]
+    },
+    # Underwater Theme (211-225)
+    {
+        "id": 211,
+        "wonder": "Great Barrier Reef",
+        "location": "Australia",
+        "letters": ["C", "O", "R", "A", "L"],
+        "targetWords": ["CAR", "OAR", "ARC", "ORAL", "CORAL"],
+        "grid": [
+            {"word": "CAR", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "OAR", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "ARC", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "ORAL", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "CORAL", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["COLA", "CARL", "ORCA", "LOCA", "ARCO"]
+    },
+    {
+        "id": 212,
+        "wonder": "Maldives Reef",
+        "location": "Maldives",
+        "letters": ["D", "I", "V", "E", "S"],
+        "targetWords": ["DIE", "VIE", "DIVE", "DIVES"],
+        "grid": [
+            {"word": "DIE", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "VIE", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "DIVE", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "DIVES", "row": 3, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["VIED", "DIES", "VIES", "SIDE", "IDES"]
+    },
+    # Sakura Theme (226-240)
+    {
+        "id": 226,
+        "wonder": "Mount Fuji",
+        "location": "Japan",
+        "letters": ["P", "E", "A", "K", "S"],
+        "targetWords": ["PEA", "SEA", "PEAK", "PEAKS"],
+        "grid": [
+            {"word": "PEA", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "SEA", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "PEAK", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "PEAKS", "row": 3, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["SAKE", "SPEAK", "PEAS", "APES", "SPAKE"]
+    },
+    {
+        "id": 227,
+        "wonder": "Kyoto Gardens",
+        "location": "Japan",
+        "letters": ["B", "L", "O", "O", "M"],
+        "targetWords": ["MOB", "LOOM", "BLOOM"],
+        "grid": [
+            {"word": "MOB", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "LOOM", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "BLOOM", "row": 2, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["BOOM", "LOOM", "BOLO", "MOOL"]
+    },
+    # Autumn Theme (241-255)
+    {
+        "id": 241,
+        "wonder": "Maple Valley",
+        "location": "Vermont, USA",
+        "letters": ["L", "E", "A", "V", "E", "S"],
+        "targetWords": ["EVE", "SEA", "LEA", "SAVE", "LEAVE", "LEAVES"],
+        "grid": [
+            {"word": "EVE", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "SEA", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "LEA", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "SAVE", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "LEAVE", "row": 4, "col": 0, "direction": "horizontal"},
+            {"word": "LEAVES", "row": 5, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["VASE", "EASE", "SLAVE", "WEAVE", "ELVES", "EAVES"]
+    },
+    {
+        "id": 242,
+        "wonder": "Napa Valley",
+        "location": "California, USA",
+        "letters": ["V", "I", "N", "E", "S"],
+        "targetWords": ["VIE", "SIN", "VINE", "VINES"],
+        "grid": [
+            {"word": "VIE", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "SIN", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "VINE", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "VINES", "row": 3, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["VEINS", "SIREN", "RISEN", "RINSE"]
+    },
+    # Storm Theme (256-270)
+    {
+        "id": 256,
+        "wonder": "Lightning Fields",
+        "location": "New Mexico, USA",
+        "letters": ["S", "T", "O", "R", "M"],
+        "targetWords": ["ROT", "MOT", "SORT", "STORM"],
+        "grid": [
+            {"word": "ROT", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "MOT", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "SORT", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "STORM", "row": 3, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["MORT", "TORS", "ROTS", "MOST", "MORTS", "WORMS"]
+    },
+    {
+        "id": 257,
+        "wonder": "Tornado Alley",
+        "location": "Oklahoma, USA",
+        "letters": ["W", "I", "N", "D", "S"],
+        "targetWords": ["WIN", "DIN", "WIND", "WINDS"],
+        "grid": [
+            {"word": "WIN", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "DIN", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "WIND", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "WINDS", "row": 3, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["DINS", "WINS", "SIND", "WIDS"]
+    },
+    # Galaxy Theme (271-285)
+    {
+        "id": 271,
+        "wonder": "Milky Way View",
+        "location": "Chile",
+        "letters": ["S", "T", "A", "R", "S"],
+        "targetWords": ["TAR", "RAT", "SAT", "STAR", "STARS"],
+        "grid": [
+            {"word": "TAR", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "RAT", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "SAT", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "STAR", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "STARS", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["TARS", "RATS", "ARTS", "TSAR", "TSARS"]
+    },
+    {
+        "id": 272,
+        "wonder": "Atacama Desert",
+        "location": "Chile",
+        "letters": ["S", "P", "A", "C", "E"],
+        "targetWords": ["CAP", "ACE", "PEA", "CAPE", "SPACE"],
+        "grid": [
+            {"word": "CAP", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "ACE", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "PEA", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "CAPE", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "SPACE", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["PACE", "APES", "PECS", "CAPS", "CAPES", "PACES", "ESCAPE"]
+    },
+    # Ancient Civilization Theme (286-300)
+    {
+        "id": 286,
+        "wonder": "Angkor Wat",
+        "location": "Cambodia",
+        "letters": ["T", "E", "M", "P", "L", "E"],
+        "targetWords": ["MET", "PET", "LET", "MEET", "TEMPLE"],
+        "grid": [
+            {"word": "MET", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "PET", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "LET", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "MEET", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "TEMPLE", "row": 4, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["PEEL", "MELT", "PELT", "TEEM", "EMIT"]
+    },
+    {
+        "id": 287,
+        "wonder": "Borobudur",
+        "location": "Indonesia",
+        "letters": ["S", "T", "O", "N", "E", "S"],
+        "targetWords": ["SON", "TON", "SET", "TONE", "STONE", "STONES"],
+        "grid": [
+            {"word": "SON", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "TON", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "SET", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "TONE", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "STONE", "row": 4, "col": 0, "direction": "horizontal"},
+            {"word": "STONES", "row": 5, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["ONES", "NEST", "NOTE", "NOSE", "TONES", "NOTES", "ONSET", "NOSES"]
+    },
+    {
+        "id": 300,
+        "wonder": "Ultimate Wonder",
+        "location": "World Master",
+        "letters": ["M", "A", "S", "T", "E", "R", "S"],
+        "targetWords": ["MAT", "SAT", "EAT", "MEAT", "STREAM", "MASTERS"],
+        "grid": [
+            {"word": "MAT", "row": 0, "col": 0, "direction": "horizontal"},
+            {"word": "SAT", "row": 1, "col": 0, "direction": "horizontal"},
+            {"word": "EAT", "row": 2, "col": 0, "direction": "horizontal"},
+            {"word": "MEAT", "row": 3, "col": 0, "direction": "horizontal"},
+            {"word": "STREAM", "row": 4, "col": 0, "direction": "horizontal"},
+            {"word": "MASTERS", "row": 5, "col": 0, "direction": "horizontal"}
+        ],
+        "bonusWords": ["MART", "SMART", "STEAM", "TEAMS", "MASTS", "TEARS", "STARE"]
+    }
+]
+
+# Fill in missing levels 156-165, 169-180, 183-195, 198-210, 213-225, 228-240, 243-255, 258-270, 273-285, 288-299
+FILLER_LEVELS = []
+
+# Wonder locations for each theme range
+WONDER_THEMES = {
+    (156, 165): [
+        ("Dettifoss Waterfall", "Iceland"),
+        ("Jökulsárlón Glacier", "Iceland"),
+        ("Reykjavik Harbor", "Iceland"),
+        ("Vatnajökull Ice", "Iceland"),
+        ("Landmannalaugar", "Iceland"),
+        ("Seljalandsfoss", "Iceland"),
+        ("Reynisfjara Beach", "Iceland"),
+        ("Strokkur Geyser", "Iceland"),
+        ("Hverir Hot Springs", "Iceland"),
+        ("Diamond Beach", "Iceland"),
+    ],
+    (169, 180): [
+        ("Sedona Rocks", "Arizona, USA"),
+        ("Monument Valley", "Arizona, USA"),
+        ("Vermilion Cliffs", "Arizona, USA"),
+        ("Petrified Forest", "Arizona, USA"),
+        ("Saguaro Desert", "Arizona, USA"),
+        ("Havasu Falls", "Arizona, USA"),
+        ("Meteor Crater", "Arizona, USA"),
+        ("Painted Desert", "Arizona, USA"),
+        ("Canyon de Chelly", "Arizona, USA"),
+        ("Lake Powell", "Arizona, USA"),
+        ("Glen Canyon", "Arizona, USA"),
+        ("Wupatki Ruins", "Arizona, USA"),
+    ],
+    (183, 195): [
+        ("Lavender Fields", "Provence, France"),
+        ("Sunflower Fields", "Tuscany, Italy"),
+        ("Cherry Orchards", "Washington, USA"),
+        ("Poppy Fields", "California, USA"),
+        ("Rose Gardens", "Portland, USA"),
+        ("Iris Gardens", "Oregon, USA"),
+        ("Bluebell Woods", "England"),
+        ("Lotus Pond", "Vietnam"),
+        ("Wisteria Tunnel", "Japan"),
+        ("Hibiscus Beach", "Hawaii"),
+        ("Magnolia Garden", "South Carolina"),
+        ("Jasmine Valley", "India"),
+        ("Orchid Forest", "Thailand"),
+    ],
+    (198, 210): [
+        ("Maldives Sunset", "Maldives"),
+        ("Key West Pier", "Florida, USA"),
+        ("Uluru at Dusk", "Australia"),
+        ("Grand Canyon Rim", "Arizona, USA"),
+        ("Bora Bora Beach", "French Polynesia"),
+        ("Amalfi Coast", "Italy"),
+        ("Cape Town Beach", "South Africa"),
+        ("Phi Phi Islands", "Thailand"),
+        ("Zanzibar Beach", "Tanzania"),
+        ("Big Sur Coast", "California, USA"),
+        ("Dubrovnik Walls", "Croatia"),
+        ("Cinque Terre", "Italy"),
+        ("Maui Beach", "Hawaii"),
+    ],
+    (213, 225): [
+        ("Palau Islands", "Palau"),
+        ("Raja Ampat", "Indonesia"),
+        ("Red Sea Reef", "Egypt"),
+        ("Cozumel Reef", "Mexico"),
+        ("Belize Barrier", "Belize"),
+        ("Fiji Reef", "Fiji"),
+        ("Komodo Island", "Indonesia"),
+        ("Galapagos Sea", "Ecuador"),
+        ("Seychelles Reef", "Seychelles"),
+        ("Sipadan Island", "Malaysia"),
+        ("Tubbataha Reef", "Philippines"),
+        ("Ningaloo Reef", "Australia"),
+        ("Cayman Islands", "Caribbean"),
+    ],
+    (228, 240): [
+        ("Nara Park", "Japan"),
+        ("Tokyo Gardens", "Japan"),
+        ("Osaka Castle", "Japan"),
+        ("Hiroshima Park", "Japan"),
+        ("Kanazawa Garden", "Japan"),
+        ("Nagoya Castle", "Japan"),
+        ("Nikko Shrine", "Japan"),
+        ("Kamakura Buddha", "Japan"),
+        ("Himeji Castle", "Japan"),
+        ("Kinkaku-ji", "Japan"),
+        ("Fushimi Inari", "Japan"),
+        ("Arashiyama", "Japan"),
+        ("Miyajima Island", "Japan"),
+    ],
+    (243, 255): [
+        ("Central Park", "New York, USA"),
+        ("Lake Tahoe", "California, USA"),
+        ("Smoky Mountains", "Tennessee, USA"),
+        ("Blue Ridge Parkway", "Virginia, USA"),
+        ("White Mountains", "New Hampshire, USA"),
+        ("Acadia Park", "Maine, USA"),
+        ("Aspen Valley", "Colorado, USA"),
+        ("Door County", "Wisconsin, USA"),
+        ("Shenandoah Valley", "Virginia, USA"),
+        ("Catskill Mountains", "New York, USA"),
+        ("Berkshire Hills", "Massachusetts, USA"),
+        ("Hudson Valley", "New York, USA"),
+        ("Finger Lakes", "New York, USA"),
+    ],
+    (258, 270): [
+        ("Catatumbo", "Venezuela"),
+        ("Lake Maracaibo", "Venezuela"),
+        ("Supercell Plains", "Kansas, USA"),
+        ("Monsoon Valley", "India"),
+        ("Typhoon Coast", "Taiwan"),
+        ("Hurricane Beach", "Florida, USA"),
+        ("Thunder Bay", "Canada"),
+        ("Storm Chaser", "Nebraska, USA"),
+        ("Electric Sky", "Texas, USA"),
+        ("Cyclone Coast", "Bangladesh"),
+        ("Tempest Peak", "Colorado, USA"),
+        ("Blizzard Range", "Alaska, USA"),
+        ("Squall Line", "Iowa, USA"),
+    ],
+    (273, 285): [
+        ("Paranal Observatory", "Chile"),
+        ("Mauna Kea", "Hawaii"),
+        ("Namib Desert", "Namibia"),
+        ("Sahara Night", "Morocco"),
+        ("Gobi Desert", "Mongolia"),
+        ("Death Valley", "California, USA"),
+        ("Outback Stars", "Australia"),
+        ("Karoo Desert", "South Africa"),
+        ("Wadi Rum", "Jordan"),
+        ("Thar Desert", "India"),
+        ("Sonoran Night", "Arizona, USA"),
+        ("Mojave Stars", "California, USA"),
+        ("Joshua Tree", "California, USA"),
+    ],
+    (288, 299): [
+        ("Bagan Temples", "Myanmar"),
+        ("Ayutthaya", "Thailand"),
+        ("Sukhothai", "Thailand"),
+        ("Prambanan", "Indonesia"),
+        ("My Son", "Vietnam"),
+        ("Hampi Ruins", "India"),
+        ("Ellora Caves", "India"),
+        ("Sigiriya Rock", "Sri Lanka"),
+        ("Polonnaruwa", "Sri Lanka"),
+        ("Khajuraho", "India"),
+        ("Konark Temple", "India"),
+        ("Fatehpur Sikri", "India"),
+    ],
+}
+
+# Word sets for filler levels
+WORD_SETS = [
+    {"letters": ["R", "O", "C", "K"], "words": ["ROC", "COR", "ROCK"], "bonus": ["CORK", "CROCK"]},
+    {"letters": ["S", "A", "N", "D"], "words": ["AND", "SAD", "SAND"], "bonus": ["DANS", "ANDS"]},
+    {"letters": ["W", "A", "V", "E"], "words": ["AWE", "AVE", "WAVE"], "bonus": ["WAVY", "WEAVE"]},
+    {"letters": ["G", "L", "O", "W"], "words": ["LOW", "OWL", "GLOW"], "bonus": ["GOLF", "FLOW"]},
+    {"letters": ["M", "O", "O", "N"], "words": ["MOO", "MOON"], "bonus": ["NOON", "MONO"]},
+    {"letters": ["S", "K", "Y"], "words": ["SKY"], "bonus": ["KEYS", "YAKS"]},
+    {"letters": ["D", "A", "W", "N"], "words": ["WAD", "AND", "DAWN"], "bonus": ["WAND", "DRAWN"]},
+    {"letters": ["D", "U", "S", "K"], "words": ["DUE", "DUSK"], "bonus": ["DESK", "DUKES"]},
+    {"letters": ["P", "E", "A", "K"], "words": ["PEA", "PEAK"], "bonus": ["PECK", "SPEAK"]},
+    {"letters": ["C", "A", "V", "E"], "words": ["ACE", "AVE", "CAVE"], "bonus": ["COVE", "VASE"]},
+    {"letters": ["R", "I", "V", "E", "R"], "words": ["IRE", "VIE", "RIVER"], "bonus": ["RIVE", "RIVEN"]},
+    {"letters": ["L", "A", "K", "E"], "words": ["ALE", "ELK", "LAKE"], "bonus": ["KALE", "LEAK"]},
+    {"letters": ["H", "I", "L", "L"], "words": ["ILL", "HILL"], "bonus": ["HULL", "HILLY"]},
+    {"letters": ["V", "A", "L", "E"], "words": ["ALE", "VALE"], "bonus": ["VEAL", "LAVE"]},
+    {"letters": ["F", "O", "R", "E", "S", "T"], "words": ["FOR", "SET", "REST", "FOREST"], "bonus": ["FORT", "STORE", "FROST"]},
+]
+
+# Generate filler levels
+level_id = 156
+for range_start, range_end in [(156, 165), (169, 180), (183, 195), (198, 210), (213, 225), (228, 240), (243, 255), (258, 270), (273, 285), (288, 299)]:
+    wonders = WONDER_THEMES.get((range_start, range_end), [])
+    for i, wonder_info in enumerate(wonders):
+        if level_id > 299:
+            break
+        wonder, location = wonder_info
+        word_set = WORD_SETS[i % len(WORD_SETS)]
+        
+        grid = [{"word": w, "row": j, "col": 0, "direction": "horizontal"} for j, w in enumerate(word_set["words"])]
+        
+        FILLER_LEVELS.append({
+            "id": level_id,
+            "wonder": wonder,
+            "location": location,
+            "letters": word_set["letters"],
+            "targetWords": word_set["words"],
+            "grid": grid,
+            "bonusWords": word_set["bonus"]
+        })
+        level_id += 1
+
 # Merge all levels
-LEVEL_DATA = LEVEL_DATA + ADDITIONAL_LEVELS
+LEVEL_DATA = LEVEL_DATA + ADDITIONAL_LEVELS + EXTENDED_LEVELS + FILLER_LEVELS
+
+# Sort by ID
+LEVEL_DATA = sorted(LEVEL_DATA, key=lambda x: x["id"])

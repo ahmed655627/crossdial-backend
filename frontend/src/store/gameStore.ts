@@ -340,12 +340,31 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   shuffleLetters: () => {
-    const { currentLevel, soundEnabled } = get();
+    const { currentLevel, soundEnabled, levels } = get();
     if (!currentLevel) return;
     
+    // Shuffle the letters
     const shuffled = [...currentLevel.letters].sort(() => Math.random() - 0.5);
+    
+    // Also cycle through different wonder themes for visual variety
+    // Get a random wonder from the same difficulty range
+    const currentId = currentLevel.id;
+    const rangeStart = Math.floor((currentId - 1) / 15) * 15 + 1;
+    const rangeEnd = rangeStart + 14;
+    
+    // Get levels in the same theme range
+    const sameTierLevels = levels.filter(l => l.id >= rangeStart && l.id <= rangeEnd);
+    const randomWonder = sameTierLevels[Math.floor(Math.random() * sameTierLevels.length)];
+    
+    // Keep the same puzzle but show different location name for variety
     set({ 
-      currentLevel: { ...currentLevel, letters: shuffled },
+      currentLevel: { 
+        ...currentLevel, 
+        letters: shuffled,
+        // Optionally change the displayed wonder (visual only)
+        wonder: randomWonder?.wonder || currentLevel.wonder,
+        location: randomWonder?.location || currentLevel.location,
+      },
       selectedLetterIndices: [],
       currentWord: ''
     });
