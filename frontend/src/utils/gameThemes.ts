@@ -6,12 +6,18 @@
 // Background theme types
 export type BackgroundTheme = 
   | 'mountains' | 'desert' | 'tropical' | 'ocean' | 'asian'
-  | 'european' | 'volcanic' | 'arctic' | 'jungle' | 'space';
+  | 'european' | 'volcanic' | 'arctic' | 'jungle' | 'space'
+  // NEW: Extended themes for levels 150+
+  | 'aurora' | 'canyon' | 'meadow' | 'sunset' | 'underwater'
+  | 'cherry' | 'autumn' | 'storm' | 'galaxy' | 'ancient';
 
 // Wheel design types
 export type WheelDesign = 
   | 'wood' | 'silver' | 'golden' | 'crystal' | 'nature'
-  | 'fire' | 'ice' | 'night' | 'rainbow' | 'electric';
+  | 'fire' | 'ice' | 'night' | 'rainbow' | 'electric'
+  // NEW: Extended wheels for levels 150+
+  | 'diamond' | 'ruby' | 'emerald' | 'sapphire' | 'obsidian'
+  | 'bronze' | 'marble' | 'neon' | 'cosmic' | 'steampunk';
 
 // Theme configuration for each level range
 export interface LevelTheme {
@@ -49,6 +55,7 @@ export interface WheelConfig {
 
 // Level themes mapping
 export const levelThemes: LevelTheme[] = [
+  // Original 150 levels
   { levelRange: [1, 15], background: 'mountains', wheel: 'wood', name: 'Mountain Peaks', description: 'Snowy mountains and forests' },
   { levelRange: [16, 30], background: 'desert', wheel: 'golden', name: 'Desert Sands', description: 'Golden dunes and pyramids' },
   { levelRange: [31, 45], background: 'tropical', wheel: 'nature', name: 'Tropical Paradise', description: 'Beaches and palm trees' },
@@ -59,6 +66,18 @@ export const levelThemes: LevelTheme[] = [
   { levelRange: [106, 120], background: 'arctic', wheel: 'ice', name: 'Arctic Frost', description: 'Ice and northern lights' },
   { levelRange: [121, 135], background: 'jungle', wheel: 'nature', name: 'Wild Jungle', description: 'Rainforest and waterfalls' },
   { levelRange: [136, 150], background: 'space', wheel: 'electric', name: 'Cosmic Quest', description: 'Stars and nebulas' },
+  
+  // NEW: Extended levels 151-300
+  { levelRange: [151, 165], background: 'aurora', wheel: 'diamond', name: 'Northern Lights', description: 'Dancing aurora borealis' },
+  { levelRange: [166, 180], background: 'canyon', wheel: 'bronze', name: 'Grand Canyon', description: 'Red rock formations' },
+  { levelRange: [181, 195], background: 'meadow', wheel: 'emerald', name: 'Flower Meadow', description: 'Blooming wildflowers' },
+  { levelRange: [196, 210], background: 'sunset', wheel: 'ruby', name: 'Golden Hour', description: 'Stunning sunset views' },
+  { levelRange: [211, 225], background: 'underwater', wheel: 'sapphire', name: 'Deep Blue', description: 'Mysterious ocean depths' },
+  { levelRange: [226, 240], background: 'cherry', wheel: 'marble', name: 'Sakura Dreams', description: 'Cherry blossom gardens' },
+  { levelRange: [241, 255], background: 'autumn', wheel: 'bronze', name: 'Fall Colors', description: 'Golden autumn leaves' },
+  { levelRange: [256, 270], background: 'storm', wheel: 'obsidian', name: 'Thunder Storm', description: 'Electric lightning skies' },
+  { levelRange: [271, 285], background: 'galaxy', wheel: 'cosmic', name: 'Milky Way', description: 'Infinite star fields' },
+  { levelRange: [286, 300], background: 'ancient', wheel: 'steampunk', name: 'Lost Civilization', description: 'Ancient ruins and mysteries' },
 ];
 
 // Background configurations
@@ -142,6 +161,87 @@ export const backgroundConfigs: Record<BackgroundTheme, BackgroundConfig> = {
     overlayOpacity: 0.2,
     particleColor: '#FFFFFF',
     imageUrl: 'https://images.unsplash.com/photo-1462331940025-496dfbfc7564',
+  },
+  // NEW: Extended backgrounds for levels 150+
+  aurora: {
+    id: 'aurora',
+    name: 'Northern Lights',
+    gradientColors: ['#0B3D0B', '#00CED1', '#9932CC'],
+    overlayOpacity: 0.25,
+    particleColor: '#00FF7F',
+    imageUrl: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7',
+  },
+  canyon: {
+    id: 'canyon',
+    name: 'Grand Canyon',
+    gradientColors: ['#8B4513', '#CD5C5C', '#F4A460'],
+    overlayOpacity: 0.3,
+    particleColor: '#FFD700',
+    imageUrl: 'https://images.unsplash.com/photo-1474044159687-1ee9f3a51722',
+  },
+  meadow: {
+    id: 'meadow',
+    name: 'Flower Meadow',
+    gradientColors: ['#90EE90', '#FFB6C1', '#87CEEB'],
+    overlayOpacity: 0.2,
+    particleColor: '#FFB6C1',
+    imageUrl: 'https://images.unsplash.com/photo-1490750967868-88aa4486c946',
+  },
+  sunset: {
+    id: 'sunset',
+    name: 'Golden Hour',
+    gradientColors: ['#FF4500', '#FF8C00', '#FFD700'],
+    overlayOpacity: 0.3,
+    particleColor: '#FFFFFF',
+    imageUrl: 'https://images.unsplash.com/photo-1495616811223-4d98c6e9c869',
+  },
+  underwater: {
+    id: 'underwater',
+    name: 'Deep Blue',
+    gradientColors: ['#000080', '#006994', '#40E0D0'],
+    overlayOpacity: 0.35,
+    particleColor: '#7FFFD4',
+    imageUrl: 'https://images.unsplash.com/photo-1682687220742-aba13b6e50ba',
+  },
+  cherry: {
+    id: 'cherry',
+    name: 'Sakura Dreams',
+    gradientColors: ['#FFB7C5', '#FF69B4', '#FFC0CB'],
+    overlayOpacity: 0.25,
+    particleColor: '#FFFFFF',
+    imageUrl: 'https://images.unsplash.com/photo-1522383225653-ed111181a951',
+  },
+  autumn: {
+    id: 'autumn',
+    name: 'Fall Colors',
+    gradientColors: ['#8B4513', '#FF8C00', '#FFD700'],
+    overlayOpacity: 0.3,
+    particleColor: '#FF6347',
+    imageUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+  },
+  storm: {
+    id: 'storm',
+    name: 'Thunder Storm',
+    gradientColors: ['#1C1C1C', '#4B0082', '#8B008B'],
+    overlayOpacity: 0.4,
+    particleColor: '#00BFFF',
+    imageUrl: 'https://images.unsplash.com/photo-1605727216801-e27ce1d0cc28',
+  },
+  galaxy: {
+    id: 'galaxy',
+    name: 'Milky Way',
+    gradientColors: ['#0D0015', '#1A0033', '#4B0082'],
+    overlayOpacity: 0.2,
+    particleColor: '#FFD700',
+    imageUrl: 'https://images.unsplash.com/photo-1419242902214-272b3f66ee7a',
+  },
+  ancient: {
+    id: 'ancient',
+    name: 'Lost Civilization',
+    gradientColors: ['#2F4F4F', '#8B7355', '#D2691E'],
+    overlayOpacity: 0.35,
+    particleColor: '#DAA520',
+    imageUrl: 'https://images.unsplash.com/photo-1539650116574-75c0c6d73f6e',
   },
 };
 
@@ -276,6 +376,137 @@ export const wheelConfigs: Record<WheelDesign, WheelConfig> = {
     glowColor: '#00FFFF',
     shadowColor: '#00008B',
     texture: 'glow',
+  },
+  // NEW: Extended wheel designs for levels 150+
+  diamond: {
+    id: 'diamond',
+    name: 'Diamond Sparkle',
+    outerRingColor: '#B9F2FF',
+    outerRingGradient: ['#FFFFFF', '#E0FFFF', '#B9F2FF'],
+    innerColor: '#F0FFFF',
+    innerGradient: ['#FFFFFF', '#F5FFFA', '#E0FFFF'],
+    letterButtonColor: '#FFFFFF',
+    letterTextColor: '#2F4F4F',
+    glowColor: '#FFFFFF',
+    shadowColor: '#708090',
+    texture: 'glass',
+  },
+  ruby: {
+    id: 'ruby',
+    name: 'Ruby Red',
+    outerRingColor: '#E0115F',
+    outerRingGradient: ['#FF6B6B', '#E0115F', '#8B0000'],
+    innerColor: '#DC143C',
+    innerGradient: ['#FF69B4', '#DC143C', '#8B0000'],
+    letterButtonColor: '#FFFFFF',
+    letterTextColor: '#4A0000',
+    glowColor: '#FF1493',
+    shadowColor: '#4A0000',
+    texture: 'glass',
+  },
+  emerald: {
+    id: 'emerald',
+    name: 'Emerald Green',
+    outerRingColor: '#50C878',
+    outerRingGradient: ['#98FB98', '#50C878', '#006400'],
+    innerColor: '#2E8B57',
+    innerGradient: ['#90EE90', '#3CB371', '#006400'],
+    letterButtonColor: '#FFFFFF',
+    letterTextColor: '#004000',
+    glowColor: '#00FF7F',
+    shadowColor: '#004000',
+    texture: 'glass',
+  },
+  sapphire: {
+    id: 'sapphire',
+    name: 'Sapphire Blue',
+    outerRingColor: '#0F52BA',
+    outerRingGradient: ['#6495ED', '#0F52BA', '#000080'],
+    innerColor: '#1E3A5F',
+    innerGradient: ['#4169E1', '#0F52BA', '#000080'],
+    letterButtonColor: '#FFFFFF',
+    letterTextColor: '#E6E6FA',
+    glowColor: '#00BFFF',
+    shadowColor: '#000033',
+    texture: 'glass',
+  },
+  obsidian: {
+    id: 'obsidian',
+    name: 'Obsidian Dark',
+    outerRingColor: '#1C1C1C',
+    outerRingGradient: ['#4A4A4A', '#2D2D2D', '#0D0D0D'],
+    innerColor: '#1C1C1C',
+    innerGradient: ['#3D3D3D', '#1C1C1C', '#000000'],
+    letterButtonColor: '#2D2D2D',
+    letterTextColor: '#E0E0E0',
+    glowColor: '#8B00FF',
+    shadowColor: '#000000',
+    texture: 'stone',
+  },
+  bronze: {
+    id: 'bronze',
+    name: 'Ancient Bronze',
+    outerRingColor: '#CD7F32',
+    outerRingGradient: ['#DAA520', '#CD7F32', '#8B4513'],
+    innerColor: '#B87333',
+    innerGradient: ['#DEB887', '#CD7F32', '#8B4513'],
+    letterButtonColor: '#FFFFFF',
+    letterTextColor: '#4A3728',
+    glowColor: '#FFD700',
+    shadowColor: '#3E2723',
+    texture: 'metal',
+  },
+  marble: {
+    id: 'marble',
+    name: 'Classic Marble',
+    outerRingColor: '#F5F5F5',
+    outerRingGradient: ['#FFFFFF', '#E8E8E8', '#D3D3D3'],
+    innerColor: '#FAFAFA',
+    innerGradient: ['#FFFFFF', '#F5F5F5', '#E0E0E0'],
+    letterButtonColor: '#FFFFFF',
+    letterTextColor: '#2F4F4F',
+    glowColor: '#FFD700',
+    shadowColor: '#696969',
+    texture: 'stone',
+  },
+  neon: {
+    id: 'neon',
+    name: 'Neon Glow',
+    outerRingColor: '#FF00FF',
+    outerRingGradient: ['#FF1493', '#FF00FF', '#8B00FF'],
+    innerColor: '#0D0015',
+    innerGradient: ['#1A0033', '#0D0015', '#000000'],
+    letterButtonColor: '#1A0033',
+    letterTextColor: '#00FF00',
+    glowColor: '#FF00FF',
+    shadowColor: '#4B0082',
+    texture: 'glow',
+  },
+  cosmic: {
+    id: 'cosmic',
+    name: 'Cosmic Nebula',
+    outerRingColor: '#9932CC',
+    outerRingGradient: ['#FF69B4', '#9932CC', '#4B0082'],
+    innerColor: '#2E1A47',
+    innerGradient: ['#8B008B', '#4B0082', '#1A0033'],
+    letterButtonColor: '#FFFFFF',
+    letterTextColor: '#E6E6FA',
+    glowColor: '#FFD700',
+    shadowColor: '#0D0015',
+    texture: 'glow',
+  },
+  steampunk: {
+    id: 'steampunk',
+    name: 'Steampunk Gears',
+    outerRingColor: '#B87333',
+    outerRingGradient: ['#CD7F32', '#8B4513', '#654321'],
+    innerColor: '#704214',
+    innerGradient: ['#8B7355', '#704214', '#3E2723'],
+    letterButtonColor: '#F5DEB3',
+    letterTextColor: '#2F1810',
+    glowColor: '#FFD700',
+    shadowColor: '#1A0F0A',
+    texture: 'metal',
   },
 };
 
