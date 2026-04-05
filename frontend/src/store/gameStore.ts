@@ -312,8 +312,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   submitWord: async () => {
     const { currentWord, currentLevel, deviceId, foundWords, bonusWordsFound, soundEnabled } = get();
+    
+    // Clear selection first to prevent multiple submissions
+    set({ selectedLetterIndices: [], currentWord: '' });
+    
     if (!currentLevel || !deviceId || currentWord.length < 3) {
-      set({ selectedLetterIndices: [], currentWord: '', lastWordResult: null });
+      set({ lastWordResult: null });
       return;
     }
     
@@ -321,11 +325,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     
     // Check if already found
     if (foundWords.includes(word) || bonusWordsFound.includes(word)) {
-      set({ 
-        selectedLetterIndices: [], 
-        currentWord: '',
-        lastWordResult: { word, isBonus: false, isValid: false }
-      });
+      set({ lastWordResult: { word, isBonus: false, isValid: false } });
       if (soundEnabled) soundManager.playWrongWord();
       return;
     }
@@ -337,13 +337,20 @@ export const useGameStore = create<GameState>((set, get) => ({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ word, level_id: currentLevel.id }),
       });
+      
+      if (!response.ok) {
+        console.error('Validate word response not ok:', response.status);
+        set({ lastWordResult: { word, isBonus: false, isValid: false } });
+        return;
+      }
+      
       const result = await response.json();
       
       if (result.valid) {
-        // Add word to found list
-        await fetch(`${API_URL}/api/progress/${deviceId}/add-word?level_id=${currentLevel.id}&word=${word}&is_bonus=${result.is_bonus_word}`, {
+        // Add word to found list (non-blocking)
+        fetch(`${API_URL}/api/progress/${deviceId}/add-word?level_id=${currentLevel.id}&word=${word}&is_bonus=${result.is_bonus_word}`, {
           method: 'POST',
-        });
+        }).catch(e => console.error('Add word error:', e));
         
         // Update local state
         if (result.is_target_word) {
@@ -363,10 +370,11 @@ export const useGameStore = create<GameState>((set, get) => ({
           if (soundEnabled) soundManager.playBonusWord();
         }
         
-        // Refresh progress
-        const progressResponse = await fetch(`${API_URL}/api/progress/${deviceId}`);
-        const progress = await progressResponse.json();
-        set({ progress });
+        // Refresh progress (non-blocking)
+        fetch(`${API_URL}/api/progress/${deviceId}`)
+          .then(res => res.json())
+          .then(progress => set({ progress }))
+          .catch(e => console.error('Refresh progress error:', e));
         
         set({ lastWordResult: { word, isBonus: result.is_bonus_word, isValid: true } });
       } else {
@@ -375,9 +383,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
     } catch (error) {
       console.error('Submit word error:', error);
+      set({ lastWordResult: { word, isBonus: false, isValid: false } });
     }
-    
-    set({ selectedLetterIndices: [], currentWord: '' });
   },
 
   shuffleLetters: () => {

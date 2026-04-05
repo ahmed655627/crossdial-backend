@@ -771,13 +771,9 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Letter Wheel - Premium or Standard */}
+        {/* Letter Wheel - Use standard wheel for stability */}
         <View style={styles.wheelContainer}>
-          {usePremiumWheel ? (
-            <PremiumLetterWheel wheelTheme={premiumWheelTheme} />
-          ) : (
-            <LetterWheel />
-          )}
+          <LetterWheel />
         </View>
 
         {/* Action Buttons */}
