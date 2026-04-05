@@ -10,6 +10,7 @@ import {
   Dimensions,
   Platform,
   Alert,
+  Modal,
 } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import Animated, {
@@ -61,6 +62,11 @@ import { PremiumLetterWheel } from '../src/components/PremiumLetterWheel';
 import { LanguageSelector } from '../src/components/LanguageSelector';
 import { useGameSettings } from '../src/stores/gameSettingsStore';
 import { getThemeForLevel, getBackgroundForLevel, getWheelForLevel } from '../src/utils/gameThemes';
+
+// NEW: Import game modes
+import GameModeSelector from '../src/components/GameModeSelector';
+import MatchMode from '../src/components/MatchMode';
+import { GameModeType } from '../src/data/gameModes';
 
 const { width, height } = Dimensions.get('window');
 
@@ -130,6 +136,12 @@ export default function GameScreen() {
   
   // NEW: Language selector state
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
+  
+  // NEW: Game mode states
+  const [showGameModeSelector, setShowGameModeSelector] = useState(false);
+  const [currentGameMode, setCurrentGameMode] = useState<GameModeType>('classic');
+  const [showMatchMode, setShowMatchMode] = useState(false);
+  const [matchPuzzleId, setMatchPuzzleId] = useState(1);
   
   // NEW: Get settings and translations
   const { t, language, animationsEnabled, usePremiumWheel, premiumWheelTheme } = useGameSettings();
@@ -760,6 +772,14 @@ export default function GameScreen() {
 
         {/* Action Buttons */}
         <View style={styles.actionButtons}>
+          {/* Game Modes Button */}
+          <TouchableOpacity 
+            style={[styles.actionButton, styles.gameModeButton]} 
+            onPress={() => setShowGameModeSelector(true)}
+          >
+            <Text style={styles.gameModeIcon}>🎮</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={[styles.actionButton, styles.shuffleButton]} onPress={handleShuffle}>
             <Ionicons name="shuffle" size={24} color="#fff" />
             <View style={styles.adBadge}>
@@ -825,6 +845,35 @@ export default function GameScreen() {
           visible={showLanguageSelector}
           onClose={() => setShowLanguageSelector(false)}
         />
+        
+        {/* NEW: Game Mode Selector */}
+        <GameModeSelector
+          visible={showGameModeSelector}
+          currentLevel={currentLevelNumber}
+          onSelectMode={(mode) => {
+            setCurrentGameMode(mode);
+            setShowGameModeSelector(false);
+            if (mode === 'match') {
+              setShowMatchMode(true);
+            }
+          }}
+          onClose={() => setShowGameModeSelector(false)}
+        />
+        
+        {/* NEW: Match Mode Game */}
+        {showMatchMode && (
+          <Modal visible={showMatchMode} animationType="slide" transparent={false}>
+            <MatchMode
+              puzzleId={matchPuzzleId}
+              onComplete={(reward) => {
+                // Add coins reward
+                setShowMatchMode(false);
+                setMatchPuzzleId(prev => prev + 1);
+              }}
+              onClose={() => setShowMatchMode(false)}
+            />
+          </Modal>
+        )}
         </SafeAreaView>
       </ThemedBackground>
     </GestureHandlerRootView>
@@ -1130,6 +1179,13 @@ const styles = StyleSheet.create({
   shuffleButton: {
     backgroundColor: 'rgba(52, 152, 219, 0.35)',
     borderColor: 'rgba(52, 152, 219, 0.5)',
+  },
+  gameModeButton: {
+    backgroundColor: 'rgba(155, 89, 182, 0.35)',
+    borderColor: 'rgba(155, 89, 182, 0.5)',
+  },
+  gameModeIcon: {
+    fontSize: 24,
   },
   adBadge: {
     position: 'absolute',

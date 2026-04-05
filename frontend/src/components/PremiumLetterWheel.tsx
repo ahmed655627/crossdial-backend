@@ -157,7 +157,7 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
   
   // Trigger particle explosion when word is found
   useEffect(() => {
-    if (lastWordResult?.found && animationsEnabled) {
+    if (lastWordResult?.isValid && animationsEnabled) {
       triggerParticleExplosion();
       onWordFound?.();
     }
