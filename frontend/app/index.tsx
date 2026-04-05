@@ -57,6 +57,7 @@ import { adManager } from '../src/utils/adManager.web';
 // NEW: Import themed components and settings
 import { ThemedBackground } from '../src/components/ThemedBackground';
 import { AnimatedLetterWheel } from '../src/components/AnimatedLetterWheel';
+import { PremiumLetterWheel } from '../src/components/PremiumLetterWheel';
 import { LanguageSelector } from '../src/components/LanguageSelector';
 import { useGameSettings } from '../src/stores/gameSettingsStore';
 import { getThemeForLevel, getBackgroundForLevel, getWheelForLevel } from '../src/utils/gameThemes';
@@ -131,7 +132,7 @@ export default function GameScreen() {
   const [showLanguageSelector, setShowLanguageSelector] = useState(false);
   
   // NEW: Get settings and translations
-  const { t, language, animationsEnabled } = useGameSettings();
+  const { t, language, animationsEnabled, usePremiumWheel, premiumWheelTheme } = useGameSettings();
   
   // NEW: Word found animation values
   const wordFoundScale = useSharedValue(0);
@@ -748,9 +749,13 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Letter Wheel */}
+        {/* Letter Wheel - Premium or Standard */}
         <View style={styles.wheelContainer}>
-          <LetterWheel />
+          {usePremiumWheel ? (
+            <PremiumLetterWheel wheelTheme={premiumWheelTheme} />
+          ) : (
+            <LetterWheel />
+          )}
         </View>
 
         {/* Action Buttons */}

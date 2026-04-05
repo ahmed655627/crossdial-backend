@@ -9,6 +9,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SupportedLanguage, getTranslation, Translations } from '../utils/localization';
 import { BackgroundTheme, WheelDesign } from '../utils/gameThemes';
 
+// Premium wheel theme types
+export type PremiumWheelTheme = 'wooden' | 'golden' | 'crystal' | 'emerald';
+
 interface GameSettings {
   // Language
   language: SupportedLanguage;
@@ -26,6 +29,8 @@ interface GameSettings {
   // Theme overrides (null = use level-based theme)
   customBackground: BackgroundTheme | null;
   customWheel: WheelDesign | null;
+  premiumWheelTheme: PremiumWheelTheme;
+  usePremiumWheel: boolean;
   
   // Notifications
   notificationsEnabled: boolean;
@@ -40,6 +45,8 @@ interface GameSettings {
   setParticlesEnabled: (enabled: boolean) => void;
   setCustomBackground: (bg: BackgroundTheme | null) => void;
   setCustomWheel: (wheel: WheelDesign | null) => void;
+  setPremiumWheelTheme: (theme: PremiumWheelTheme) => void;
+  setUsePremiumWheel: (use: boolean) => void;
   setNotificationsEnabled: (enabled: boolean) => void;
   setDailyReminderTime: (time: string) => void;
   
@@ -58,6 +65,8 @@ const defaultSettings = {
   particlesEnabled: true,
   customBackground: null,
   customWheel: null,
+  premiumWheelTheme: 'wooden' as PremiumWheelTheme,
+  usePremiumWheel: true, // Enable premium wheel by default
   notificationsEnabled: true,
   dailyReminderTime: '09:00',
 };
@@ -85,6 +94,10 @@ export const useGameSettings = create<GameSettings>()(
       setCustomBackground: (bg: BackgroundTheme | null) => set({ customBackground: bg }),
       
       setCustomWheel: (wheel: WheelDesign | null) => set({ customWheel: wheel }),
+      
+      setPremiumWheelTheme: (theme: PremiumWheelTheme) => set({ premiumWheelTheme: theme }),
+      
+      setUsePremiumWheel: (use: boolean) => set({ usePremiumWheel: use }),
       
       setNotificationsEnabled: (enabled: boolean) => set({ notificationsEnabled: enabled }),
       
@@ -115,6 +128,8 @@ export const useGameSettings = create<GameSettings>()(
         particlesEnabled: state.particlesEnabled,
         customBackground: state.customBackground,
         customWheel: state.customWheel,
+        premiumWheelTheme: state.premiumWheelTheme,
+        usePremiumWheel: state.usePremiumWheel,
         notificationsEnabled: state.notificationsEnabled,
         dailyReminderTime: state.dailyReminderTime,
       }),
