@@ -29,9 +29,9 @@ import { useGameStore } from '../store/gameStore';
 import { useGameSettings } from '../stores/gameSettingsStore';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const WHEEL_SIZE = Math.min(SCREEN_WIDTH * 0.88, 340);
-const LETTER_SIZE = 58;
-const LETTER_RADIUS = (WHEEL_SIZE - LETTER_SIZE) / 2 - 20;
+const WHEEL_SIZE = Math.min(SCREEN_WIDTH * 0.85, 320);
+const LETTER_SIZE = 54;
+const LETTER_RADIUS = (WHEEL_SIZE / 2) - LETTER_SIZE / 2 - 30; // Keep letters inside wheel
 
 // Premium wheel themes
 export const PREMIUM_WHEELS = {
@@ -246,9 +246,27 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
     }
     trailOpacity.value = withTiming(0, { duration: 200 });
   }, [currentWord, submitWord, clearSelection]);
+
+  // Handle tap on letter (for single taps)
+  const handleTapLetter = useCallback((index: number) => {
+    selectLetter(index);
+    if (Platform.OS !== 'web') {
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  }, [selectLetter]);
   
+  // Tap gesture for single taps on letters
+  const tapGesture = Gesture.Tap()
+    .onStart((event) => {
+      const letterIndex = findLetterAtPosition(event.x, event.y);
+      if (letterIndex !== null) {
+        runOnJS(handleTapLetter)(letterIndex);
+      }
+    });
+
   // Pan gesture for swiping through letters
   const panGesture = Gesture.Pan()
+    .minDistance(5)
     .onStart((event) => {
       trailOpacity.value = withTiming(1, { duration: 100 });
       const letterIndex = findLetterAtPosition(event.x, event.y);
@@ -265,6 +283,9 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
     .onEnd(() => {
       runOnJS(handleSubmit)();
     });
+  
+  // Combine tap and pan gestures - tap has priority for single taps
+  const combinedGesture = Gesture.Exclusive(panGesture, tapGesture);
   
   // Animated styles
   const wheelAnimatedStyle = useAnimatedStyle(() => ({
@@ -405,7 +426,7 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
       </View>
       
       {/* Main wheel */}
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={combinedGesture}>
         <Animated.View style={[styles.wheelWrapper, wheelAnimatedStyle]}>
           {/* Outer shadow/glow ring */}
           <View style={[styles.outerShadow, { shadowColor: theme.glowColor }]} />
@@ -686,16 +707,16 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   centerCircle: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 3,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   centerIcon: {
-    fontSize: 28,
+    fontSize: 24,
     color: '#8B4513',
     textShadowColor: 'rgba(255, 215, 0, 0.5)',
     textShadowOffset: { width: 0, height: 0 },
@@ -719,7 +740,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   letterText: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: '900',
   },
   selectionBadge: {
