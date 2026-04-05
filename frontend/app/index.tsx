@@ -314,10 +314,20 @@ export default function GameScreen() {
           colors={['#1a1a2e', '#16213e', '#0f3460']}
           style={StyleSheet.absoluteFill}
         />
-        <Text style={styles.errorText}>{error || 'Failed to load game'}</Text>
-        <TouchableOpacity style={styles.retryButton} onPress={initialize}>
-          <Text style={styles.retryButtonText}>Retry</Text>
-        </TouchableOpacity>
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorIcon}>⚠️</Text>
+          <Text style={styles.errorTitle}>Connection Issue</Text>
+          <Text style={styles.errorText}>{error || 'Unable to load game data'}</Text>
+          <Text style={styles.errorHint}>Check your internet connection and try again</Text>
+          <TouchableOpacity style={styles.retryButton} onPress={initialize}>
+            <LinearGradient
+              colors={['#4ECDC4', '#44A08D']}
+              style={styles.retryButtonGradient}
+            >
+              <Text style={styles.retryButtonText}>🔄 Retry</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -895,18 +905,43 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: '600',
   },
+  errorContainer: {
+    alignItems: 'center',
+    padding: 30,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    borderRadius: 20,
+    marginHorizontal: 20,
+  },
+  errorIcon: {
+    fontSize: 50,
+    marginBottom: 15,
+  },
+  errorTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 10,
+  },
   errorText: {
-    fontSize: 16,
-    color: '#e74c3c',
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.7)',
     textAlign: 'center',
+    marginBottom: 10,
+    paddingHorizontal: 20,
+  },
+  errorHint: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.5)',
     marginBottom: 20,
-    paddingHorizontal: 30,
+    textAlign: 'center',
   },
   retryButton: {
-    backgroundColor: '#3498db',
-    paddingHorizontal: 30,
-    paddingVertical: 12,
     borderRadius: 25,
+    overflow: 'hidden',
+  },
+  retryButtonGradient: {
+    paddingHorizontal: 40,
+    paddingVertical: 15,
   },
   retryButtonText: {
     color: '#fff',

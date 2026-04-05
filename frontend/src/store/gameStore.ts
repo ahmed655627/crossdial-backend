@@ -168,17 +168,57 @@ export const useGameStore = create<GameState>((set, get) => ({
       const deviceId = await getOrCreateDeviceId();
       set({ deviceId });
       
-      // Create or get progress
-      const progressResponse = await fetch(`${API_URL}/api/progress`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ device_id: deviceId }),
-      });
-      const progress = await progressResponse.json();
+      // Create or get progress with retry
+      let progress = null;
+      let retries = 3;
       
-      // Load levels
-      const levelsResponse = await fetch(`${API_URL}/api/levels`);
-      const levels = await levelsResponse.json();
+      while (retries > 0) {
+        try {
+          const progressResponse = await fetch(`${API_URL}/api/progress`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ device_id: deviceId }),
+          });
+          
+          if (!progressResponse.ok) {
+            throw new Error(`Progress API returned ${progressResponse.status}`);
+          }
+          
+          progress = await progressResponse.json();
+          break;
+        } catch (err) {
+          retries--;
+          console.log(`Progress fetch retry ${3 - retries}/3`);
+          if (retries === 0) throw err;
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+      
+      // Load levels with retry
+      let levels = [];
+      retries = 3;
+      
+      while (retries > 0) {
+        try {
+          const levelsResponse = await fetch(`${API_URL}/api/levels`);
+          
+          if (!levelsResponse.ok) {
+            throw new Error(`Levels API returned ${levelsResponse.status}`);
+          }
+          
+          levels = await levelsResponse.json();
+          break;
+        } catch (err) {
+          retries--;
+          console.log(`Levels fetch retry ${3 - retries}/3`);
+          if (retries === 0) throw err;
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+      
+      if (!levels || levels.length === 0) {
+        throw new Error('No levels loaded from server');
+      }
       
       set({ 
         progress, 
@@ -187,18 +227,19 @@ export const useGameStore = create<GameState>((set, get) => ({
       });
       
       // Set current level
-      const currentLevelId = progress.current_level || 1;
+      const currentLevelId = progress?.current_level || 1;
       await get().setCurrentLevel(currentLevelId);
       
-      // Load leaderboard
-      await get().loadLeaderboard();
+      // Load leaderboard (non-blocking)
+      get().loadLeaderboard().catch(e => console.log('Leaderboard load failed:', e));
       
-      // Fetch daily spin status
-      await get().fetchSpinStatus();
+      // Fetch daily spin status (non-blocking)
+      get().fetchSpinStatus().catch(e => console.log('Spin status fetch failed:', e));
       
     } catch (error) {
       console.error('Initialize error:', error);
-      set({ error: 'Failed to initialize game', loading: false });
+      const errorMsg = error instanceof Error ? error.message : 'Unknown error';
+      set({ error: `Failed to initialize: ${errorMsg}`, loading: false });
     }
   },
 
