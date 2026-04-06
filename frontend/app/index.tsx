@@ -62,16 +62,6 @@ import { PremiumLetterWheel } from '../src/components/PremiumLetterWheel';
 import { LanguageSelector } from '../src/components/LanguageSelector';
 import { useGameSettings } from '../src/stores/gameSettingsStore';
 import { getThemeForLevel, getBackgroundForLevel, getWheelForLevel } from '../src/utils/gameThemes';
-import { getThemeForLevelNumber, LevelTheme } from '../src/data/levelThemes';
-
-// NEW: Import refactored game components
-import { 
-  GameHeader, 
-  WonderInfo, 
-  QuickActionsBar, 
-  EnhancedCrosswordGrid, 
-  EnhancedLetterWheel 
-} from '../src/components/game';
 
 // NEW: Import game modes
 import GameModeSelector from '../src/components/GameModeSelector';
@@ -254,9 +244,6 @@ export default function GameScreen() {
   const levelTheme = getThemeForLevel(currentLevelNumber);
   const backgroundConfig = getBackgroundForLevel(currentLevelNumber);
   const wheelConfig = getWheelForLevel(currentLevelNumber);
-  
-  // Get theme from levelThemes for enhanced components
-  const currentThemeConfig = getThemeForLevelNumber(currentLevelNumber);
 
   // Check for onboarding on first load
   useEffect(() => {
@@ -1128,9 +1115,9 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Crossword Grid - Enhanced with 3D tiles and frosted glass */}
+        {/* Crossword Grid */}
         <View style={styles.gridContainer}>
-          <EnhancedCrosswordGrid theme={currentThemeConfig} />
+          <CrosswordGrid />
         </View>
 
         {/* Word feedback */}
@@ -1217,9 +1204,9 @@ export default function GameScreen() {
           </TouchableOpacity>
         </View>
 
-        {/* Letter Wheel - Enhanced with theme colors */}
+        {/* Letter Wheel */}
         <View style={styles.wheelContainer}>
-          <EnhancedLetterWheel theme={currentThemeConfig} />
+          <LetterWheel />
         </View>
 
         {/* Action Buttons */}
