@@ -81,9 +81,9 @@ import { EventsModal } from '../src/components/EventsModal';
 import { 
   SpinWheelModal, 
   StatisticsModal, 
-  AchievementsModal, 
+  AchievementsModal as GameAchievementsModal, 
   ProgressMapModal, 
-  LeaderboardModal, 
+  LeaderboardModal as GameLeaderboardModal, 
   FriendChallengeModal,
   WordDefinitionModal 
 } from '../src/components/GameFeatureModals';
@@ -207,10 +207,10 @@ export default function GameScreen() {
   const [isMuted, setIsMuted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [showSpinWheel, setShowSpinWheel] = useState(false);
-  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  // Note: showLeaderboard already declared above (line 115)
   const [showFriendChallenge, setShowFriendChallenge] = useState(false);
   const [showStatistics, setShowStatistics] = useState(false);
-  const [showAchievements, setShowAchievements] = useState(false);
+  // Note: showAchievements already declared above (line 124)
   const [showProgressMap, setShowProgressMap] = useState(false);
   const [seasonalTheme, setSeasonalTheme] = useState<'default' | 'christmas' | 'halloween' | 'summer'>('default');
   const [achievements, setAchievements] = useState([
