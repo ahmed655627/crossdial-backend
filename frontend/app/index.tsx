@@ -73,6 +73,7 @@ import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
 import { TimeChallengeModal } from '../src/components/TimeChallengeModal';
 import { ProfileModal } from '../src/components/ProfileModal';
+import { OnboardingScreen } from '../src/components/OnboardingScreen';
 import { MusicModal } from '../src/components/MusicModal';
 import { CelebrationsModal } from '../src/components/CelebrationsModal';
 import { MascotModal } from '../src/components/MascotModal';
@@ -176,11 +177,41 @@ export default function GameScreen() {
   const wordFoundScale = useSharedValue(0);
   const wordFoundOpacity = useSharedValue(0);
   
+  // NEW: Onboarding state
+  const [showOnboarding, setShowOnboarding] = useState(false);
+  const [hasSeenOnboarding, setHasSeenOnboarding] = useState(true);
+  
   // NEW: Get current theme based on level
   const currentLevelNumber = progress?.current_level || 1;
   const levelTheme = getThemeForLevel(currentLevelNumber);
   const backgroundConfig = getBackgroundForLevel(currentLevelNumber);
   const wheelConfig = getWheelForLevel(currentLevelNumber);
+
+  // Check for onboarding on first load
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      try {
+        const seen = await AsyncStorage.getItem('hasSeenOnboarding');
+        if (!seen) {
+          setShowOnboarding(true);
+          setHasSeenOnboarding(false);
+        }
+      } catch (e) {
+        console.log('Error checking onboarding status');
+      }
+    };
+    checkOnboarding();
+  }, []);
+
+  const handleOnboardingComplete = async () => {
+    try {
+      await AsyncStorage.setItem('hasSeenOnboarding', 'true');
+      setShowOnboarding(false);
+      setHasSeenOnboarding(true);
+    } catch (e) {
+      console.log('Error saving onboarding status');
+    }
+  };
 
   // Check for privacy consent on first load
   useEffect(() => {
@@ -482,6 +513,15 @@ export default function GameScreen() {
         break;
     }
   };
+
+  // Show Onboarding for first-time users
+  if (showOnboarding) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <OnboardingScreen onComplete={handleOnboardingComplete} />
+      </GestureHandlerRootView>
+    );
+  }
 
   // Show Home Screen if user hasn't started playing
   if (showHomeScreen) {
@@ -815,46 +855,54 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Quick Access Gameplay Bar */}
-        <View style={styles.quickAccessBar}>
+        {/* Floating Sidebar - Quick Access */}
+        <View style={styles.floatingSidebar}>
           <TouchableOpacity 
-            style={styles.quickAccessButton}
+            style={styles.sidebarButton}
             onPress={() => setShowPowerUps(true)}
           >
-            <View style={[styles.quickAccessIcon, { backgroundColor: '#f39c12' }]}>
-              <Text style={styles.quickAccessEmoji}>⚡</Text>
-            </View>
-            <Text style={styles.quickAccessLabel}>Power-Ups</Text>
+            <LinearGradient 
+              colors={['#f39c12', '#e67e22']} 
+              style={styles.sidebarButtonGradient}
+            >
+              <Text style={styles.sidebarEmoji}>⚡</Text>
+            </LinearGradient>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.quickAccessButton}
+            style={styles.sidebarButton}
             onPress={() => setShowCombos(true)}
           >
-            <View style={[styles.quickAccessIcon, { backgroundColor: '#e74c3c' }]}>
-              <Text style={styles.quickAccessEmoji}>🔥</Text>
-            </View>
-            <Text style={styles.quickAccessLabel}>Combos</Text>
+            <LinearGradient 
+              colors={['#e74c3c', '#c0392b']} 
+              style={styles.sidebarButtonGradient}
+            >
+              <Text style={styles.sidebarEmoji}>🔥</Text>
+            </LinearGradient>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.quickAccessButton}
+            style={styles.sidebarButton}
             onPress={() => setShowTimeChallenge(true)}
           >
-            <View style={[styles.quickAccessIcon, { backgroundColor: '#e67e22' }]}>
-              <Text style={styles.quickAccessEmoji}>⏱️</Text>
-            </View>
-            <Text style={styles.quickAccessLabel}>Timer</Text>
+            <LinearGradient 
+              colors={['#3498db', '#2980b9']} 
+              style={styles.sidebarButtonGradient}
+            >
+              <Text style={styles.sidebarEmoji}>⏱️</Text>
+            </LinearGradient>
           </TouchableOpacity>
           
           <TouchableOpacity 
-            style={styles.quickAccessButton}
+            style={styles.sidebarButton}
             onPress={() => setShowLevelSkip(true)}
           >
-            <View style={[styles.quickAccessIcon, { backgroundColor: '#e74c3c' }]}>
-              <Text style={styles.quickAccessEmoji}>🚀</Text>
-            </View>
-            <Text style={styles.quickAccessLabel}>Skip</Text>
+            <LinearGradient 
+              colors={['#9b59b6', '#8e44ad']} 
+              style={styles.sidebarButtonGradient}
+            >
+              <Text style={styles.sidebarEmoji}>🚀</Text>
+            </LinearGradient>
           </TouchableOpacity>
         </View>
 
@@ -1056,6 +1104,22 @@ export default function GameScreen() {
         <EventsModal
           visible={showEvents}
           onClose={() => setShowEvents(false)}
+        />
+        
+        {/* Game Screen Modals - Level Skip */}
+        <LevelSkipModal
+          visible={showLevelSkip}
+          onClose={() => setShowLevelSkip(false)}
+          onSkip={() => {
+            setShowLevelSkip(false);
+            // Skip to next level
+            const nextLevel = (progress?.current_level || 1) + 1;
+            Alert.alert('Level Skipped!', `Moving to level ${nextLevel}!`);
+          }}
+          onWatchAd={() => adManager.showVideoRewardedAd()}
+          currentLevel={progress?.current_level || 1}
+          skipCost={100}
+          coins={progress?.coins || 0}
         />
         </SafeAreaView>
       </ThemedBackground>
@@ -1431,35 +1495,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'transparent',
   },
-  quickAccessBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    marginHorizontal: 10,
-    marginBottom: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 16,
+  floatingSidebar: {
+    position: 'absolute',
+    right: 8,
+    top: '35%',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    borderRadius: 25,
+    padding: 6,
+    gap: 8,
   },
-  quickAccessButton: {
-    alignItems: 'center',
-    paddingHorizontal: 8,
+  sidebarButton: {
+    borderRadius: 20,
+    overflow: 'hidden',
   },
-  quickAccessIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  sidebarButtonGradient: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 4,
   },
-  quickAccessEmoji: {
-    fontSize: 20,
-  },
-  quickAccessLabel: {
-    fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.8)',
-    fontWeight: '600',
+  sidebarEmoji: {
+    fontSize: 18,
   },
 });
