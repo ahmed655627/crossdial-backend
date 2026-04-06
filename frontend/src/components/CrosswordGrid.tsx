@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useGameStore, GridPosition } from '../store/gameStore';
 
@@ -10,12 +10,11 @@ export const CrosswordGrid: React.FC = () => {
   
   if (!currentLevel) return null;
   
-  // Calculate grid dimensions
   const grid = currentLevel.grid;
   let maxRow = 0;
   let maxCol = 0;
   
-  grid.forEach(wordPos => {
+  grid.forEach((wordPos: GridPosition) => {
     const wordLength = wordPos.word.length;
     if (wordPos.direction === 'horizontal') {
       maxRow = Math.max(maxRow, wordPos.row);
@@ -29,17 +28,16 @@ export const CrosswordGrid: React.FC = () => {
   const numRows = maxRow + 1;
   const numCols = maxCol + 1;
   
-  // Cell size calculation
-  const maxGridWidth = width - 50;
+  const maxGridWidth = width - 40;
   const cellSize = Math.min(Math.floor(maxGridWidth / numCols), 42);
   
-  // Build grid cells
+  // Build cells
   const cells: (string | null)[][] = Array(numRows).fill(null).map(() => Array(numCols).fill(null));
   const cellFound: boolean[][] = Array(numRows).fill(null).map(() => Array(numCols).fill(false));
   const cellHinted: boolean[][] = Array(numRows).fill(null).map(() => Array(numCols).fill(false));
   const hintedLetters: (string | null)[][] = Array(numRows).fill(null).map(() => Array(numCols).fill(null));
   
-  grid.forEach(wordPos => {
+  grid.forEach((wordPos: GridPosition) => {
     const word = wordPos.word.toUpperCase();
     const isFound = foundWords.includes(word);
     
@@ -58,7 +56,6 @@ export const CrosswordGrid: React.FC = () => {
         cellFound[row][col] = true;
       }
       
-      // Check if this cell should show hint
       if (hintLetter && 
           hintLetter.position.word.toUpperCase() === word && 
           hintLetter.letterIndex === i) {
@@ -70,67 +67,81 @@ export const CrosswordGrid: React.FC = () => {
   
   return (
     <View style={styles.container}>
-      {/* Decorative glow behind grid */}
+      {/* Ambient glow effect */}
       <View style={styles.glowEffect} />
       
-      <View style={[styles.grid, { width: cellSize * numCols + 10, height: cellSize * numRows + 10 }]}>
-        {cells.map((row, rowIndex) => (
-          <View key={rowIndex} style={styles.row}>
-            {row.map((cell, colIndex) => {
-              if (cell === null) {
-                return <View key={colIndex} style={[styles.emptyCell, { width: cellSize, height: cellSize }]} />;
-              }
-              
-              const isFound = cellFound[rowIndex][colIndex];
-              const isHinted = cellHinted[rowIndex][colIndex];
-              const hintedLetter = hintedLetters[rowIndex][colIndex];
-              
-              if (isFound) {
+      {/* Grid container with frosted glass effect */}
+      <View style={[styles.gridWrapper, { padding: 10 }]}>
+        <View style={styles.grid}>
+          {cells.map((row, rowIndex) => (
+            <View key={rowIndex} style={styles.row}>
+              {row.map((cell, colIndex) => {
+                if (cell === null) {
+                  return (
+                    <View 
+                      key={colIndex} 
+                      style={[styles.emptyCell, { width: cellSize, height: cellSize }]} 
+                    />
+                  );
+                }
+                
+                const isFound = cellFound[rowIndex][colIndex];
+                const isHinted = cellHinted[rowIndex][colIndex];
+                const hintedLetter = hintedLetters[rowIndex][colIndex];
+                
+                // Found cell - 3D glossy tile
+                if (isFound) {
+                  return (
+                    <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
+                      <LinearGradient
+                        colors={['#00d4aa', '#00b894', '#009d80']}
+                        style={[styles.cell, styles.cellFound]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                      >
+                        {/* 3D shine effect */}
+                        <View style={styles.cellShine} />
+                        <Text style={[styles.cellText, styles.cellTextFound, { fontSize: cellSize * 0.52 }]}>
+                          {cell}
+                        </Text>
+                        {/* Bottom shadow for 3D effect */}
+                        <View style={styles.cellBottomShadow} />
+                      </LinearGradient>
+                    </View>
+                  );
+                }
+                
+                // Hinted cell
+                if (isHinted) {
+                  return (
+                    <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
+                      <LinearGradient
+                        colors={['#667eea', '#764ba2', '#6c63ff']}
+                        style={[styles.cell, styles.cellHinted]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 1 }}
+                      >
+                        <View style={styles.cellShine} />
+                        <Text style={[styles.cellText, styles.cellTextHinted, { fontSize: cellSize * 0.52 }]}>
+                          {hintedLetter}
+                        </Text>
+                      </LinearGradient>
+                    </View>
+                  );
+                }
+                
+                // Empty cell - frosted glass effect
                 return (
                   <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
-                    <LinearGradient
-                      colors={['#4fc3f7', '#29b6f6', '#03a9f4']}
-                      style={[styles.cell, styles.cellFound]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                    >
-                      <Text style={[styles.cellText, styles.cellTextFound, { fontSize: cellSize * 0.55 }]}>
-                        {cell}
-                      </Text>
-                    </LinearGradient>
+                    <View style={[styles.cell, styles.cellEmpty]}>
+                      <View style={styles.cellEmptyInner} />
+                    </View>
                   </View>
                 );
-              }
-              
-              if (isHinted) {
-                return (
-                  <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
-                    <LinearGradient
-                      colors={['#74b9ff', '#0984e3']}
-                      style={[styles.cell, styles.cellHinted]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                    >
-                      <Text style={[styles.cellText, styles.cellTextHinted, { fontSize: cellSize * 0.55 }]}>
-                        {hintedLetter}
-                      </Text>
-                    </LinearGradient>
-                  </View>
-                );
-              }
-              
-              return (
-                <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
-                  <View style={[styles.cell, styles.cellEmpty]}>
-                    <Text style={[styles.cellText, { fontSize: cellSize * 0.55 }]}>
-                      {''}
-                    </Text>
-                  </View>
-                </View>
-              );
-            })}
-          </View>
-        ))}
+              })}
+            </View>
+          ))}
+        </View>
       </View>
     </View>
   );
@@ -140,25 +151,27 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 15,
+    paddingVertical: 12,
     position: 'relative',
   },
   glowEffect: {
     position: 'absolute',
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: 'rgba(79, 195, 247, 0.15)',
+    width: 180,
+    height: 180,
+    borderRadius: 90,
+    backgroundColor: 'rgba(0, 212, 170, 0.12)',
     top: '50%',
     left: '50%',
-    transform: [{ translateX: -100 }, { translateY: -100 }],
+    transform: [{ translateX: -90 }, { translateY: -90 }],
+  },
+  gridWrapper: {
+    backgroundColor: 'rgba(0, 0, 0, 0.25)',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   grid: {
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    padding: 8,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'transparent',
   },
   row: {
     flexDirection: 'row',
@@ -174,41 +187,72 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 10,
+    borderRadius: 8,
+    overflow: 'hidden',
   },
   cellEmpty: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  cellEmptyInner: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
   },
   cellFound: {
-    shadowColor: '#000',
+    shadowColor: '#00b894',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
     elevation: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  cellShine: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: '40%',
+    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    borderTopLeftRadius: 8,
+    borderTopRightRadius: 8,
+  },
+  cellBottomShadow: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '20%',
+    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
   cellHinted: {
-    shadowColor: '#0984e3',
-    shadowOffset: { width: 0, height: 3 },
+    shadowColor: '#667eea',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.5,
-    shadowRadius: 6,
+    shadowRadius: 8,
     elevation: 8,
   },
   cellText: {
     fontWeight: '800',
     color: '#fff',
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 3,
+    textShadowRadius: 2,
   },
   cellTextFound: {
     color: '#fff',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowColor: 'rgba(0, 0, 0, 0.25)',
   },
   cellTextHinted: {
     color: '#fff',
   },
 });
+
+export default CrosswordGrid;
