@@ -68,6 +68,16 @@ import GameModeSelector from '../src/components/GameModeSelector';
 import MatchMode from '../src/components/MatchMode';
 import { GameModeType } from '../src/data/gameModes';
 
+// NEW: Import feature modals
+import { PowerUpsModal } from '../src/components/PowerUpsModal';
+import { CombosModal } from '../src/components/CombosModal';
+import { TimeChallengeModal } from '../src/components/TimeChallengeModal';
+import { ProfileModal } from '../src/components/ProfileModal';
+import { MusicModal } from '../src/components/MusicModal';
+import { CelebrationsModal } from '../src/components/CelebrationsModal';
+import { MascotModal } from '../src/components/MascotModal';
+import { EventsModal } from '../src/components/EventsModal';
+
 const { width, height } = Dimensions.get('window');
 
 export default function GameScreen() {
@@ -142,6 +152,27 @@ export default function GameScreen() {
   const [currentGameMode, setCurrentGameMode] = useState<GameModeType>('classic');
   const [showMatchMode, setShowMatchMode] = useState(false);
   const [matchPuzzleId, setMatchPuzzleId] = useState(1);
+  
+  // NEW: Feature modal states
+  const [showPowerUps, setShowPowerUps] = useState(false);
+  const [showCombos, setShowCombos] = useState(false);
+  const [showTimeChallenge, setShowTimeChallenge] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showMusic, setShowMusic] = useState(false);
+  const [showCelebrations, setShowCelebrations] = useState(false);
+  const [showMascot, setShowMascot] = useState(false);
+  const [showEvents, setShowEvents] = useState(false);
+  
+  // Profile and game stats
+  const [userAvatar, setUserAvatar] = useState('🦉');
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
+  const [currentMascot, setCurrentMascot] = useState('owl');
+  
+  // Celebration settings
+  const [confettiEnabled, setConfettiEnabled] = useState(true);
+  const [screenShakeEnabled, setScreenShakeEnabled] = useState(true);
+  const [particlesEnabled, setParticlesEnabled] = useState(true);
   
   // NEW: Get settings and translations
   const { t, language, animationsEnabled, usePremiumWheel, premiumWheelTheme } = useGameSettings();
@@ -418,19 +449,37 @@ export default function GameScreen() {
         setShowThemes(true);
         break;
       case 'power_ups':
+        setShowPowerUps(true);
+        break;
+      case 'combos':
+        setShowCombos(true);
+        break;
+      case 'game_modes':
+        setShowGameModeSelector(true);
+        break;
+      case 'time_challenge':
+        setShowTimeChallenge(true);
+        break;
+      case 'player_profile':
+        setShowProfile(true);
+        break;
+      case 'music_themes':
+        setShowMusic(true);
+        break;
+      case 'celebrations':
+        setShowCelebrations(true);
+        break;
+      case 'mascot':
+        setShowMascot(true);
+        break;
+      case 'seasonal':
+        setShowEvents(true);
+        break;
       case 'piggy_bank':
       case 'postcards':
       case 'vocabulary':
-      case 'game_modes':
-      case 'player_profile':
-      case 'music_themes':
       case 'wonder_facts':
       case 'word_packs':
-      case 'seasonal':
-      case 'combos':
-      case 'time_challenge':
-      case 'celebrations':
-      case 'mascot':
         // These features are coming soon
         Alert.alert('Coming Soon!', 'This feature will be available in a future update.');
         break;
@@ -880,6 +929,96 @@ export default function GameScreen() {
             />
           </Modal>
         )}
+        
+        {/* Feature Hub Modals */}
+        <PowerUpsModal
+          visible={showPowerUps}
+          onClose={() => setShowPowerUps(false)}
+          coins={progress?.coins || 0}
+          onUsePowerUp={(powerUpId, cost) => {
+            // Deduct coins and apply power-up
+            Alert.alert('Power-Up Activated!', `Using power-up: ${powerUpId}`);
+          }}
+        />
+        
+        <CombosModal
+          visible={showCombos}
+          onClose={() => setShowCombos(false)}
+          currentStreak={currentStreak}
+          bestStreak={bestStreak}
+        />
+        
+        <TimeChallengeModal
+          visible={showTimeChallenge}
+          onClose={() => setShowTimeChallenge(false)}
+          onStartChallenge={(difficulty) => {
+            setShowTimeChallenge(false);
+            Alert.alert('Starting Challenge', `Difficulty: ${difficulty}`);
+          }}
+          bestTime={null}
+        />
+        
+        <ProfileModal
+          visible={showProfile}
+          onClose={() => setShowProfile(false)}
+          username={progress?.username || 'Player'}
+          avatar={userAvatar}
+          stats={{
+            levelsCompleted: progress?.completed_levels?.length || 0,
+            wordsFound: Object.values(progress?.found_words || {}).flat().length,
+            totalCoins: progress?.coins || 0,
+            playTime: 0,
+            currentStreak: currentStreak,
+          }}
+          onUpdateProfile={(username, avatar) => {
+            setUserAvatar(avatar);
+            Alert.alert('Profile Updated!', `Welcome, ${username}!`);
+          }}
+        />
+        
+        <MusicModal
+          visible={showMusic}
+          onClose={() => setShowMusic(false)}
+          musicEnabled={soundEnabled}
+          soundEnabled={soundEnabled}
+          vibrationEnabled={true}
+          onToggleMusic={(enabled) => {
+            soundManager.setEnabled(enabled);
+          }}
+          onToggleSound={(enabled) => {
+            soundManager.setEnabled(enabled);
+          }}
+          onToggleVibration={(enabled) => {
+            // Toggle vibration
+          }}
+        />
+        
+        <CelebrationsModal
+          visible={showCelebrations}
+          onClose={() => setShowCelebrations(false)}
+          confettiEnabled={confettiEnabled}
+          screenShakeEnabled={screenShakeEnabled}
+          particlesEnabled={particlesEnabled}
+          onToggleConfetti={setConfettiEnabled}
+          onToggleScreenShake={setScreenShakeEnabled}
+          onToggleParticles={setParticlesEnabled}
+        />
+        
+        <MascotModal
+          visible={showMascot}
+          onClose={() => setShowMascot(false)}
+          currentMascot={currentMascot}
+          currentLevel={currentLevelNumber}
+          onSelectMascot={(mascotId) => {
+            setCurrentMascot(mascotId);
+            setShowMascot(false);
+          }}
+        />
+        
+        <EventsModal
+          visible={showEvents}
+          onClose={() => setShowEvents(false)}
+        />
         </SafeAreaView>
       </ThemedBackground>
     </GestureHandlerRootView>
