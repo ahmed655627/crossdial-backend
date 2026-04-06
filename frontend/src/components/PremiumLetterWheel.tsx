@@ -7,7 +7,7 @@
  * - Haptic feedback integration
  */
 
-import React, { useEffect, useMemo, useRef, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { View, Text, StyleSheet, Dimensions, Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import Animated, {
@@ -19,9 +19,7 @@ import Animated, {
   withRepeat,
   withDelay,
   Easing,
-  interpolate,
   runOnJS,
-  cancelAnimation,
   SharedValue,
 } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -116,8 +114,8 @@ export const PREMIUM_WHEELS = {
   },
 };
 
-// Particle configuration
-const PARTICLE_COUNT = 20;
+// Particle configuration - reduced for stability
+const PARTICLE_COUNT = 8;
 const PARTICLE_COLORS = ['#FFD700', '#FFA500', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#FF7675'];
 
 interface PremiumLetterWheelProps {
@@ -150,18 +148,67 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
   const wheelScale = useSharedValue(1);
   const wheelRotation = useSharedValue(0);
   const trailOpacity = useSharedValue(0);
-  const trailPoints = useSharedValue<{x: number, y: number}[]>([]);
   
-  // Particle animation values
-  const particleAnims = useRef(
-    [...Array(PARTICLE_COUNT)].map(() => ({
-      x: useSharedValue(WHEEL_SIZE / 2),
-      y: useSharedValue(WHEEL_SIZE / 2),
-      scale: useSharedValue(0),
-      opacity: useSharedValue(0),
-      rotation: useSharedValue(0),
-    }))
-  ).current;
+  // Particle animation values - use individual shared values (stable across renders)
+  const particleX0 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY0 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale0 = useSharedValue(0);
+  const particleOpacity0 = useSharedValue(0);
+  const particleRotation0 = useSharedValue(0);
+  
+  const particleX1 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY1 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale1 = useSharedValue(0);
+  const particleOpacity1 = useSharedValue(0);
+  const particleRotation1 = useSharedValue(0);
+  
+  const particleX2 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY2 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale2 = useSharedValue(0);
+  const particleOpacity2 = useSharedValue(0);
+  const particleRotation2 = useSharedValue(0);
+  
+  const particleX3 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY3 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale3 = useSharedValue(0);
+  const particleOpacity3 = useSharedValue(0);
+  const particleRotation3 = useSharedValue(0);
+  
+  const particleX4 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY4 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale4 = useSharedValue(0);
+  const particleOpacity4 = useSharedValue(0);
+  const particleRotation4 = useSharedValue(0);
+  
+  const particleX5 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY5 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale5 = useSharedValue(0);
+  const particleOpacity5 = useSharedValue(0);
+  const particleRotation5 = useSharedValue(0);
+  
+  const particleX6 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY6 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale6 = useSharedValue(0);
+  const particleOpacity6 = useSharedValue(0);
+  const particleRotation6 = useSharedValue(0);
+  
+  const particleX7 = useSharedValue(WHEEL_SIZE / 2);
+  const particleY7 = useSharedValue(WHEEL_SIZE / 2);
+  const particleScale7 = useSharedValue(0);
+  const particleOpacity7 = useSharedValue(0);
+  const particleRotation7 = useSharedValue(0);
+  
+  // Group particles for easier access
+  const particleAnims = useMemo(() => [
+    { x: particleX0, y: particleY0, scale: particleScale0, opacity: particleOpacity0, rotation: particleRotation0 },
+    { x: particleX1, y: particleY1, scale: particleScale1, opacity: particleOpacity1, rotation: particleRotation1 },
+    { x: particleX2, y: particleY2, scale: particleScale2, opacity: particleOpacity2, rotation: particleRotation2 },
+    { x: particleX3, y: particleY3, scale: particleScale3, opacity: particleOpacity3, rotation: particleRotation3 },
+    { x: particleX4, y: particleY4, scale: particleScale4, opacity: particleOpacity4, rotation: particleRotation4 },
+    { x: particleX5, y: particleY5, scale: particleScale5, opacity: particleOpacity5, rotation: particleRotation5 },
+    { x: particleX6, y: particleY6, scale: particleScale6, opacity: particleOpacity6, rotation: particleRotation6 },
+    { x: particleX7, y: particleY7, scale: particleScale7, opacity: particleOpacity7, rotation: particleRotation7 },
+  ], []);
   
   // Center glow pulse
   const centerPulse = useSharedValue(1);
@@ -196,9 +243,9 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
       triggerParticleExplosion();
       onWordFound?.();
     }
-  }, [lastWordResult]);
+  }, [lastWordResult, animationsEnabled, triggerParticleExplosion, onWordFound]);
   
-  const triggerParticleExplosion = () => {
+  const triggerParticleExplosion = useCallback(() => {
     particleAnims.forEach((anim, i) => {
       const angle = (i / PARTICLE_COUNT) * Math.PI * 2 + Math.random() * 0.5;
       const distance = 80 + Math.random() * 100;
@@ -238,7 +285,7 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
     if (Platform.OS !== 'web') {
       Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
     }
-  };
+  }, [particleAnims]);
   
   // Calculate letter positions
   const getLetterPosition = useCallback((index: number) => {

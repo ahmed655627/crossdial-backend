@@ -1,45 +1,55 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
-import { AD_UNIT_IDS } from '../utils/adManager';
 
-// Dynamic import for banner ad
-let BannerAd: any = null;
-let BannerAdSize: any = null;
-
-const loadBannerModule = async () => {
-  if (Platform.OS === 'web') return false;
-  
-  try {
-    const adsModule = await import('react-native-google-mobile-ads');
-    BannerAd = adsModule.BannerAd;
-    BannerAdSize = adsModule.BannerAdSize;
-    return true;
-  } catch (error) {
-    console.log('Banner module not available:', error);
-    return false;
-  }
+// Import AD_UNIT_IDS directly from constants, not from adManager (which may have native dependencies)
+const AD_UNIT_IDS = {
+  BANNER: 'ca-app-pub-1991020937935015/3076430560',
 };
 
 interface BannerAdComponentProps {
   style?: any;
 }
 
+// Native-only implementation - web has its own stub file (BannerAdComponent.web.tsx)
 export const BannerAdComponent: React.FC<BannerAdComponentProps> = ({ style }) => {
   const [moduleLoaded, setModuleLoaded] = useState(false);
   const [adError, setAdError] = useState(false);
+  const [adModule, setAdModule] = useState<{
+    BannerAd: any;
+    BannerAdSize: any;
+  } | null>(null);
 
   useEffect(() => {
-    const init = async () => {
-      const loaded = await loadBannerModule();
-      setModuleLoaded(loaded);
+    // Web platform check - should use .web.tsx file but double check here
+    if (Platform.OS === 'web') {
+      setAdError(true);
+      return;
+    }
+
+    const loadModule = async () => {
+      try {
+        // Dynamic require to avoid bundling issues
+        const adsModule = await eval('import("react-native-google-mobile-ads")');
+        setAdModule({
+          BannerAd: adsModule.BannerAd,
+          BannerAdSize: adsModule.BannerAdSize,
+        });
+        setModuleLoaded(true);
+      } catch (error) {
+        console.log('Banner module not available:', error);
+        setAdError(true);
+      }
     };
-    init();
+
+    loadModule();
   }, []);
 
-  // Don't render on web or if module failed to load
-  if (Platform.OS === 'web' || !moduleLoaded || !BannerAd || adError) {
+  // Don't render if module failed to load or not ready
+  if (!moduleLoaded || !adModule || adError) {
     return null;
   }
+
+  const { BannerAd, BannerAdSize } = adModule;
 
   return (
     <View style={[styles.container, style]}>
