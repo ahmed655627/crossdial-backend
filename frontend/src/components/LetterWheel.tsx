@@ -1,7 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Platform } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming, runOnJS } from 'react-native-reanimated';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useGameStore } from '../store/gameStore';
 
@@ -24,24 +22,13 @@ export const LetterWheel: React.FC = () => {
     return { x, y };
   };
   
-  // Calculate letter center positions for gesture detection
+  // Calculate letter center positions for lines
   const getLetterCenter = (index: number) => {
     const angle = (index * 2 * Math.PI) / numLetters - Math.PI / 2;
     const radius = (WHEEL_SIZE - LETTER_SIZE) / 2 - 15;
     const x = Math.cos(angle) * radius + WHEEL_SIZE / 2;
     const y = Math.sin(angle) * radius + WHEEL_SIZE / 2;
     return { x, y };
-  };
-  
-  const findLetterAtPosition = (x: number, y: number): number | null => {
-    for (let i = 0; i < numLetters; i++) {
-      const center = getLetterCenter(i);
-      const distance = Math.sqrt(Math.pow(x - center.x, 2) + Math.pow(y - center.y, 2));
-      if (distance < LETTER_SIZE / 2 + 8) {
-        return i;
-      }
-    }
-    return null;
   };
   
   const handleSelectLetter = (index: number) => {
@@ -63,15 +50,6 @@ export const LetterWheel: React.FC = () => {
       console.log('Error submitting:', e);
     }
   };
-  
-  // Simple tap gesture only - no swipe to avoid crashes
-  const tapGesture = Gesture.Tap()
-    .onEnd((event) => {
-      const letterIndex = findLetterAtPosition(event.x, event.y);
-      if (letterIndex !== null) {
-        runOnJS(handleSelectLetter)(letterIndex);
-      }
-    });
   
   // Draw lines between selected letters
   const renderLines = () => {
@@ -134,85 +112,83 @@ export const LetterWheel: React.FC = () => {
       </TouchableOpacity>
       
       {/* Letter wheel */}
-      <GestureDetector gesture={tapGesture}>
-        <View style={styles.wheelWrapper}>
-          {/* Outer ring glow */}
-          <View style={styles.outerGlow} />
+      <View style={styles.wheelWrapper}>
+        {/* Outer ring glow */}
+        <View style={styles.outerGlow} />
+        
+        <LinearGradient
+          colors={['rgba(102, 126, 234, 0.2)', 'rgba(118, 75, 162, 0.2)']}
+          style={[styles.wheel, { width: WHEEL_SIZE, height: WHEEL_SIZE }]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          {/* Decorative rings */}
+          <View style={styles.decorativeRing1} />
+          <View style={styles.decorativeRing2} />
           
+          {/* Connection lines */}
+          {renderLines()}
+          
+          {/* Center circle with gradient */}
           <LinearGradient
-            colors={['rgba(102, 126, 234, 0.2)', 'rgba(118, 75, 162, 0.2)']}
-            style={[styles.wheel, { width: WHEEL_SIZE, height: WHEEL_SIZE }]}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+            colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.05)']}
+            style={styles.centerCircle}
           >
-            {/* Decorative rings */}
-            <View style={styles.decorativeRing1} />
-            <View style={styles.decorativeRing2} />
-            
-            {/* Connection lines */}
-            {renderLines()}
-            
-            {/* Center circle with gradient */}
-            <LinearGradient
-              colors={['rgba(255, 255, 255, 0.15)', 'rgba(255, 255, 255, 0.05)']}
-              style={styles.centerCircle}
-            >
-              <Text style={styles.centerText}>✦</Text>
-            </LinearGradient>
-            
-            {/* Letters */}
-            {letters.map((letter, index) => {
-              const position = getLetterPosition(index);
-              const isSelected = selectedLetterIndices.includes(index);
-              const selectionOrder = selectedLetterIndices.indexOf(index);
-              
-              return (
-                <TouchableOpacity
-                  key={index}
-                  style={[
-                    styles.letterWrapper,
-                    {
-                      left: position.x,
-                      top: position.y,
-                    },
-                  ]}
-                  onPress={() => handleSelectLetter(index)}
-                  activeOpacity={0.8}
-                >
-                  {isSelected ? (
-                    <LinearGradient
-                      colors={['#FFD700', '#FFA500', '#FF8C00']}
-                      style={[styles.letterContainer, styles.letterSelected]}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                    >
-                      <Text style={[styles.letterText, styles.letterTextSelected]}>
-                        {letter}
-                      </Text>
-                    </LinearGradient>
-                  ) : (
-                    <LinearGradient
-                      colors={['#ffffff', '#f0f0f0']}
-                      style={styles.letterContainer}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 0, y: 1 }}
-                    >
-                      <Text style={styles.letterText}>
-                        {letter}
-                      </Text>
-                    </LinearGradient>
-                  )}
-                  {isSelected && selectionOrder >= 0 && (
-                    <View style={styles.selectionBadge}>
-                      <Text style={styles.selectionBadgeText}>{selectionOrder + 1}</Text>
-                    </View>
-                  )}
-                </TouchableOpacity>
-              );
-            })}
+            <Text style={styles.centerText}>✦</Text>
           </LinearGradient>
-        </View>
-      </GestureDetector>
+          
+          {/* Letters */}
+          {letters.map((letter, index) => {
+            const position = getLetterPosition(index);
+            const isSelected = selectedLetterIndices.includes(index);
+            const selectionOrder = selectedLetterIndices.indexOf(index);
+            
+            return (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.letterWrapper,
+                  {
+                    left: position.x,
+                    top: position.y,
+                  },
+                ]}
+                onPress={() => handleSelectLetter(index)}
+                activeOpacity={0.8}
+              >
+                {isSelected ? (
+                  <LinearGradient
+                    colors={['#FFD700', '#FFA500', '#FF8C00']}
+                    style={[styles.letterContainer, styles.letterSelected]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                  >
+                    <Text style={[styles.letterText, styles.letterTextSelected]}>
+                      {letter}
+                    </Text>
+                  </LinearGradient>
+                ) : (
+                  <LinearGradient
+                    colors={['#ffffff', '#f0f0f0']}
+                    style={styles.letterContainer}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                  >
+                    <Text style={styles.letterText}>
+                      {letter}
+                    </Text>
+                  </LinearGradient>
+                )}
+                {isSelected && selectionOrder >= 0 && (
+                  <View style={styles.selectionBadge}>
+                    <Text style={styles.selectionBadgeText}>{selectionOrder + 1}</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
+        </LinearGradient>
+      </View>
     </View>
   );
 };
