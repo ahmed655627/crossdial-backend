@@ -43,7 +43,7 @@ export const TimeChallengeModal: React.FC<TimeChallengeModalProps> = ({
   ];
 
   return (
-    <Modal visible={visible} transparent animationType="slide">
+    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <LinearGradient

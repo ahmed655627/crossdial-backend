@@ -54,7 +54,7 @@ export const MascotModal: React.FC<MascotModalProps> = ({
   const currentMascotData = MASCOTS.find(m => m.id === currentMascot) || MASCOTS[0];
 
   return (
-    <Modal visible={visible} transparent animationType="slide">
+    <Modal visible={visible} transparent animationType="fade" statusBarTranslucent>
       <View style={styles.overlay}>
         <View style={styles.container}>
           <LinearGradient

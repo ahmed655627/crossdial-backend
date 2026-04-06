@@ -815,6 +815,49 @@ export default function GameScreen() {
           </View>
         )}
 
+        {/* Quick Access Gameplay Bar */}
+        <View style={styles.quickAccessBar}>
+          <TouchableOpacity 
+            style={styles.quickAccessButton}
+            onPress={() => setShowPowerUps(true)}
+          >
+            <View style={[styles.quickAccessIcon, { backgroundColor: '#f39c12' }]}>
+              <Text style={styles.quickAccessEmoji}>⚡</Text>
+            </View>
+            <Text style={styles.quickAccessLabel}>Power-Ups</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.quickAccessButton}
+            onPress={() => setShowCombos(true)}
+          >
+            <View style={[styles.quickAccessIcon, { backgroundColor: '#e74c3c' }]}>
+              <Text style={styles.quickAccessEmoji}>🔥</Text>
+            </View>
+            <Text style={styles.quickAccessLabel}>Combos</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.quickAccessButton}
+            onPress={() => setShowTimeChallenge(true)}
+          >
+            <View style={[styles.quickAccessIcon, { backgroundColor: '#e67e22' }]}>
+              <Text style={styles.quickAccessEmoji}>⏱️</Text>
+            </View>
+            <Text style={styles.quickAccessLabel}>Timer</Text>
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.quickAccessButton}
+            onPress={() => setShowLevelSkip(true)}
+          >
+            <View style={[styles.quickAccessIcon, { backgroundColor: '#e74c3c' }]}>
+              <Text style={styles.quickAccessEmoji}>🚀</Text>
+            </View>
+            <Text style={styles.quickAccessLabel}>Skip</Text>
+          </TouchableOpacity>
+        </View>
+
         {/* Letter Wheel - Standard wheel only for stability */}
         <View style={styles.wheelContainer}>
           <LetterWheel />
@@ -1387,5 +1430,36 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     backgroundColor: 'transparent',
+  },
+  quickAccessBar: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    marginHorizontal: 10,
+    marginBottom: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 16,
+  },
+  quickAccessButton: {
+    alignItems: 'center',
+    paddingHorizontal: 8,
+  },
+  quickAccessIcon: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 4,
+  },
+  quickAccessEmoji: {
+    fontSize: 20,
+  },
+  quickAccessLabel: {
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontWeight: '600',
   },
 });
