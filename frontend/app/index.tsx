@@ -109,6 +109,8 @@ export default function GameScreen() {
     canSpinWheel,
     soundEnabled,
     toggleSound,
+    selectedLetterIndices,
+    selectLetter,
   } = useGameStore();
 
   const [showLevelSelect, setShowLevelSelect] = useState(false);
