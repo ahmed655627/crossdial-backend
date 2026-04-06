@@ -64,6 +64,10 @@ import { LanguageSelector } from '../src/components/LanguageSelector';
 import { useGameSettings } from '../src/stores/gameSettingsStore';
 import { getThemeForLevel, getBackgroundForLevel, getWheelForLevel } from '../src/utils/gameThemes';
 
+// NEW: Import level clues and backgrounds
+import { getCluesForLevel, getThemeForLevel as getLevelTheme, getRandomFeedback } from '../src/data/levelClues';
+import { getBackgroundConfig, BACKGROUNDS } from '../src/data/backgrounds';
+
 // NEW: Import game modes
 import GameModeSelector from '../src/components/GameModeSelector';
 import MatchMode from '../src/components/MatchMode';
@@ -979,10 +983,21 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Wonder Name */}
-        <View style={styles.wonderInfo}>
-          <Text style={styles.wonderName}>{currentLevel.wonder}</Text>
-          <Text style={styles.wonderLocation}>{currentLevel.location}</Text>
+        {/* Theme Header */}
+        <View style={styles.themeHeader}>
+          <Text style={styles.themeText}>{getLevelTheme(currentLevel.id)}</Text>
+        </View>
+
+        {/* Clue/Question Box */}
+        <View style={styles.clueBox}>
+          <LinearGradient
+            colors={['rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 0.3)']}
+            style={styles.clueGradient}
+          >
+            <Text style={styles.clueText}>
+              {getCluesForLevel(currentLevel.id, settings?.language === 'it' ? 'it' : 'en')[0]}
+            </Text>
+          </LinearGradient>
         </View>
 
         {/* Progress Bar */}
@@ -1043,24 +1058,16 @@ export default function GameScreen() {
           <CrosswordGrid />
         </View>
 
-        {/* Word feedback */}
+        {/* Fancy Word Feedback */}
         {showWordFeedback && lastWordResult && (
-          <View
-            style={[
-              styles.wordFeedback,
-              lastWordResult.isValid
-                ? lastWordResult.isBonus
-                  ? styles.bonusWordFeedback
-                  : styles.correctWordFeedback
-                : styles.wrongWordFeedback,
-            ]}
-          >
-            <Text style={styles.wordFeedbackText}>
+          <View style={styles.fancyFeedbackContainer}>
+            <Text style={[
+              styles.fancyFeedbackText,
+              lastWordResult.isValid ? styles.fancyFeedbackSuccess : styles.fancyFeedbackError
+            ]}>
               {lastWordResult.isValid
-                ? lastWordResult.isBonus
-                  ? `${lastWordResult.word} +5 BONUS!`
-                  : `${lastWordResult.word} ✓`
-                : `${lastWordResult.word} ✗`}
+                ? getRandomFeedback(settings?.language === 'it' ? 'it' : 'en', lastWordResult.isBonus ? 'bonus' : 'excellent')
+                : lastWordResult.word + ' ✗'}
             </Text>
           </View>
         )}
@@ -2060,5 +2067,65 @@ const styles = StyleSheet.create({
   },
   confettiText: {
     fontSize: 80,
+  },
+  // Theme Header & Clue Box
+  themeHeader: {
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  themeText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.5)',
+    letterSpacing: 4,
+  },
+  clueBox: {
+    marginHorizontal: 20,
+    marginBottom: 10,
+    borderRadius: 16,
+    overflow: 'hidden',
+  },
+  clueGradient: {
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 16,
+  },
+  clueText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
+    textAlign: 'center',
+    fontStyle: 'italic',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
+  },
+  // Fancy Feedback
+  fancyFeedbackContainer: {
+    position: 'absolute',
+    top: '40%',
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 100,
+  },
+  fancyFeedbackText: {
+    fontSize: 36,
+    fontWeight: '900',
+    textShadowOffset: { width: 0, height: 3 },
+    textShadowRadius: 10,
+    letterSpacing: 2,
+  },
+  fancyFeedbackSuccess: {
+    color: '#00d4aa',
+    textShadowColor: 'rgba(0, 212, 170, 0.6)',
+  },
+  fancyFeedbackError: {
+    color: '#e74c3c',
+    textShadowColor: 'rgba(231, 76, 60, 0.6)',
   },
 });
