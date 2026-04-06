@@ -1445,7 +1445,7 @@ export default function GameScreen() {
               </Text>
               <View style={styles.hintPreviewWordBox}>
                 <Text style={styles.hintPreviewWord}>
-                  {hintPreviewWord.charAt(0)}{'_'.repeat(hintPreviewWord.length - 1)}
+                  {hintPreviewWord ? `${hintPreviewWord.charAt(0)}${'_'.repeat(Math.max(0, hintPreviewWord.length - 1))}` : '___'}
                 </Text>
               </View>
               <View style={styles.hintPreviewButtons}>
