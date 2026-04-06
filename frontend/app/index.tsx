@@ -175,6 +175,18 @@ export default function GameScreen() {
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [challengeDifficulty, setChallengeDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(null);
   
+  // NEW FEATURES: Game enhancements
+  const [recentWordsFound, setRecentWordsFound] = useState<string[]>([]);
+  const [comboCount, setComboCount] = useState(0);
+  const [comboMultiplier, setComboMultiplier] = useState(1);
+  const [showCoinAnimation, setShowCoinAnimation] = useState(false);
+  const [coinAnimationAmount, setCoinAnimationAmount] = useState(0);
+  const [mascotMood, setMascotMood] = useState<'happy' | 'sad' | 'neutral' | 'excited'>('neutral');
+  const [dailyChallengeActive, setDailyChallengeActive] = useState(true);
+  const [dailyChallengeTimeLeft, setDailyChallengeTimeLeft] = useState('5h 30m');
+  const [showHintPreview, setShowHintPreview] = useState(false);
+  const [hintPreviewWord, setHintPreviewWord] = useState('');
+  
   // NEW: Get settings and translations
   const { t, language, animationsEnabled, usePremiumWheel, premiumWheelTheme } = useGameSettings();
   
@@ -339,6 +351,67 @@ export default function GameScreen() {
       return () => clearTimeout(timer);
     }
   }, [lastWordResult]);
+
+  // Handle word found - update combo, mascot, animations
+  useEffect(() => {
+    if (lastWordResult?.isValid && lastWordResult?.word) {
+      // Update recent words
+      setRecentWordsFound(prev => [lastWordResult.word, ...prev].slice(0, 5));
+      
+      // Update combo
+      setComboCount(prev => {
+        const newCount = prev + 1;
+        // Set multiplier based on combo
+        if (newCount >= 10) setComboMultiplier(5);
+        else if (newCount >= 7) setComboMultiplier(4);
+        else if (newCount >= 5) setComboMultiplier(3);
+        else if (newCount >= 3) setComboMultiplier(2);
+        else if (newCount >= 2) setComboMultiplier(1.5);
+        else setComboMultiplier(1);
+        return newCount;
+      });
+      
+      // Update mascot mood
+      setMascotMood('happy');
+      setTimeout(() => setMascotMood('neutral'), 2000);
+      
+      // Show coin animation
+      const coinsEarned = 10 * comboMultiplier;
+      setCoinAnimationAmount(coinsEarned);
+      setShowCoinAnimation(true);
+      setTimeout(() => setShowCoinAnimation(false), 1500);
+    } else if (lastWordResult && !lastWordResult.isValid) {
+      // Wrong word - reset combo, sad mascot
+      setComboCount(0);
+      setComboMultiplier(1);
+      setMascotMood('sad');
+      setTimeout(() => setMascotMood('neutral'), 2000);
+    }
+  }, [lastWordResult]);
+
+  // Undo last letter
+  const handleUndoLetter = () => {
+    if (selectedLetterIndices && selectedLetterIndices.length > 0) {
+      // Clear selection and reselect all but last
+      const newIndices = selectedLetterIndices.slice(0, -1);
+      clearSelection();
+      newIndices.forEach(idx => selectLetter(idx));
+    }
+  };
+
+  // Handle hint with preview
+  const handleHintWithPreview = () => {
+    // Find first unrevealed word
+    const unrevealedWord = currentLevel?.words?.find(
+      (w: any) => !progress?.found_words?.[currentLevelNumber]?.includes(w.word)
+    );
+    if (unrevealedWord) {
+      setHintPreviewWord(unrevealedWord.word);
+      setShowHintPreview(true);
+    } else {
+      Alert.alert('No Hints Available', 'All words have been found!');
+    }
+  };
 
   // Handle hint with ad (REWARDED - user chooses)
   const handleHint = async () => {
@@ -909,6 +982,69 @@ export default function GameScreen() {
           </View>
         )}
 
+        {/* NEW: Wonder/Location Card */}
+        <View style={styles.wonderCard}>
+          <View style={styles.wonderCardLeft}>
+            <Text style={styles.wonderEmoji}>🏛️</Text>
+          </View>
+          <View style={styles.wonderCardInfo}>
+            <Text style={styles.wonderName}>{currentLevel?.wonder || 'Ancient Wonder'}</Text>
+            <Text style={styles.wonderLocation}>📍 {currentLevel?.location || 'Unknown'}</Text>
+          </View>
+          {dailyChallengeActive && (
+            <View style={styles.dailyBadge}>
+              <Text style={styles.dailyBadgeText}>📅 {dailyChallengeTimeLeft}</Text>
+            </View>
+          )}
+        </View>
+
+        {/* NEW: Combo & Mascot Row */}
+        <View style={styles.comboMascotRow}>
+          {/* Mascot */}
+          <View style={styles.mascotContainer}>
+            <Text style={styles.mascotEmoji}>
+              {mascotMood === 'happy' ? '🦉😄' : mascotMood === 'sad' ? '🦉😢' : mascotMood === 'excited' ? '🦉🎉' : '🦉'}
+            </Text>
+            {mascotMood === 'happy' && <Text style={styles.mascotSpeech}>Great!</Text>}
+            {mascotMood === 'sad' && <Text style={styles.mascotSpeech}>Try again!</Text>}
+          </View>
+
+          {/* Combo Display */}
+          {comboCount > 0 && (
+            <View style={styles.comboContainer}>
+              <LinearGradient
+                colors={comboMultiplier >= 3 ? ['#e74c3c', '#c0392b'] : comboMultiplier >= 2 ? ['#f39c12', '#e67e22'] : ['#3498db', '#2980b9']}
+                style={styles.comboGradient}
+              >
+                <Text style={styles.comboText}>🔥 {comboCount}</Text>
+                {comboMultiplier > 1 && (
+                  <Text style={styles.comboMultiplier}>{comboMultiplier}x</Text>
+                )}
+              </LinearGradient>
+            </View>
+          )}
+
+          {/* Coin Animation */}
+          {showCoinAnimation && (
+            <View style={styles.coinAnimation}>
+              <Text style={styles.coinAnimationText}>+{coinAnimationAmount} 💰</Text>
+            </View>
+          )}
+        </View>
+
+        {/* NEW: Recent Words Found */}
+        {recentWordsFound.length > 0 && (
+          <View style={styles.recentWordsContainer}>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+              {recentWordsFound.map((word, idx) => (
+                <View key={idx} style={[styles.recentWordBadge, idx === 0 && styles.recentWordLatest]}>
+                  <Text style={styles.recentWordText}>{word}</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
+        )}
+
         {/* Crossword Grid */}
         <View style={styles.gridContainer}>
           <CrosswordGrid />
@@ -1015,19 +1151,22 @@ export default function GameScreen() {
 
           <TouchableOpacity style={[styles.actionButton, styles.shuffleButton]} onPress={handleShuffle}>
             <Ionicons name="shuffle" size={24} color="#fff" />
-            <View style={styles.adBadge}>
-              <Ionicons name="play" size={10} color="#fff" />
-            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.actionButton, styles.hintButton]}
-            onPress={handleHint}
+            onPress={handleHintWithPreview}
           >
             <Ionicons name="bulb" size={24} color="#fff" />
-            <View style={styles.adBadge}>
-              <Ionicons name="play" size={10} color="#fff" />
-            </View>
+          </TouchableOpacity>
+
+          {/* NEW: Undo Button */}
+          <TouchableOpacity 
+            style={[styles.actionButton, styles.undoButton]} 
+            onPress={handleUndoLetter}
+            disabled={!selectedLetterIndices || selectedLetterIndices.length === 0}
+          >
+            <Ionicons name="arrow-undo" size={24} color="#fff" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionButton} onPress={clearSelection}>
@@ -1210,6 +1349,46 @@ export default function GameScreen() {
           skipCost={100}
           coins={progress?.coins || 0}
         />
+        
+        {/* NEW: Hint Preview Modal */}
+        <Modal visible={showHintPreview} transparent animationType="fade">
+          <View style={styles.hintPreviewOverlay}>
+            <View style={styles.hintPreviewCard}>
+              <Text style={styles.hintPreviewTitle}>💡 Use Hint?</Text>
+              <Text style={styles.hintPreviewText}>
+                Reveal first letter of:
+              </Text>
+              <View style={styles.hintPreviewWordBox}>
+                <Text style={styles.hintPreviewWord}>
+                  {hintPreviewWord.charAt(0)}{'_'.repeat(hintPreviewWord.length - 1)}
+                </Text>
+              </View>
+              <View style={styles.hintPreviewButtons}>
+                <TouchableOpacity 
+                  style={styles.hintPreviewCancel}
+                  onPress={() => setShowHintPreview(false)}
+                >
+                  <Text style={styles.hintPreviewCancelText}>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.hintPreviewConfirm}
+                  onPress={() => {
+                    setShowHintPreview(false);
+                    handleHint();
+                  }}
+                >
+                  <LinearGradient
+                    colors={['#f39c12', '#e67e22']}
+                    style={styles.hintPreviewConfirmGradient}
+                  >
+                    <Ionicons name="play" size={16} color="#fff" />
+                    <Text style={styles.hintPreviewConfirmText}>Watch Ad & Reveal</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
         </SafeAreaView>
       </ThemedBackground>
     </GestureHandlerRootView>
@@ -1630,5 +1809,201 @@ const styles = StyleSheet.create({
   timerCancel: {
     marginLeft: 8,
     padding: 4,
+  },
+  // NEW FEATURE STYLES
+  wonderCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    marginHorizontal: 15,
+    marginVertical: 6,
+    padding: 10,
+    borderRadius: 12,
+  },
+  wonderCardLeft: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  wonderEmoji: {
+    fontSize: 20,
+  },
+  wonderCardInfo: {
+    flex: 1,
+  },
+  wonderName: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  wonderLocation: {
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.7)',
+    marginTop: 2,
+  },
+  dailyBadge: {
+    backgroundColor: '#e74c3c',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  dailyBadgeText: {
+    fontSize: 10,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  comboMascotRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 15,
+    marginVertical: 4,
+    gap: 15,
+  },
+  mascotContainer: {
+    alignItems: 'center',
+  },
+  mascotEmoji: {
+    fontSize: 28,
+  },
+  mascotSpeech: {
+    fontSize: 10,
+    color: '#FFD700',
+    fontWeight: 'bold',
+    marginTop: 2,
+  },
+  comboContainer: {
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
+  comboGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    gap: 6,
+  },
+  comboText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  comboMultiplier: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    backgroundColor: 'rgba(0,0,0,0.3)',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+  },
+  coinAnimation: {
+    position: 'absolute',
+    right: 20,
+  },
+  coinAnimationText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#FFD700',
+  },
+  recentWordsContainer: {
+    paddingHorizontal: 15,
+    marginVertical: 4,
+  },
+  recentWordBadge: {
+    backgroundColor: 'rgba(46, 204, 113, 0.3)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 8,
+  },
+  recentWordLatest: {
+    backgroundColor: 'rgba(46, 204, 113, 0.6)',
+  },
+  recentWordText: {
+    fontSize: 12,
+    color: '#fff',
+    fontWeight: '600',
+  },
+  undoButton: {
+    backgroundColor: 'rgba(149, 165, 166, 0.35)',
+    borderColor: 'rgba(149, 165, 166, 0.5)',
+  },
+  hintPreviewOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  hintPreviewCard: {
+    backgroundColor: '#fff',
+    borderRadius: 20,
+    padding: 25,
+    width: '100%',
+    maxWidth: 320,
+    alignItems: 'center',
+  },
+  hintPreviewTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    marginBottom: 10,
+  },
+  hintPreviewText: {
+    fontSize: 14,
+    color: '#7f8c8d',
+    marginBottom: 15,
+  },
+  hintPreviewWordBox: {
+    backgroundColor: '#f8f9fa',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginBottom: 20,
+  },
+  hintPreviewWord: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2c3e50',
+    letterSpacing: 4,
+  },
+  hintPreviewButtons: {
+    flexDirection: 'row',
+    gap: 12,
+    width: '100%',
+  },
+  hintPreviewCancel: {
+    flex: 1,
+    paddingVertical: 12,
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    borderRadius: 12,
+  },
+  hintPreviewCancelText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#7f8c8d',
+  },
+  hintPreviewConfirm: {
+    flex: 2,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  hintPreviewConfirmGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    gap: 8,
+  },
+  hintPreviewConfirmText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#fff',
   },
 });
