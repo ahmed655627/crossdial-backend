@@ -124,16 +124,11 @@ export default function GameScreen() {
   const [showFeaturesHub, setShowFeaturesHub] = useState(false);
   const [showMysteryBox, setShowMysteryBox] = useState(false);
   const [showScratchCard, setShowScratchCard] = useState(false);
-  const [showPowerUps, setShowPowerUps] = useState(false);
   const [showPiggyBank, setShowPiggyBank] = useState(false);
   const [showPostcards, setShowPostcards] = useState(false);
   const [showVocabulary, setShowVocabulary] = useState(false);
-  const [showGameModes, setShowGameModes] = useState(false);
-  const [showPlayerProfile, setShowPlayerProfile] = useState(false);
-  const [showMusicThemes, setShowMusicThemes] = useState(false);
   const [showWonderFacts, setShowWonderFacts] = useState(false);
   const [showWordPacks, setShowWordPacks] = useState(false);
-  const [showSeasonalEvents, setShowSeasonalEvents] = useState(false);
   const [mysteryBoxesAvailable, setMysteryBoxesAvailable] = useState(3);
   const [canScratch, setCanScratch] = useState(true);
   
