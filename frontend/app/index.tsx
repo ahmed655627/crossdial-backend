@@ -995,7 +995,7 @@ export default function GameScreen() {
             style={styles.clueGradient}
           >
             <Text style={styles.clueText}>
-              {getCluesForLevel(currentLevel.id, settings?.language === 'it' ? 'it' : 'en')[0]}
+              {getCluesForLevel(currentLevel.id, language === 'it' ? 'it' : 'en')[0]}
             </Text>
           </LinearGradient>
         </View>
@@ -1066,7 +1066,7 @@ export default function GameScreen() {
               lastWordResult.isValid ? styles.fancyFeedbackSuccess : styles.fancyFeedbackError
             ]}>
               {lastWordResult.isValid
-                ? getRandomFeedback(settings?.language === 'it' ? 'it' : 'en', lastWordResult.isBonus ? 'bonus' : 'excellent')
+                ? getRandomFeedback(language === 'it' ? 'it' : 'en', lastWordResult.isBonus ? 'bonus' : 'excellent')
                 : lastWordResult.word + ' ✗'}
             </Text>
           </View>
