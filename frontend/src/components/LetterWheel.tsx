@@ -45,32 +45,32 @@ export const LetterWheel: React.FC = () => {
   };
   
   const handleSelectLetter = (index: number) => {
-    selectLetter(index);
-  };
-  
-  const handleSubmit = () => {
-    if (currentWord.length >= 3) {
-      submitWord();
-    } else {
-      clearSelection();
+    try {
+      selectLetter(index);
+    } catch (e) {
+      console.log('Error selecting letter:', e);
     }
   };
   
-  const panGesture = Gesture.Pan()
-    .onStart((event) => {
+  const handleSubmit = () => {
+    try {
+      if (currentWord.length >= 3) {
+        submitWord();
+      } else {
+        clearSelection();
+      }
+    } catch (e) {
+      console.log('Error submitting:', e);
+    }
+  };
+  
+  // Simple tap gesture only - no swipe to avoid crashes
+  const tapGesture = Gesture.Tap()
+    .onEnd((event) => {
       const letterIndex = findLetterAtPosition(event.x, event.y);
       if (letterIndex !== null) {
         runOnJS(handleSelectLetter)(letterIndex);
       }
-    })
-    .onUpdate((event) => {
-      const letterIndex = findLetterAtPosition(event.x, event.y);
-      if (letterIndex !== null) {
-        runOnJS(handleSelectLetter)(letterIndex);
-      }
-    })
-    .onEnd(() => {
-      runOnJS(handleSubmit)();
     });
   
   // Draw lines between selected letters
@@ -134,7 +134,7 @@ export const LetterWheel: React.FC = () => {
       </TouchableOpacity>
       
       {/* Letter wheel */}
-      <GestureDetector gesture={panGesture}>
+      <GestureDetector gesture={tapGesture}>
         <View style={styles.wheelWrapper}>
           {/* Outer ring glow */}
           <View style={styles.outerGlow} />

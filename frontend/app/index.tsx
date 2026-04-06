@@ -170,6 +170,11 @@ export default function GameScreen() {
   const [screenShakeEnabled, setScreenShakeEnabled] = useState(true);
   const [particlesEnabled, setParticlesEnabled] = useState(true);
   
+  // Time Challenge state
+  const [timeChallengeActive, setTimeChallengeActive] = useState(false);
+  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [challengeDifficulty, setChallengeDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(null);
+  
   // NEW: Get settings and translations
   const { t, language, animationsEnabled, usePremiumWheel, premiumWheelTheme } = useGameSettings();
   
@@ -271,6 +276,52 @@ export default function GameScreen() {
       return cleanup;
     }
   }, [consentChecked]);
+
+  // Time Challenge timer effect
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (timeChallengeActive && timeRemaining > 0) {
+      interval = setInterval(() => {
+        setTimeRemaining(prev => {
+          if (prev <= 1) {
+            // Time's up!
+            setTimeChallengeActive(false);
+            setChallengeDifficulty(null);
+            Alert.alert(
+              '⏰ Time\'s Up!',
+              'You ran out of time! Try again?',
+              [
+                { text: 'OK', style: 'default' }
+              ]
+            );
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timeChallengeActive, timeRemaining]);
+
+  // Start Time Challenge
+  const startTimeChallenge = (difficulty: 'easy' | 'medium' | 'hard') => {
+    const times = { easy: 180, medium: 120, hard: 60 };
+    setTimeRemaining(times[difficulty]);
+    setChallengeDifficulty(difficulty);
+    setTimeChallengeActive(true);
+    setShowTimeChallenge(false);
+  };
+
+  // Format time for display
+  const formatTimeDisplay = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Handle consent acceptance - ads are always enabled
   const handleConsentAccept = async () => {
@@ -817,6 +868,47 @@ export default function GameScreen() {
           </Text>
         </View>
 
+        {/* Time Challenge Timer Display */}
+        {timeChallengeActive && (
+          <View style={styles.timerContainer}>
+            <LinearGradient
+              colors={timeRemaining <= 30 ? ['#e74c3c', '#c0392b'] : ['#3498db', '#2980b9']}
+              style={styles.timerGradient}
+            >
+              <Ionicons name="timer" size={18} color="#fff" />
+              <Text style={[
+                styles.timerText,
+                timeRemaining <= 30 && styles.timerUrgent
+              ]}>
+                {formatTimeDisplay(timeRemaining)}
+              </Text>
+              <TouchableOpacity 
+                style={styles.timerCancel}
+                onPress={() => {
+                  Alert.alert(
+                    'End Challenge?',
+                    'Are you sure you want to end the time challenge?',
+                    [
+                      { text: 'Continue', style: 'cancel' },
+                      { 
+                        text: 'End', 
+                        style: 'destructive',
+                        onPress: () => {
+                          setTimeChallengeActive(false);
+                          setChallengeDifficulty(null);
+                          setTimeRemaining(0);
+                        }
+                      }
+                    ]
+                  );
+                }}
+              >
+                <Ionicons name="close" size={16} color="#fff" />
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
+        )}
+
         {/* Crossword Grid */}
         <View style={styles.gridContainer}>
           <CrosswordGrid />
@@ -1037,10 +1129,7 @@ export default function GameScreen() {
         <TimeChallengeModal
           visible={showTimeChallenge}
           onClose={() => setShowTimeChallenge(false)}
-          onStartChallenge={(difficulty) => {
-            setShowTimeChallenge(false);
-            Alert.alert('Starting Challenge', `Difficulty: ${difficulty}`);
-          }}
+          onStartChallenge={startTimeChallenge}
           bestTime={null}
         />
         
@@ -1517,5 +1606,29 @@ const styles = StyleSheet.create({
   },
   sidebarEmoji: {
     fontSize: 18,
+  },
+  timerContainer: {
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  timerGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 8,
+  },
+  timerText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  timerUrgent: {
+    color: '#fff',
+  },
+  timerCancel: {
+    marginLeft: 8,
+    padding: 4,
   },
 });
