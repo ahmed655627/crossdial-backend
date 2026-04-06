@@ -89,7 +89,7 @@ export const CrosswordGrid: React.FC = () => {
                 return (
                   <View key={colIndex} style={[styles.cellWrapper, { width: cellSize, height: cellSize }]}>
                     <LinearGradient
-                      colors={['#FFD700', '#FFA500', '#FF8C00']}
+                      colors={['#4fc3f7', '#29b6f6', '#03a9f4']}
                       style={[styles.cell, styles.cellFound]}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
@@ -148,14 +148,17 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: 'rgba(102, 126, 234, 0.15)',
+    backgroundColor: 'rgba(79, 195, 247, 0.15)',
     top: '50%',
     left: '50%',
     transform: [{ translateX: -100 }, { translateY: -100 }],
   },
   grid: {
-    backgroundColor: 'transparent',
-    padding: 5,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
+    padding: 8,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   row: {
     flexDirection: 'row',
@@ -171,37 +174,39 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 8,
+    borderRadius: 10,
   },
   cellEmpty: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
   cellFound: {
-    shadowColor: '#FFD700',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   cellHinted: {
     shadowColor: '#0984e3',
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
+    shadowRadius: 6,
+    elevation: 8,
   },
   cellText: {
     fontWeight: '800',
     color: '#fff',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
   cellTextFound: {
-    color: '#1a1a2e',
-    textShadowColor: 'rgba(255, 255, 255, 0.3)',
+    color: '#fff',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
   },
   cellTextHinted: {
     color: '#fff',

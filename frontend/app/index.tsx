@@ -1116,6 +1116,11 @@ export default function GameScreen() {
           </TouchableOpacity>
         </View>
 
+        {/* Banner Ad in Game Screen */}
+        <View style={styles.gameBannerAdContainer}>
+          <BannerAdComponent />
+        </View>
+
         {/* Error message */}
         {error && (
           <View style={styles.errorBanner}>
@@ -1748,6 +1753,11 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     backgroundColor: 'transparent',
+  },
+  gameBannerAdContainer: {
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 5,
   },
   floatingSidebar: {
     position: 'absolute',
