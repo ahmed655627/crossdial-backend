@@ -837,6 +837,18 @@ export default function GameScreen() {
     );
   }
 
+  // Add safety check for currentLevel
+  if (!currentLevel) {
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+          <ActivityIndicator size="large" color="#4fc3f7" />
+          <Text style={{ color: '#fff', marginTop: 20 }}>Loading game...</Text>
+        </View>
+      </GestureHandlerRootView>
+    );
+  }
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemedBackground level={currentLevelNumber} showParticles={animationsEnabled}>
