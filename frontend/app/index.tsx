@@ -78,6 +78,15 @@ import { MusicModal } from '../src/components/MusicModal';
 import { CelebrationsModal } from '../src/components/CelebrationsModal';
 import { MascotModal } from '../src/components/MascotModal';
 import { EventsModal } from '../src/components/EventsModal';
+import { 
+  SpinWheelModal, 
+  StatisticsModal, 
+  AchievementsModal, 
+  ProgressMapModal, 
+  LeaderboardModal, 
+  FriendChallengeModal,
+  WordDefinitionModal 
+} from '../src/components/GameFeatureModals';
 
 const { width, height } = Dimensions.get('window');
 
@@ -186,6 +195,38 @@ export default function GameScreen() {
   const [dailyChallengeTimeLeft, setDailyChallengeTimeLeft] = useState('5h 30m');
   const [showHintPreview, setShowHintPreview] = useState(false);
   const [hintPreviewWord, setHintPreviewWord] = useState('');
+  
+  // NEW FEATURES BATCH 2
+  const [wordOfTheDay, setWordOfTheDay] = useState('WONDER');
+  const [wordOfTheDayFound, setWordOfTheDayFound] = useState(false);
+  const [goldenLetterIndex, setGoldenLetterIndex] = useState<number | null>(null);
+  const [showWordDefinition, setShowWordDefinition] = useState(false);
+  const [lastWordDefinition, setLastWordDefinition] = useState({ word: '', definition: '' });
+  const [levelStars, setLevelStars] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [showSpinWheel, setShowSpinWheel] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
+  const [showFriendChallenge, setShowFriendChallenge] = useState(false);
+  const [showStatistics, setShowStatistics] = useState(false);
+  const [showAchievements, setShowAchievements] = useState(false);
+  const [showProgressMap, setShowProgressMap] = useState(false);
+  const [seasonalTheme, setSeasonalTheme] = useState<'default' | 'christmas' | 'halloween' | 'summer'>('default');
+  const [achievements, setAchievements] = useState([
+    { id: 'first_word', name: 'First Steps', icon: '👶', unlocked: true },
+    { id: 'combo_5', name: 'Combo King', icon: '🔥', unlocked: false },
+    { id: 'speed_demon', name: 'Speed Demon', icon: '⚡', unlocked: false },
+    { id: 'word_master', name: 'Word Master', icon: '📚', unlocked: false },
+    { id: 'explorer', name: 'World Explorer', icon: '🌍', unlocked: false },
+  ]);
+  const [gameStats, setGameStats] = useState({
+    totalWordsFound: 0,
+    totalPlayTime: 0,
+    accuracy: 85,
+    longestStreak: 0,
+    levelsCompleted: 0,
+  });
   
   // NEW: Get settings and translations
   const { t, language, animationsEnabled, usePremiumWheel, premiumWheelTheme } = useGameSettings();
@@ -998,6 +1039,35 @@ export default function GameScreen() {
           )}
         </View>
 
+        {/* NEW: Quick Feature Access Row */}
+        <View style={styles.featureQuickAccess}>
+          <TouchableOpacity style={styles.featureQuickBtn} onPress={() => setShowSpinWheel(true)}>
+            <Text style={styles.featureQuickEmoji}>🎰</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.featureQuickBtn} onPress={() => setShowLeaderboard(true)}>
+            <Text style={styles.featureQuickEmoji}>🏆</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.featureQuickBtn} onPress={() => setShowAchievements(true)}>
+            <Text style={styles.featureQuickEmoji}>🏅</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.featureQuickBtn} onPress={() => setShowProgressMap(true)}>
+            <Text style={styles.featureQuickEmoji}>🗺️</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.featureQuickBtn} onPress={() => setShowStatistics(true)}>
+            <Text style={styles.featureQuickEmoji}>📊</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.featureQuickBtn} onPress={() => setIsMuted(!isMuted)}>
+            <Text style={styles.featureQuickEmoji}>{isMuted ? '🔇' : '🔊'}</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Word of the Day Banner */}
+        {!wordOfTheDayFound && (
+          <View style={styles.wordOfDayBanner}>
+            <Text style={styles.wordOfDayText}>⭐ Word of the Day: Find "{wordOfTheDay}" for 50 bonus coins!</Text>
+          </View>
+        )}
+
         {/* NEW: Combo & Mascot Row */}
         <View style={styles.comboMascotRow}>
           {/* Mascot */}
@@ -1389,6 +1459,50 @@ export default function GameScreen() {
             </View>
           </View>
         </Modal>
+        
+        {/* NEW FEATURE MODALS */}
+        <SpinWheelModal
+          visible={showSpinWheel}
+          onClose={() => setShowSpinWheel(false)}
+          onSpin={(reward) => {
+            Alert.alert('🎉 Reward!', `You won: ${reward}`);
+          }}
+        />
+        
+        <StatisticsModal
+          visible={showStatistics}
+          onClose={() => setShowStatistics(false)}
+          stats={gameStats}
+        />
+        
+        <AchievementsModal
+          visible={showAchievements}
+          onClose={() => setShowAchievements(false)}
+          achievements={achievements}
+        />
+        
+        <ProgressMapModal
+          visible={showProgressMap}
+          onClose={() => setShowProgressMap(false)}
+          currentLevel={currentLevelNumber}
+        />
+        
+        <LeaderboardModal
+          visible={showLeaderboard}
+          onClose={() => setShowLeaderboard(false)}
+        />
+        
+        <FriendChallengeModal
+          visible={showFriendChallenge}
+          onClose={() => setShowFriendChallenge(false)}
+        />
+        
+        <WordDefinitionModal
+          visible={showWordDefinition}
+          onClose={() => setShowWordDefinition(false)}
+          word={lastWordDefinition.word}
+          definition={lastWordDefinition.definition}
+        />
         </SafeAreaView>
       </ThemedBackground>
     </GestureHandlerRootView>
@@ -2005,5 +2119,64 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     color: '#fff',
+  },
+  // NEW FEATURE STYLES
+  featureQuickAccess: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    marginHorizontal: 15,
+    marginBottom: 4,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 12,
+  },
+  featureQuickBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  featureQuickEmoji: {
+    fontSize: 18,
+  },
+  wordOfDayBanner: {
+    backgroundColor: 'rgba(241, 196, 15, 0.2)',
+    marginHorizontal: 15,
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+    marginBottom: 4,
+  },
+  wordOfDayText: {
+    fontSize: 11,
+    color: '#FFD700',
+    textAlign: 'center',
+    fontWeight: '600',
+  },
+  levelStarsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 4,
+    marginVertical: 4,
+  },
+  levelStar: {
+    fontSize: 16,
+  },
+  confettiContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    pointerEvents: 'none',
+  },
+  confettiText: {
+    fontSize: 80,
   },
 });
