@@ -482,12 +482,13 @@ export default function GameScreen() {
 
   // Handle hint with preview
   const handleHintWithPreview = () => {
-    // Find first unrevealed word
-    const unrevealedWord = currentLevel?.words?.find(
-      (w: any) => !progress?.found_words?.[currentLevelNumber]?.includes(w.word)
+    // Find first unrevealed word from targetWords
+    const foundWordsForLevel = progress?.found_words?.[currentLevelNumber] || [];
+    const unrevealedWord = currentLevel?.targetWords?.find(
+      (word: string) => !foundWordsForLevel.includes(word)
     );
     if (unrevealedWord) {
-      setHintPreviewWord(unrevealedWord.word);
+      setHintPreviewWord(unrevealedWord);
       setShowHintPreview(true);
     } else {
       Alert.alert('No Hints Available', 'All words have been found!');
