@@ -78,6 +78,15 @@ import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
 import { TimeChallengeModal } from '../src/components/TimeChallengeModal';
 import { ProfileModal } from '../src/components/ProfileModal';
+
+// NEW: Import enhanced game features
+import TimedChallengeModal from '../src/components/TimedChallengeModal';
+import PhrasePuzzleModal from '../src/components/PhrasePuzzleModal';
+import ThemePacksModal from '../src/components/ThemePacksModal';
+import WordDefinitionPopup from '../src/components/WordDefinitionPopup';
+import { TimedChallenge } from '../src/data/timedChallenges';
+import { PhrasePuzzle } from '../src/data/phrasePuzzles';
+import { hasDefinition } from '../src/data/wordDefinitions';
 import { OnboardingScreen } from '../src/components/OnboardingScreen';
 import { MusicModal } from '../src/components/MusicModal';
 import { CelebrationsModal } from '../src/components/CelebrationsModal';
@@ -220,6 +229,31 @@ export default function GameScreen() {
   // Note: showAchievements already declared above (line 124)
   const [showProgressMap, setShowProgressMap] = useState(false);
   const [seasonalTheme, setSeasonalTheme] = useState<'default' | 'christmas' | 'halloween' | 'summer'>('default');
+  
+  // NEW: Enhanced Game Feature States
+  const [showTimedChallenge, setShowTimedChallenge] = useState(false);
+  const [showPhrasePuzzles, setShowPhrasePuzzles] = useState(false);
+  const [showThemePacks, setShowThemePacks] = useState(false);
+  const [activeTimedChallenge, setActiveTimedChallenge] = useState<TimedChallenge | null>(null);
+  const [activePhrasePuzzle, setActivePhrasePuzzle] = useState<PhrasePuzzle | null>(null);
+  const [completedTimedChallenges, setCompletedTimedChallenges] = useState<{ [id: number]: { stars: number; bestTime: number } }>({});
+  const [completedPhrasePuzzles, setCompletedPhrasePuzzles] = useState<number[]>([]);
+  const [selectedThemePack, setSelectedThemePack] = useState('default');
+  const [unlockedAchievementIds, setUnlockedAchievementIds] = useState<string[]>(['first_word']);
+  const [showWordDefinitionPopup, setShowWordDefinitionPopup] = useState(false);
+  const [lastFoundWord, setLastFoundWord] = useState<string | null>(null);
+  const [playerStats, setPlayerStats] = useState({
+    wordsFound: 0,
+    levelsCompleted: 0,
+    streakDays: 0,
+    fastestTime: 999,
+    bonusWords: 0,
+    hintsUnused: 0,
+    perfectLevels: 0,
+    dailyCompleted: 0,
+    coinsEarned: 0,
+  });
+  
   const [achievements, setAchievements] = useState([
     { id: 'first_word', name: 'First Steps', icon: '👶', unlocked: true },
     { id: 'combo_5', name: 'Combo King', icon: '🔥', unlocked: false },
@@ -708,9 +742,11 @@ export default function GameScreen() {
           onDailyChallenge={() => setShowDailyChallenge(true)}
           onWordOfDay={() => setShowWordOfDay(true)}
           onStats={() => setShowStats(true)}
-          onThemes={() => setShowThemes(true)}
+          onThemes={() => setShowThemePacks(true)}
           onWatchAdForCoins={handleWatchAdForCoins}
           onFeaturesHub={() => setShowFeaturesHub(true)}
+          onTimedChallenge={() => setShowTimedChallenge(true)}
+          onPhrasePuzzles={() => setShowPhrasePuzzles(true)}
         />
         
         {/* Banner Ad at bottom of Home Screen */}
@@ -734,7 +770,56 @@ export default function GameScreen() {
         <AchievementsModal
           visible={showAchievements}
           onClose={() => setShowAchievements(false)}
+          unlockedAchievements={unlockedAchievementIds}
+          stats={playerStats}
         />
+        
+        {/* NEW: Enhanced Game Feature Modals */}
+        <TimedChallengeModal
+          visible={showTimedChallenge}
+          onClose={() => setShowTimedChallenge(false)}
+          onStartChallenge={(challenge) => {
+            setActiveTimedChallenge(challenge);
+            setShowTimedChallenge(false);
+            setShowHomeScreen(false);
+            // TODO: Start timed challenge gameplay
+            Alert.alert('Starting Challenge', `${challenge.name} - ${challenge.timeLimit}s`);
+          }}
+          currentLevel={progress?.current_level || 1}
+          completedChallenges={completedTimedChallenges}
+        />
+        
+        <PhrasePuzzleModal
+          visible={showPhrasePuzzles}
+          onClose={() => setShowPhrasePuzzles(false)}
+          onStartPuzzle={(puzzle) => {
+            setActivePhrasePuzzle(puzzle);
+            setShowPhrasePuzzles(false);
+            // TODO: Start phrase puzzle gameplay
+            Alert.alert('Starting Puzzle', `"${puzzle.clue}"`);
+          }}
+          completedPuzzles={completedPhrasePuzzles}
+        />
+        
+        <ThemePacksModal
+          visible={showThemePacks}
+          onClose={() => setShowThemePacks(false)}
+          onSelectTheme={(themeId) => {
+            setSelectedThemePack(themeId);
+            Alert.alert('Theme Applied!', `${themeId} theme is now active`);
+          }}
+          currentTheme={selectedThemePack}
+          currentLevel={progress?.current_level || 1}
+          currentCoins={progress?.coins || 0}
+          unlockedAchievements={unlockedAchievementIds}
+        />
+        
+        {/* Word Definition Popup */}
+        <WordDefinitionPopup
+          word={lastFoundWord}
+          onDismiss={() => setLastFoundWord(null)}
+        />
+        
         <DailyChallengeModal
           visible={showDailyChallenge}
           onClose={() => setShowDailyChallenge(false)}

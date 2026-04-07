@@ -28,6 +28,8 @@ interface HomeScreenProps {
   onThemes?: () => void;
   onWatchAdForCoins?: () => void;
   onFeaturesHub?: () => void;
+  onTimedChallenge?: () => void;
+  onPhrasePuzzles?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -42,6 +44,8 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onThemes,
   onWatchAdForCoins,
   onFeaturesHub,
+  onTimedChallenge,
+  onPhrasePuzzles,
 }) => {
   const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
   const [titleAnim] = useState(new Animated.Value(0));
@@ -286,6 +290,42 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
         </Animated.View>
 
         {/* Feature Cards Row */}
+        <View style={styles.featureRow}>
+          {/* Timed Challenge */}
+          <TouchableOpacity style={styles.featureCard} onPress={onTimedChallenge}>
+            <LinearGradient
+              colors={['rgba(239, 68, 68, 0.2)', 'rgba(239, 68, 68, 0.1)']}
+              style={styles.featureCardGradient}
+            >
+              <Ionicons name="timer" size={22} color="#ef4444" />
+              <Text style={styles.featureCardText}>Timed</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Phrase Puzzles */}
+          <TouchableOpacity style={styles.featureCard} onPress={onPhrasePuzzles}>
+            <LinearGradient
+              colors={['rgba(139, 92, 246, 0.2)', 'rgba(139, 92, 246, 0.1)']}
+              style={styles.featureCardGradient}
+            >
+              <Ionicons name="chatbubble-ellipses" size={22} color="#8b5cf6" />
+              <Text style={styles.featureCardText}>Phrases</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+
+          {/* Themes */}
+          <TouchableOpacity style={styles.featureCard} onPress={onThemes}>
+            <LinearGradient
+              colors={['rgba(236, 72, 153, 0.2)', 'rgba(236, 72, 153, 0.1)']}
+              style={styles.featureCardGradient}
+            >
+              <Ionicons name="color-palette" size={22} color="#ec4899" />
+              <Text style={styles.featureCardText}>Themes</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+
+        {/* Feature Cards Row 2 */}
         <View style={styles.featureRow}>
           {/* Word of Day */}
           <TouchableOpacity style={styles.featureCard} onPress={onWordOfDay}>

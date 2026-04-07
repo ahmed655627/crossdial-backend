@@ -5,105 +5,165 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  Animated,
+  ScrollView,
   Dimensions,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { generateDailyChallenge, getStreakBonus, STREAK_BONUSES, DailyChallenge } from '../data/dailyChallenges';
 
 const { width } = Dimensions.get('window');
 
 interface DailyChallengeModalProps {
   visible: boolean;
   onClose: () => void;
-  onPlay: () => void;
-  dailyChallenge: {
-    date: string;
-    bonus: number;
-    difficulty: string;
-    completed: boolean;
-    streak: number;
-  } | null;
+  onPlay: (challenge: DailyChallenge) => void;
+  streak: number;
+  lastPlayedDate: string | null;
+  todayCompleted: boolean;
 }
 
-export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({
+const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({
   visible,
   onClose,
   onPlay,
-  dailyChallenge,
+  streak,
+  lastPlayedDate,
+  todayCompleted,
 }) => {
-  const [scaleAnim] = useState(new Animated.Value(0));
-  const [rotateAnim] = useState(new Animated.Value(0));
+  const [challenge, setChallenge] = useState<DailyChallenge | null>(null);
+  const [timeUntilReset, setTimeUntilReset] = useState('');
 
   useEffect(() => {
-    if (visible) {
-      Animated.parallel([
-        Animated.spring(scaleAnim, {
-          toValue: 1,
-          friction: 8,
-          tension: 40,
-          useNativeDriver: true,
-        }),
-        Animated.timing(rotateAnim, {
-          toValue: 1,
-          duration: 500,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    } else {
-      scaleAnim.setValue(0);
-      rotateAnim.setValue(0);
-    }
-  }, [visible]);
+    const today = new Date();
+    setChallenge(generateDailyChallenge(today));
 
-  const spin = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
+    // Update countdown timer
+    const updateTimer = () => {
+      const now = new Date();
+      const tomorrow = new Date(now);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      tomorrow.setHours(0, 0, 0, 0);
+      
+      const diff = tomorrow.getTime() - now.getTime();
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+      
+      setTimeUntilReset(`${hours}h ${minutes}m ${seconds}s`);
+    };
 
-  if (!dailyChallenge) return null;
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const bonus = getStreakBonus(streak);
+
+  if (!challenge) return null;
 
   return (
-    <Modal visible={visible} transparent animationType="fade">
+    <Modal visible={visible} transparent animationType="slide">
       <View style={styles.overlay}>
-        <Animated.View style={[styles.container, { transform: [{ scale: scaleAnim }] }]}>
-          <View style={styles.header}>
-            <Animated.Text style={[styles.calendarIcon, { transform: [{ rotate: spin }] }]}>
-              📅
-            </Animated.Text>
-            <Text style={styles.title}>Daily Challenge</Text>
-            <Text style={styles.date}>{dailyChallenge.date}</Text>
-          </View>
+        <View style={styles.modal}>
+          <LinearGradient
+            colors={['#1a1a2e', '#16213e', '#0f3460']}
+            style={styles.gradient}
+          >
+            {/* Header */}
+            <View style={styles.header}>
+              <Text style={styles.title}>📅 Daily Challenge</Text>
+              <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
+                <Text style={styles.closeText}>✕</Text>
+              </TouchableOpacity>
+            </View>
 
-          <View style={styles.content}>
+            {/* Streak Display */}
             <View style={styles.streakContainer}>
               <Text style={styles.streakIcon}>🔥</Text>
-              <Text style={styles.streakText}>{dailyChallenge.streak} Day Streak!</Text>
+              <Text style={styles.streakCount}>{streak}</Text>
+              <Text style={styles.streakLabel}>Day Streak</Text>
             </View>
 
-            <View style={styles.rewardBox}>
-              <Text style={styles.rewardTitle}>Today's Reward</Text>
-              <View style={styles.rewardRow}>
-                <Text style={styles.coinIcon}>🪙</Text>
-                <Text style={styles.rewardAmount}>+{dailyChallenge.bonus}</Text>
+            {/* Bonus Multiplier */}
+            <View style={styles.bonusRow}>
+              <Text style={styles.bonusLabel}>Today's Bonus:</Text>
+              <Text style={styles.bonusValue}>{bonus}x Rewards!</Text>
+            </View>
+
+            {/* Challenge Info */}
+            <View style={styles.challengeInfo}>
+              <Text style={styles.challengeTheme}>{challenge.theme}</Text>
+              <View style={styles.difficultyBadge}>
+                <Text style={styles.difficultyText}>
+                  {challenge.difficulty.toUpperCase()}
+                </Text>
               </View>
-              <Text style={styles.difficulty}>Difficulty: {dailyChallenge.difficulty}</Text>
             </View>
 
-            {dailyChallenge.completed ? (
+            {/* Rewards Preview */}
+            <View style={styles.rewardsContainer}>
+              <Text style={styles.rewardsTitle}>Rewards</Text>
+              <View style={styles.rewardsRow}>
+                <View style={styles.rewardItem}>
+                  <Text style={styles.rewardIcon}>🪙</Text>
+                  <Text style={styles.rewardValue}>
+                    {Math.floor(challenge.rewards.coins * bonus)}
+                  </Text>
+                </View>
+                <View style={styles.rewardItem}>
+                  <Text style={styles.rewardIcon}>💡</Text>
+                  <Text style={styles.rewardValue}>
+                    {Math.floor(challenge.rewards.hints * bonus)}
+                  </Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Time until reset */}
+            <View style={styles.timerContainer}>
+              <Text style={styles.timerLabel}>Resets in:</Text>
+              <Text style={styles.timerValue}>{timeUntilReset}</Text>
+            </View>
+
+            {/* Play Button */}
+            {todayCompleted ? (
               <View style={styles.completedBadge}>
-                <Text style={styles.completedIcon}>✅</Text>
-                <Text style={styles.completedText}>Completed Today!</Text>
+                <Text style={styles.completedText}>✓ Completed Today!</Text>
+                <Text style={styles.comeBackText}>Come back tomorrow</Text>
               </View>
             ) : (
-              <TouchableOpacity style={styles.playButton} onPress={onPlay}>
-                <Text style={styles.playButtonText}>Play Challenge</Text>
+              <TouchableOpacity
+                style={styles.playButton}
+                onPress={() => onPlay(challenge)}
+              >
+                <LinearGradient
+                  colors={['#667eea', '#764ba2']}
+                  style={styles.playGradient}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                >
+                  <Text style={styles.playText}>▶ Play Daily Challenge</Text>
+                </LinearGradient>
               </TouchableOpacity>
             )}
-          </View>
 
-          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </Animated.View>
+            {/* Streak Progress */}
+            <ScrollView horizontal style={styles.streakProgress} showsHorizontalScrollIndicator={false}>
+              {STREAK_BONUSES.map((item, index) => (
+                <View
+                  key={index}
+                  style={[
+                    styles.streakMilestone,
+                    streak >= item.days && styles.streakMilestoneActive,
+                  ]}
+                >
+                  <Text style={styles.milestoneDays}>{item.days}</Text>
+                  <Text style={styles.milestoneBonus}>{item.bonus}x</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </LinearGradient>
+        </View>
       </View>
     </Modal>
   );
@@ -112,121 +172,189 @@ export const DailyChallengeModal: React.FC<DailyChallengeModalProps> = ({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(0,0,0,0.8)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  container: {
-    width: width * 0.85,
-    backgroundColor: '#1a1a2e',
-    borderRadius: 24,
+  modal: {
+    width: width * 0.9,
+    maxWidth: 400,
+    borderRadius: 20,
     overflow: 'hidden',
-    borderWidth: 2,
-    borderColor: '#fbbf24',
+  },
+  gradient: {
+    padding: 20,
   },
   header: {
-    backgroundColor: '#fbbf24',
-    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-  },
-  calendarIcon: {
-    fontSize: 48,
-    marginBottom: 8,
+    marginBottom: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#1a1a2e',
+    color: '#fff',
   },
-  date: {
-    fontSize: 16,
-    color: '#1a1a2e',
-    marginTop: 4,
+  closeBtn: {
+    padding: 8,
   },
-  content: {
-    padding: 20,
+  closeText: {
+    fontSize: 24,
+    color: '#888',
   },
   streakContainer: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
   streakIcon: {
-    fontSize: 32,
+    fontSize: 40,
+  },
+  streakCount: {
+    fontSize: 48,
+    fontWeight: 'bold',
+    color: '#f39c12',
+  },
+  streakLabel: {
+    fontSize: 16,
+    color: '#888',
+  },
+  bonusRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    backgroundColor: 'rgba(243,156,18,0.2)',
+    padding: 10,
+    borderRadius: 10,
+  },
+  bonusLabel: {
+    fontSize: 16,
+    color: '#fff',
     marginRight: 8,
   },
-  streakText: {
-    fontSize: 20,
-    color: '#ff6b35',
+  bonusValue: {
+    fontSize: 18,
     fontWeight: 'bold',
+    color: '#f39c12',
   },
-  rewardBox: {
-    backgroundColor: 'rgba(251, 191, 36, 0.2)',
-    borderRadius: 16,
-    padding: 16,
+  challengeInfo: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 20,
   },
-  rewardTitle: {
-    color: '#fbbf24',
-    fontSize: 14,
+  challengeTheme: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#fff',
     marginBottom: 8,
   },
-  rewardRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  coinIcon: {
-    fontSize: 28,
-    marginRight: 8,
-  },
-  rewardAmount: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#fbbf24',
-  },
-  difficulty: {
-    color: '#9ca3af',
-    marginTop: 8,
-  },
-  completedBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(34, 197, 94, 0.2)',
-    padding: 16,
+  difficultyBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    backgroundColor: '#667eea',
     borderRadius: 12,
   },
-  completedIcon: {
-    fontSize: 24,
-    marginRight: 8,
+  difficultyText: {
+    fontSize: 12,
+    fontWeight: 'bold',
+    color: '#fff',
   },
-  completedText: {
-    color: '#22c55e',
+  rewardsContainer: {
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 12,
+    padding: 15,
+    marginBottom: 15,
+  },
+  rewardsTitle: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  rewardsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  rewardItem: {
+    alignItems: 'center',
+  },
+  rewardIcon: {
+    fontSize: 24,
+  },
+  rewardValue: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
+    marginTop: 4,
+  },
+  timerContainer: {
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  timerLabel: {
+    fontSize: 12,
+    color: '#888',
+  },
+  timerValue: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#e74c3c',
   },
   playButton: {
-    backgroundColor: '#8b5cf6',
-    padding: 16,
-    borderRadius: 12,
+    borderRadius: 25,
+    overflow: 'hidden',
+    marginBottom: 20,
+  },
+  playGradient: {
+    paddingVertical: 15,
     alignItems: 'center',
   },
-  playButtonText: {
-    color: '#fff',
+  playText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#fff',
   },
-  closeButton: {
-    padding: 16,
+  completedBadge: {
+    backgroundColor: 'rgba(46,204,113,0.2)',
+    borderRadius: 12,
+    padding: 15,
     alignItems: 'center',
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(255,255,255,0.1)',
+    marginBottom: 20,
   },
-  closeButtonText: {
-    color: '#9ca3af',
+  completedText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2ecc71',
+  },
+  comeBackText: {
+    fontSize: 14,
+    color: '#888',
+    marginTop: 4,
+  },
+  streakProgress: {
+    flexDirection: 'row',
+  },
+  streakMilestone: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 8,
+    padding: 10,
+    marginRight: 10,
+    minWidth: 60,
+  },
+  streakMilestoneActive: {
+    backgroundColor: 'rgba(243,156,18,0.3)',
+    borderColor: '#f39c12',
+    borderWidth: 1,
+  },
+  milestoneDays: {
     fontSize: 16,
+    fontWeight: 'bold',
+    color: '#fff',
+  },
+  milestoneBonus: {
+    fontSize: 12,
+    color: '#f39c12',
   },
 });
 
