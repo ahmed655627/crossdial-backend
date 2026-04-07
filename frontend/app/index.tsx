@@ -65,8 +65,8 @@ import { useGameSettings } from '../src/stores/gameSettingsStore';
 import { getThemeForLevel, getBackgroundForLevel, getWheelForLevel } from '../src/utils/gameThemes';
 
 // NEW: Import level clues and backgrounds
-import { getCluesForLevel, getThemeForLevel as getLevelTheme, getRandomFeedback } from '../src/data/levelClues';
-import { getBackgroundConfig, BACKGROUNDS } from '../src/data/backgrounds';
+import { getThemeForLevel as getGameTheme, getCategoryForLevel } from '../src/data/gameThemes';
+import { getCluesForLevel, getCategoryForLevel as getClueCategory, getRandomFeedback } from '../src/data/originalClues';
 
 // NEW: Import game modes
 import GameModeSelector from '../src/components/GameModeSelector';
@@ -983,9 +983,12 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Theme Header */}
+        {/* Theme Header - Copyright Free Category */}
         <View style={styles.themeHeader}>
-          <Text style={styles.themeText}>{getLevelTheme(currentLevel.id)}</Text>
+          <View style={styles.themeIconWrapper}>
+            <Text style={styles.themeIcon}>{getGameTheme(currentLevel.id).icon}</Text>
+          </View>
+          <Text style={styles.themeText}>{getClueCategory(currentLevel.id)}</Text>
         </View>
 
         {/* Clue Card with Progress */}
@@ -2074,14 +2077,28 @@ const styles = StyleSheet.create({
   },
   // Theme Header & Clue Card
   themeHeader: {
+    flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 6,
+    gap: 8,
+  },
+  themeIconWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  themeIcon: {
+    fontSize: 16,
   },
   themeText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '700',
-    color: 'rgba(255, 255, 255, 0.6)',
-    letterSpacing: 5,
+    color: 'rgba(255, 255, 255, 0.7)',
+    letterSpacing: 3,
   },
   clueCard: {
     marginHorizontal: 16,

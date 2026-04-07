@@ -97,18 +97,19 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   const canSpin = canSpinWheel();
   const dailyStreak = progress?.daily_streak || 0;
 
-  // Get current wonder name based on level
-  const getCurrentWonder = () => {
-    if (currentLevel <= 20) return { name: 'Great Pyramid of Giza', emoji: '🏛️' };
-    if (currentLevel <= 40) return { name: 'Hanging Gardens', emoji: '🌿' };
-    if (currentLevel <= 60) return { name: 'Colosseum', emoji: '🏟️' };
-    if (currentLevel <= 80) return { name: 'Machu Picchu', emoji: '🗻' };
-    if (currentLevel <= 100) return { name: 'Taj Mahal', emoji: '🕌' };
-    if (currentLevel <= 120) return { name: 'Great Wall', emoji: '🧱' };
-    return { name: 'Christ the Redeemer', emoji: '⛪' };
+  // Get current category based on level - Copyright Free
+  const getCurrentCategory = () => {
+    if (currentLevel <= 20) return { name: 'Basics', emoji: '📚' };
+    if (currentLevel <= 40) return { name: 'Everyday Life', emoji: '🏠' };
+    if (currentLevel <= 60) return { name: 'Nature & Animals', emoji: '🌿' };
+    if (currentLevel <= 80) return { name: 'Food & Kitchen', emoji: '🍳' };
+    if (currentLevel <= 100) return { name: 'Travel & Places', emoji: '✈️' };
+    if (currentLevel <= 120) return { name: 'Sports & Games', emoji: '⚽' };
+    if (currentLevel <= 140) return { name: 'Science & Tech', emoji: '🔬' };
+    return { name: 'Expert', emoji: '🏆' };
   };
 
-  const wonder = getCurrentWonder();
+  const category = getCurrentCategory();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -177,7 +178,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
           <Text style={styles.subtitle}>PUZZLES</Text>
         </Animated.View>
 
-        {/* Current Wonder Card */}
+        {/* Current Category Card - Copyright Free */}
         <Animated.View style={[styles.wonderCard, { opacity: cardAnim }]}>
           <LinearGradient
             colors={['rgba(103, 126, 234, 0.3)', 'rgba(118, 75, 162, 0.3)']}
@@ -186,10 +187,10 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             end={{ x: 1, y: 1 }}
           >
             <View style={styles.wonderCardContent}>
-              <Text style={styles.wonderEmoji}>{wonder.emoji}</Text>
+              <Text style={styles.wonderEmoji}>{category.emoji}</Text>
               <View style={styles.wonderInfo}>
-                <Text style={styles.wonderLabel}>CURRENT WONDER</Text>
-                <Text style={styles.wonderName}>{wonder.name}</Text>
+                <Text style={styles.wonderLabel}>CURRENT CATEGORY</Text>
+                <Text style={styles.wonderName}>{category.name}</Text>
               </View>
             </View>
             <View style={styles.levelBadge}>
@@ -359,7 +360,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>150+ Levels • 7 World Wonders • Daily Challenges</Text>
+          <Text style={styles.footerText}>150+ Levels • 8 Categories • Daily Challenges</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
