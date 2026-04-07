@@ -988,28 +988,32 @@ export default function GameScreen() {
           <Text style={styles.themeText}>{getLevelTheme(currentLevel.id)}</Text>
         </View>
 
-        {/* Clue/Question Box */}
-        <View style={styles.clueBox}>
+        {/* Clue Card with Progress */}
+        <View style={styles.clueCard}>
           <LinearGradient
-            colors={['rgba(0, 0, 0, 0.5)', 'rgba(0, 0, 0, 0.3)']}
-            style={styles.clueGradient}
+            colors={['rgba(30, 30, 50, 0.85)', 'rgba(20, 20, 40, 0.9)']}
+            style={styles.clueCardGradient}
           >
+            {/* Clue Text */}
             <Text style={styles.clueText}>
               {getCluesForLevel(currentLevel.id, language === 'it' ? 'it' : 'en')[0]}
             </Text>
+            
+            {/* Progress Bar inside card */}
+            <View style={styles.progressWrapper}>
+              <View style={styles.progressBarInner}>
+                <LinearGradient
+                  colors={['#00d4aa', '#00b894']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={[styles.progressFillGradient, { width: `${Math.max(5, progressPercent)}%` }]}
+                />
+              </View>
+              <Text style={styles.progressTextInner}>
+                {foundWordsCount}/{targetWordsCount}
+              </Text>
+            </View>
           </LinearGradient>
-        </View>
-
-        {/* Progress Bar */}
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
-            <View
-              style={[styles.progressFill, { width: `${progressPercent}%` }]}
-            />
-          </View>
-          <Text style={styles.progressText}>
-            {foundWordsCount}/{targetWordsCount}
-          </Text>
         </View>
 
         {/* Time Challenge Timer Display */}
@@ -2068,17 +2072,61 @@ const styles = StyleSheet.create({
   confettiText: {
     fontSize: 80,
   },
-  // Theme Header & Clue Box
+  // Theme Header & Clue Card
   themeHeader: {
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 6,
   },
   themeText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '700',
-    color: 'rgba(255, 255, 255, 0.5)',
-    letterSpacing: 4,
+    color: 'rgba(255, 255, 255, 0.6)',
+    letterSpacing: 5,
   },
+  clueCard: {
+    marginHorizontal: 16,
+    marginBottom: 12,
+    borderRadius: 18,
+    overflow: 'hidden',
+  },
+  clueCardGradient: {
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderRadius: 18,
+  },
+  clueText: {
+    fontSize: 17,
+    fontWeight: '600',
+    color: '#fff',
+    textAlign: 'center',
+    fontStyle: 'italic',
+    marginBottom: 12,
+  },
+  progressWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  progressBarInner: {
+    flex: 1,
+    height: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 3,
+    overflow: 'hidden',
+  },
+  progressFillGradient: {
+    height: '100%',
+    borderRadius: 3,
+  },
+  progressTextInner: {
+    color: 'rgba(255, 255, 255, 0.8)',
+    fontSize: 13,
+    fontWeight: '700',
+    minWidth: 35,
+  },
+  // Legacy styles (keep for compatibility)
   clueBox: {
     marginHorizontal: 20,
     marginBottom: 10,
@@ -2093,20 +2141,10 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
   },
-  clueText: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',
-    textAlign: 'center',
-    fontStyle: 'italic',
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
-  },
   // Fancy Feedback
   fancyFeedbackContainer: {
     position: 'absolute',
-    top: '40%',
+    top: '35%',
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -2114,7 +2152,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   fancyFeedbackText: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: '900',
     textShadowOffset: { width: 0, height: 3 },
     textShadowRadius: 10,

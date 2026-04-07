@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Platform } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useGameStore } from '../store/gameStore';
 
-const { width } = Dimensions.get('window');
-const WHEEL_SIZE = Math.min(width * 0.78, 300);
-const LETTER_SIZE = 52;
+const { width, height } = Dimensions.get('window');
+const WHEEL_SIZE = Math.min(width * 0.72, 280);
+const LETTER_SIZE = 48;
 
 export const LetterWheel: React.FC = () => {
   const { currentLevel, selectedLetterIndices, currentWord, selectLetter, submitWord, clearSelection } = useGameStore();
@@ -16,7 +16,7 @@ export const LetterWheel: React.FC = () => {
   // Calculate positions in a circle
   const getLetterPosition = (index: number) => {
     const angle = (index * 2 * Math.PI) / numLetters - Math.PI / 2;
-    const radius = (WHEEL_SIZE - LETTER_SIZE) / 2 - 12;
+    const radius = (WHEEL_SIZE - LETTER_SIZE) / 2 - 10;
     const x = Math.cos(angle) * radius + WHEEL_SIZE / 2 - LETTER_SIZE / 2;
     const y = Math.sin(angle) * radius + WHEEL_SIZE / 2 - LETTER_SIZE / 2;
     return { x, y };
@@ -25,7 +25,7 @@ export const LetterWheel: React.FC = () => {
   // Calculate letter center positions for lines
   const getLetterCenter = (index: number) => {
     const angle = (index * 2 * Math.PI) / numLetters - Math.PI / 2;
-    const radius = (WHEEL_SIZE - LETTER_SIZE) / 2 - 12;
+    const radius = (WHEEL_SIZE - LETTER_SIZE) / 2 - 10;
     const x = Math.cos(angle) * radius + WHEEL_SIZE / 2;
     const y = Math.sin(angle) * radius + WHEEL_SIZE / 2;
     return { x, y };
@@ -36,18 +36,6 @@ export const LetterWheel: React.FC = () => {
       selectLetter(index);
     } catch (e) {
       console.log('Error selecting letter:', e);
-    }
-  };
-  
-  const handleSubmit = () => {
-    try {
-      if (currentWord.length >= 3) {
-        submitWord();
-      } else {
-        clearSelection();
-      }
-    } catch (e) {
-      console.log('Error submitting:', e);
     }
   };
   
@@ -71,7 +59,7 @@ export const LetterWheel: React.FC = () => {
             {
               width: length,
               left: start.x,
-              top: start.y - 3,
+              top: start.y - 2,
               transform: [{ rotate: `${angle}deg` }],
               transformOrigin: 'left center',
             },
@@ -82,63 +70,58 @@ export const LetterWheel: React.FC = () => {
     return lines;
   };
   
+  const isValidWord = currentWord.length >= 3;
+  
   return (
     <View style={styles.container}>
-      {/* Current word display - tap to submit */}
+      {/* Current word display */}
       <TouchableOpacity 
         style={styles.wordDisplayWrapper}
-        onPress={() => {
-          if (currentWord.length >= 3) {
-            submitWord();
-          }
-        }}
-        activeOpacity={0.8}
+        onPress={() => isValidWord && submitWord()}
+        activeOpacity={isValidWord ? 0.7 : 1}
       >
         <LinearGradient
-          colors={currentWord.length >= 3 
-            ? ['rgba(16, 185, 129, 0.4)', 'rgba(5, 150, 105, 0.4)'] 
+          colors={isValidWord 
+            ? ['rgba(16, 185, 129, 0.35)', 'rgba(5, 150, 105, 0.35)'] 
             : ['rgba(255, 255, 255, 0.08)', 'rgba(255, 255, 255, 0.04)']}
-          style={styles.wordDisplay}
+          style={[styles.wordDisplay, isValidWord && styles.wordDisplayValid]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
         >
-          <Text style={[styles.currentWordText, currentWord.length >= 3 && styles.validWord]}>
+          <Text style={[styles.currentWordText, isValidWord && styles.validWordText]}>
             {currentWord || '• • •'}
           </Text>
-          {currentWord.length >= 3 && (
-            <View style={styles.submitHint}>
-              <Text style={styles.tapToSubmit}>TAP TO SUBMIT</Text>
-            </View>
+          {isValidWord && (
+            <Text style={styles.tapHint}>TAP</Text>
           )}
         </LinearGradient>
       </TouchableOpacity>
       
       {/* Letter wheel */}
       <View style={styles.wheelWrapper}>
-        {/* Outer glow */}
+        {/* Outer glow ring */}
         <View style={styles.outerGlow} />
         
         {/* Main wheel */}
         <LinearGradient
-          colors={['rgba(15, 12, 41, 0.95)', 'rgba(48, 43, 99, 0.95)', 'rgba(36, 36, 62, 0.95)']}
+          colors={['rgba(30, 27, 75, 0.95)', 'rgba(55, 48, 107, 0.95)', 'rgba(45, 40, 85, 0.95)']}
           style={[styles.wheel, { width: WHEEL_SIZE, height: WHEEL_SIZE }]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
         >
           {/* Decorative rings */}
-          <View style={styles.decorativeRing1} />
-          <View style={styles.decorativeRing2} />
-          <View style={styles.decorativeRing3} />
+          <View style={[styles.decorRing, { width: WHEEL_SIZE - 25, height: WHEEL_SIZE - 25, borderRadius: (WHEEL_SIZE - 25) / 2 }]} />
+          <View style={[styles.decorRing2, { width: WHEEL_SIZE - 50, height: WHEEL_SIZE - 50, borderRadius: (WHEEL_SIZE - 50) / 2 }]} />
           
           {/* Connection lines */}
           {renderLines()}
           
-          {/* Center circle with gradient */}
+          {/* Center */}
           <LinearGradient
-            colors={['rgba(102, 126, 234, 0.3)', 'rgba(118, 75, 162, 0.3)']}
+            colors={['rgba(139, 92, 246, 0.3)', 'rgba(109, 40, 217, 0.3)']}
             style={styles.centerCircle}
           >
-            <Text style={styles.centerText}>✦</Text>
+            <Text style={styles.centerIcon}>✦</Text>
           </LinearGradient>
           
           {/* Letters */}
@@ -152,42 +135,35 @@ export const LetterWheel: React.FC = () => {
                 key={index}
                 style={[
                   styles.letterWrapper,
-                  {
-                    left: position.x,
-                    top: position.y,
-                  },
+                  { left: position.x, top: position.y },
                 ]}
                 onPress={() => handleSelectLetter(index)}
-                activeOpacity={0.8}
+                activeOpacity={0.7}
               >
                 {isSelected ? (
                   <LinearGradient
-                    colors={['#667eea', '#764ba2', '#f093fb']}
-                    style={[styles.letterContainer, styles.letterSelected]}
+                    colors={['#8b5cf6', '#7c3aed', '#6d28d9']}
+                    style={[styles.letterCircle, styles.letterSelected]}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 1 }}
                   >
-                    <View style={styles.letterShine} />
-                    <Text style={[styles.letterText, styles.letterTextSelected]}>
-                      {letter}
-                    </Text>
+                    <View style={styles.letterShineSelected} />
+                    <Text style={styles.letterTextSelected}>{letter}</Text>
                   </LinearGradient>
                 ) : (
                   <LinearGradient
-                    colors={['#ffffff', '#f0f0f0', '#e8e8e8']}
-                    style={styles.letterContainer}
+                    colors={['#ffffff', '#f8f8f8', '#f0f0f0']}
+                    style={styles.letterCircle}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 0, y: 1 }}
                   >
-                    <View style={styles.letterShineUnselected} />
-                    <Text style={styles.letterText}>
-                      {letter}
-                    </Text>
+                    <View style={styles.letterShine} />
+                    <Text style={styles.letterText}>{letter}</Text>
                   </LinearGradient>
                 )}
                 {isSelected && selectionOrder >= 0 && (
-                  <View style={styles.selectionBadge}>
-                    <Text style={styles.selectionBadgeText}>{selectionOrder + 1}</Text>
+                  <View style={styles.orderBadge}>
+                    <Text style={styles.orderBadgeText}>{selectionOrder + 1}</Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -198,8 +174,8 @@ export const LetterWheel: React.FC = () => {
       
       {/* Clear button */}
       {currentWord.length > 0 && (
-        <TouchableOpacity style={styles.clearButton} onPress={clearSelection}>
-          <Text style={styles.clearButtonText}>Clear</Text>
+        <TouchableOpacity style={styles.clearBtn} onPress={clearSelection}>
+          <Text style={styles.clearBtnText}>Clear</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -210,44 +186,43 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
+    paddingTop: 8,
   },
   wordDisplayWrapper: {
-    marginBottom: 18,
+    marginBottom: 14,
   },
   wordDisplay: {
-    paddingHorizontal: 32,
-    paddingVertical: 14,
-    borderRadius: 28,
-    minWidth: 160,
+    paddingHorizontal: 28,
+    paddingVertical: 12,
+    borderRadius: 24,
+    minWidth: 140,
+    flexDirection: 'row',
     alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    justifyContent: 'center',
+    gap: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+  },
+  wordDisplayValid: {
+    borderColor: 'rgba(16, 185, 129, 0.4)',
   },
   currentWordText: {
-    fontSize: 26,
+    fontSize: 22,
     fontWeight: '800',
     color: 'rgba(255, 255, 255, 0.4)',
-    letterSpacing: 5,
-    textTransform: 'uppercase',
+    letterSpacing: 4,
   },
-  validWord: {
+  validWordText: {
     color: '#10b981',
-    textShadowColor: 'rgba(16, 185, 129, 0.4)',
-    textShadowOffset: { width: 0, height: 0 },
-    textShadowRadius: 12,
   },
-  submitHint: {
-    marginTop: 6,
-    backgroundColor: 'rgba(16, 185, 129, 0.3)',
-    paddingHorizontal: 14,
-    paddingVertical: 4,
-    borderRadius: 10,
-  },
-  tapToSubmit: {
+  tapHint: {
     fontSize: 10,
     fontWeight: '700',
     color: '#10b981',
-    letterSpacing: 1,
+    backgroundColor: 'rgba(16, 185, 129, 0.25)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
   },
   wheelWrapper: {
     position: 'relative',
@@ -256,71 +231,47 @@ const styles = StyleSheet.create({
   },
   outerGlow: {
     position: 'absolute',
-    width: WHEEL_SIZE + 30,
-    height: WHEEL_SIZE + 30,
-    borderRadius: (WHEEL_SIZE + 30) / 2,
-    backgroundColor: 'rgba(102, 126, 234, 0.15)',
+    width: WHEEL_SIZE + 24,
+    height: WHEEL_SIZE + 24,
+    borderRadius: (WHEEL_SIZE + 24) / 2,
+    backgroundColor: 'rgba(139, 92, 246, 0.12)',
     borderWidth: 2,
-    borderColor: 'rgba(102, 126, 234, 0.2)',
+    borderColor: 'rgba(139, 92, 246, 0.15)',
   },
   wheel: {
     position: 'relative',
     borderRadius: WHEEL_SIZE / 2,
-    borderWidth: 3,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    shadowColor: '#667eea',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    elevation: 15,
-  },
-  decorativeRing1: {
-    position: 'absolute',
-    width: WHEEL_SIZE - 20,
-    height: WHEEL_SIZE - 20,
-    borderRadius: (WHEEL_SIZE - 20) / 2,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.06)',
-    left: 10,
-    top: 10,
-  },
-  decorativeRing2: {
-    position: 'absolute',
-    width: WHEEL_SIZE - 45,
-    height: WHEEL_SIZE - 45,
-    borderRadius: (WHEEL_SIZE - 45) / 2,
-    borderWidth: 1,
-    borderColor: 'rgba(102, 126, 234, 0.15)',
-    left: 22.5,
-    top: 22.5,
-  },
-  decorativeRing3: {
-    position: 'absolute',
-    width: WHEEL_SIZE - 70,
-    height: WHEEL_SIZE - 70,
-    borderRadius: (WHEEL_SIZE - 70) / 2,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.04)',
-    borderStyle: 'dashed',
-    left: 35,
-    top: 35,
-  },
-  centerCircle: {
-    position: 'absolute',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    left: '50%',
-    top: '50%',
-    marginLeft: -30,
-    marginTop: -30,
-    alignItems: 'center',
-    justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.1)',
+    shadowColor: '#6d28d9',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
+    elevation: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  centerText: {
-    fontSize: 22,
+  decorRing: {
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.06)',
+  },
+  decorRing2: {
+    position: 'absolute',
+    borderWidth: 1,
+    borderColor: 'rgba(139, 92, 246, 0.12)',
+  },
+  centerCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  centerIcon: {
+    fontSize: 18,
     color: 'rgba(255, 255, 255, 0.4)',
   },
   letterWrapper: {
@@ -328,25 +279,25 @@ const styles = StyleSheet.create({
     width: LETTER_SIZE,
     height: LETTER_SIZE,
   },
-  letterContainer: {
+  letterCircle: {
     width: LETTER_SIZE,
     height: LETTER_SIZE,
     borderRadius: LETTER_SIZE / 2,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
     overflow: 'hidden',
   },
   letterSelected: {
-    transform: [{ scale: 1.1 }],
-    shadowColor: '#667eea',
-    shadowOpacity: 0.5,
-    shadowRadius: 12,
-    elevation: 12,
+    shadowColor: '#8b5cf6',
+    shadowOpacity: 0.4,
+    shadowRadius: 8,
+    elevation: 10,
+    transform: [{ scale: 1.08 }],
   },
   letterShine: {
     position: 'absolute',
@@ -354,77 +305,66 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: '45%',
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    backgroundColor: 'rgba(255, 255, 255, 0.5)',
     borderTopLeftRadius: LETTER_SIZE / 2,
     borderTopRightRadius: LETTER_SIZE / 2,
   },
-  letterShineUnselected: {
+  letterShineSelected: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     height: '45%',
-    backgroundColor: 'rgba(255, 255, 255, 0.6)',
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     borderTopLeftRadius: LETTER_SIZE / 2,
     borderTopRightRadius: LETTER_SIZE / 2,
   },
   letterText: {
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '800',
-    color: '#1a1a2e',
+    color: '#1e1b4b',
   },
   letterTextSelected: {
+    fontSize: 20,
+    fontWeight: '800',
     color: '#fff',
-    textShadowColor: 'rgba(0, 0, 0, 0.3)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
   },
-  selectionBadge: {
+  orderBadge: {
     position: 'absolute',
-    top: -4,
-    right: -4,
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    top: -3,
+    right: -3,
+    width: 18,
+    height: 18,
+    borderRadius: 9,
     backgroundColor: '#ef4444',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#fff',
-    shadowColor: '#ef4444',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 5,
   },
-  selectionBadgeText: {
+  orderBadgeText: {
     fontSize: 10,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#fff',
   },
   line: {
     position: 'absolute',
-    height: 5,
-    backgroundColor: '#667eea',
-    borderRadius: 2.5,
+    height: 4,
+    backgroundColor: '#8b5cf6',
+    borderRadius: 2,
     zIndex: -1,
-    shadowColor: '#667eea',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.6,
-    shadowRadius: 8,
-    elevation: 3,
   },
-  clearButton: {
-    marginTop: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 8,
+  clearBtn: {
+    marginTop: 10,
+    paddingHorizontal: 18,
+    paddingVertical: 7,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
   },
-  clearButtonText: {
-    color: 'rgba(255, 255, 255, 0.7)',
+  clearBtnText: {
+    color: 'rgba(255, 255, 255, 0.6)',
     fontSize: 13,
     fontWeight: '600',
   },
