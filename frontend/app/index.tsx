@@ -1075,24 +1075,19 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Theme Header - Copyright Free Category */}
-        <View style={styles.themeHeader}>
-          <View style={styles.themeIconWrapper}>
-            <Text style={styles.themeIcon}>{getGameTheme(currentLevel.id).icon}</Text>
-          </View>
-          <Text style={styles.themeText}>{getClueCategory(currentLevel.id)}</Text>
-        </View>
-
-        {/* Clue Card with Progress */}
+        {/* Clue Card with Progress - Compact */}
         <View style={styles.clueCard}>
           <LinearGradient
             colors={['rgba(30, 30, 50, 0.85)', 'rgba(20, 20, 40, 0.9)']}
             style={styles.clueCardGradient}
           >
-            {/* Clue Text */}
-            <Text style={styles.clueText}>
-              {getCluesForLevel(currentLevel.id, language === 'it' ? 'it' : 'en')[0]}
-            </Text>
+            {/* Theme + Clue in one row */}
+            <View style={styles.clueHeaderRow}>
+              <Text style={styles.themeIcon}>{getGameTheme(currentLevel.id).icon}</Text>
+              <Text style={styles.clueText}>
+                {getCluesForLevel(currentLevel.id, language === 'it' ? 'it' : 'en')[0]}
+              </Text>
+            </View>
             
             {/* Progress Bar inside card */}
             <View style={styles.progressWrapper}>
@@ -1171,20 +1166,15 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Bonus Words Counter */}
-        {bonusWordsFound.length > 0 && (
-          <View style={styles.bonusContainer}>
-            <Ionicons name="gift" size={16} color="#9b59b6" />
-            <Text style={styles.bonusText}>
-              {bonusWordsFound.length} bonus word
-              {bonusWordsFound.length > 1 ? 's' : ''}
-            </Text>
-          </View>
-        )}
-
-        {/* Letter Wheel */}
+        {/* Letter Wheel - directly after grid */}
         <View style={styles.wheelContainer}>
           <LetterWheel />
+          {/* Bonus Words Counter - small badge on wheel */}
+          {bonusWordsFound.length > 0 && (
+            <View style={styles.bonusBadge}>
+              <Text style={styles.bonusBadgeText}>+{bonusWordsFound.length}</Text>
+            </View>
+          )}
         </View>
 
         {/* Action Buttons */}
@@ -1774,23 +1764,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 1,
   },
-  bonusContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 5,
-    marginBottom: 4,
-    marginTop: 2,
+  bonusBadge: {
+    position: 'absolute',
+    top: -5,
+    right: -5,
+    backgroundColor: '#9b59b6',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderWidth: 2,
+    borderColor: '#fff',
   },
-  bonusText: {
-    color: '#9b59b6',
-    fontSize: 12,
-    fontWeight: '600',
+  bonusBadgeText: {
+    color: '#fff',
+    fontSize: 11,
+    fontWeight: 'bold',
   },
   wheelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 2,
+    paddingVertical: 0,
     marginTop: 0,
   },
   actionButtons: {
@@ -2174,53 +2167,38 @@ const styles = StyleSheet.create({
   confettiText: {
     fontSize: 80,
   },
-  // Theme Header & Clue Card
-  themeHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 6,
-    gap: 8,
-  },
-  themeIconWrapper: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+  // Theme Header & Clue Card - Combined into one compact row
   themeIcon: {
-    fontSize: 16,
-  },
-  themeText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: 'rgba(255, 255, 255, 0.7)',
-    letterSpacing: 3,
+    fontSize: 18,
   },
   clueCard: {
-    marginHorizontal: 16,
-    marginBottom: 8,
-    marginTop: 4,
-    borderRadius: 16,
+    marginHorizontal: 12,
+    marginBottom: 4,
+    marginTop: 2,
+    borderRadius: 12,
     overflow: 'hidden',
     zIndex: 10,
   },
   clueCardGradient: {
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
-    borderRadius: 16,
+    borderRadius: 12,
+  },
+  clueHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginBottom: 6,
   },
   clueText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
     color: '#fff',
     textAlign: 'center',
     fontStyle: 'italic',
-    marginBottom: 10,
   },
   progressWrapper: {
     flexDirection: 'row',
