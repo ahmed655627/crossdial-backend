@@ -1745,10 +1745,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   gridContainer: {
-    flex: 1,
+    flex: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: 150,
+    paddingVertical: 8,
   },
   wordFeedback: {
     position: 'absolute',
@@ -1789,15 +1789,16 @@ const styles = StyleSheet.create({
   wheelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingVertical: 5,
+    marginTop: 5,
   },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 20,
-    paddingVertical: 15,
-    paddingBottom: Platform.OS === 'ios' ? 30 : 20,
+    gap: 16,
+    paddingVertical: 10,
+    paddingBottom: Platform.OS === 'ios' ? 5 : 10,
   },
   actionButton: {
     width: 56,
@@ -1867,8 +1868,8 @@ const styles = StyleSheet.create({
   },
   gameBannerAdContainer: {
     alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 5,
+    marginTop: 5,
+    marginBottom: 2,
   },
   floatingSidebar: {
     position: 'absolute',
@@ -2199,24 +2200,26 @@ const styles = StyleSheet.create({
   },
   clueCard: {
     marginHorizontal: 16,
-    marginBottom: 12,
-    borderRadius: 18,
+    marginBottom: 8,
+    marginTop: 4,
+    borderRadius: 16,
     overflow: 'hidden',
+    zIndex: 10,
   },
   clueCardGradient: {
-    paddingVertical: 14,
-    paddingHorizontal: 18,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
-    borderRadius: 18,
+    borderRadius: 16,
   },
   clueText: {
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '600',
     color: '#fff',
     textAlign: 'center',
     fontStyle: 'italic',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   progressWrapper: {
     flexDirection: 'row',
