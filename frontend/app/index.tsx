@@ -276,14 +276,13 @@ export default function GameScreen() {
     levelsCompleted: 0,
   });
   
-  // NEW: Enhanced game states
-  const [comboCount, setComboCount] = useState(0);
-  const [comboMultiplier, setComboMultiplier] = useState(1);
+  // NOTE: comboCount and comboMultiplier already declared above (lines 212-213)
+  // NOTE: soundEnabled comes from useGameStore
+  // Additional enhanced game states (non-duplicates only)
   const [particleTrigger, setParticleTrigger] = useState(0);
   const [isWordValid, setIsWordValid] = useState(false);
   const [isWordInvalid, setIsWordInvalid] = useState(false);
   const [currentStars, setCurrentStars] = useState(0);
-  const [soundEnabled, setSoundEnabled] = useState(true);
   const [dailyStreak, setDailyStreak] = useState(0);
   
   // NEW: Get settings and translations
@@ -1106,7 +1105,7 @@ export default function GameScreen() {
           coins={progress?.coins || 0}
           streak={dailyStreak}
           soundEnabled={soundEnabled}
-          onSoundToggle={() => setSoundEnabled(!soundEnabled)}
+          onSoundToggle={toggleSound}
           onSettingsPress={() => setShowPrivacyPolicy(true)}
         />
 
