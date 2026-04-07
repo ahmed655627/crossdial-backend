@@ -4,8 +4,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useGameStore } from '../store/gameStore';
 
 const { width, height } = Dimensions.get('window');
-const WHEEL_SIZE = Math.min(width * 0.72, 280);
-const LETTER_SIZE = 48;
+const WHEEL_SIZE = Math.min(width * 0.58, 220);
+const LETTER_SIZE = 44;
 
 export const LetterWheel: React.FC = () => {
   const { currentLevel, selectedLetterIndices, currentWord, selectLetter, submitWord, clearSelection } = useGameStore();
@@ -231,9 +231,9 @@ const styles = StyleSheet.create({
   },
   outerGlow: {
     position: 'absolute',
-    width: WHEEL_SIZE + 24,
-    height: WHEEL_SIZE + 24,
-    borderRadius: (WHEEL_SIZE + 24) / 2,
+    width: WHEEL_SIZE + 20,
+    height: WHEEL_SIZE + 20,
+    borderRadius: (WHEEL_SIZE + 20) / 2,
     backgroundColor: 'rgba(139, 92, 246, 0.12)',
     borderWidth: 2,
     borderColor: 'rgba(139, 92, 246, 0.15)',
@@ -262,16 +262,16 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(139, 92, 246, 0.12)',
   },
   centerCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
   },
   centerIcon: {
-    fontSize: 18,
+    fontSize: 16,
     color: 'rgba(255, 255, 255, 0.4)',
   },
   letterWrapper: {

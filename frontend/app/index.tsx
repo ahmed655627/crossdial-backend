@@ -1198,14 +1198,14 @@ export default function GameScreen() {
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.actionButton, styles.shuffleButton]} onPress={handleShuffle}>
-            <Ionicons name="shuffle" size={24} color="#fff" />
+            <Ionicons name="shuffle" size={20} color="#fff" />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.actionButton, styles.hintButton]}
             onPress={handleHintWithPreview}
           >
-            <Ionicons name="bulb" size={24} color="#fff" />
+            <Ionicons name="bulb" size={20} color="#fff" />
           </TouchableOpacity>
 
           {/* NEW: Undo Button */}
@@ -1214,11 +1214,11 @@ export default function GameScreen() {
             onPress={handleUndoLetter}
             disabled={!selectedLetterIndices || selectedLetterIndices.length === 0}
           >
-            <Ionicons name="arrow-undo" size={24} color="#fff" />
+            <Ionicons name="arrow-undo" size={20} color="#fff" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.actionButton} onPress={clearSelection}>
-            <Ionicons name="backspace" size={24} color="#fff" />
+            <Ionicons name="backspace" size={20} color="#fff" />
           </TouchableOpacity>
         </View>
 
@@ -1779,7 +1779,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 5,
-    marginBottom: 8,
+    marginBottom: 4,
+    marginTop: 2,
   },
   bonusText: {
     color: '#9b59b6',
@@ -1789,31 +1790,31 @@ const styles = StyleSheet.create({
   wheelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 5,
-    marginTop: 5,
+    paddingVertical: 2,
+    marginTop: 0,
   },
   actionButtons: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 16,
-    paddingVertical: 10,
-    paddingBottom: Platform.OS === 'ios' ? 5 : 10,
+    gap: 12,
+    paddingVertical: 8,
+    paddingBottom: Platform.OS === 'ios' ? 2 : 8,
   },
   actionButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: 'rgba(255, 255, 255, 0.2)',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 5,
+    shadowRadius: 4,
+    elevation: 4,
   },
   hintButton: {
     backgroundColor: 'rgba(241, 196, 15, 0.35)',
@@ -1828,7 +1829,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(155, 89, 182, 0.5)',
   },
   gameModeIcon: {
-    fontSize: 24,
+    fontSize: 20,
   },
   adBadge: {
     position: 'absolute',
