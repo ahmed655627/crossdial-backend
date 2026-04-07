@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from typing import List
 from models.game import LevelResponse, WordValidationRequest, WordValidationResponse, HintRequest, HintResponse
 from core.database import db
-from levels_data import LEVEL_DATA
+from levels_data_new import LEVEL_DATA
 from datetime import datetime
 
 router = APIRouter(tags=["Levels"])
@@ -25,17 +25,12 @@ VALID_WORDS = set([
     "place", "plant", "point", "right", "small", "sound", "spell", "still",
     "across", "action", "actual", "advice", "affect", "afford", "almost",
     "always", "amount", "animal", "appear", "around", "attack", "beauty",
-    # Game-specific words
-    "wonders", "wonder", "world", "words", "sword", "sworn", "drown",
-    "crown", "clown", "blown", "grown", "known", "shown", "tower",
-    "pyramid", "sphinx", "egypt", "giza", "rome", "roman", "italy",
-    "paris", "france", "london", "england", "china", "wall", "great",
-    "machu", "picchu", "peru", "india", "taj", "mahal", "petra",
-    "jordan", "christ", "rio", "brazil", "colosseum", "arena",
-    "ancient", "stone", "stones", "temple", "temples", "ruin", "ruins",
-    "rain", "train", "rant", "tarn", "anti", "lair", "liar", "rail",
-    "sand", "sandy", "dusty", "sunny", "dunsy", "synod", "daunt", "stun",
-    "sun", "dun", "tan", "ant", "sat", "sad", "ads", "nut", "nuts", "stud"
+    # Generic game words
+    "words", "sword", "crown", "stone", "stones", "train", "water", "cloud",
+    "river", "mount", "peak", "beach", "grass", "trees", "leaves", "storm",
+    "light", "shine", "sleep", "dream", "smile", "happy", "lucky", "smart",
+    "power", "learn", "books", "music", "songs", "blues", "waves", "stars",
+    "chair", "table", "bread", "apple", "score", "goals", "space", "atoms"
 ])
 
 @router.get("/levels", response_model=List[LevelResponse])
@@ -43,8 +38,8 @@ async def get_all_levels():
     """Get all available levels"""
     return [{
         "id": level["id"],
-        "wonder": level["wonder"],
-        "location": level["location"],
+        "wonder": level.get("category", "Puzzle"),  # Use category as wonder for compatibility
+        "location": level.get("theme", "Challenge"),  # Use theme as location for compatibility
         "letters": level["letters"],
         "targetWords": level["targetWords"],
         "grid": level["grid"],
