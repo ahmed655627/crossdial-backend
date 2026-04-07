@@ -37,7 +37,7 @@ import { AdLoadingModal } from '../src/components/AdLoadingModal';
 import { PrivacyPolicyModal } from '../src/components/PrivacyPolicyModal';
 import { ConsentModal } from '../src/components/ConsentModal';
 import { HomeScreen } from '../src/components/HomeScreen';
-import { AchievementsModal } from '../src/components/AchievementsModal';
+import AchievementsModal from '../src/components/AchievementsModal';
 import { DailyChallengeModal } from '../src/components/DailyChallengeModal';
 import { WordOfDayModal } from '../src/components/WordOfDayModal';
 import { StatsModal } from '../src/components/StatsModal';
@@ -95,7 +95,6 @@ import { EventsModal } from '../src/components/EventsModal';
 import { 
   SpinWheelModal, 
   StatisticsModal, 
-  AchievementsModal as GameAchievementsModal, 
   ProgressMapModal, 
   LeaderboardModal as GameLeaderboardModal, 
   FriendChallengeModal,
@@ -1249,10 +1248,7 @@ export default function GameScreen() {
           visible={showLeaderboard}
           onClose={() => setShowLeaderboard(false)}
         />
-        <AchievementsModal
-          visible={showAchievements}
-          onClose={() => setShowAchievements(false)}
-        />
+        {/* AchievementsModal is rendered in the Home Screen modals section */}
         <AdLoadingModal visible={showAdLoading} message={adMessage} />
         <PrivacyPolicyModal
           visible={showPrivacyPolicy}
@@ -1459,11 +1455,7 @@ export default function GameScreen() {
           stats={gameStats}
         />
         
-        <AchievementsModal
-          visible={showAchievements}
-          onClose={() => setShowAchievements(false)}
-          achievements={achievements}
-        />
+        {/* AchievementsModal already rendered in Home Screen modals section */}
         
         <ProgressMapModal
           visible={showProgressMap}
