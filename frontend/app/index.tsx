@@ -48,6 +48,14 @@ import { MysteryBoxModal } from '../src/components/MysteryBox';
 import { ScratchCardModal } from '../src/components/ScratchCard';
 import { DailyLoginCalendar } from '../src/components/DailyLoginCalendar';
 import { LevelSkipModal, FreeHintsModal } from '../src/components/AdRewardModals';
+
+// NEW: Enhanced game components
+import WordFormingDisplay from '../src/components/WordFormingDisplay';
+import ComboCounter from '../src/components/ComboCounter';
+import StarRating from '../src/components/StarRating';
+import FoundWordsPanel from '../src/components/FoundWordsPanel';
+import ParticleEffect from '../src/components/ParticleEffect';
+import MiniStatsBar from '../src/components/MiniStatsBar';
 import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
 import { privacyService } from '../src/services/privacyService';
@@ -267,6 +275,16 @@ export default function GameScreen() {
     longestStreak: 0,
     levelsCompleted: 0,
   });
+  
+  // NEW: Enhanced game states
+  const [comboCount, setComboCount] = useState(0);
+  const [comboMultiplier, setComboMultiplier] = useState(1);
+  const [particleTrigger, setParticleTrigger] = useState(0);
+  const [isWordValid, setIsWordValid] = useState(false);
+  const [isWordInvalid, setIsWordInvalid] = useState(false);
+  const [currentStars, setCurrentStars] = useState(0);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [dailyStreak, setDailyStreak] = useState(0);
   
   // NEW: Get settings and translations
   const { t, language, animationsEnabled, usePremiumWheel, premiumWheelTheme } = useGameSettings();
@@ -1076,18 +1094,35 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Clue Card with Progress - Compact */}
+        {/* Particle Effect for word found */}
+        <ParticleEffect trigger={particleTrigger} type="confetti" />
+
+        {/* Combo Counter */}
+        <ComboCounter combo={comboCount} multiplier={comboMultiplier} />
+
+        {/* Mini Stats Bar */}
+        <MiniStatsBar
+          level={currentLevelNumber}
+          coins={progress?.coins || 0}
+          streak={dailyStreak}
+          soundEnabled={soundEnabled}
+          onSoundToggle={() => setSoundEnabled(!soundEnabled)}
+          onSettingsPress={() => setShowPrivacyPolicy(true)}
+        />
+
+        {/* Clue Card with Progress + Stars - Compact */}
         <View style={styles.clueCard}>
           <LinearGradient
             colors={['rgba(30, 30, 50, 0.85)', 'rgba(20, 20, 40, 0.9)']}
             style={styles.clueCardGradient}
           >
-            {/* Theme + Clue in one row */}
+            {/* Theme + Clue + Stars in one row */}
             <View style={styles.clueHeaderRow}>
               <Text style={styles.themeIcon}>{getGameTheme(currentLevel.id).icon}</Text>
               <Text style={styles.clueText}>
                 {getCluesForLevel(currentLevel.id, language === 'it' ? 'it' : 'en')[0]}
               </Text>
+              <StarRating stars={currentStars} size="small" />
             </View>
             
             {/* Progress Bar inside card */}
@@ -1152,6 +1187,21 @@ export default function GameScreen() {
         <View style={styles.gridContainer}>
           <CrosswordGrid />
         </View>
+
+        {/* Found Words Panel - Collapsible */}
+        <FoundWordsPanel
+          foundWords={foundWords}
+          totalWords={targetWordsCount}
+        />
+
+        {/* Word Being Formed Display */}
+        {currentWord && currentWord.length > 0 && (
+          <WordFormingDisplay
+            letters={currentWord.split('')}
+            isValid={isWordValid}
+            isInvalid={isWordInvalid}
+          />
+        )}
 
         {/* Fancy Word Feedback */}
         {showWordFeedback && lastWordResult && (
