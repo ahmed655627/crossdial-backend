@@ -855,9 +855,17 @@ export default function GameScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <ThemedBackground level={currentLevelNumber} showParticles={animationsEnabled}>
-        <SafeAreaView style={styles.container}>
-          <StatusBar barStyle="light-content" />
+      {/* Colorful Outer Frame */}
+      <LinearGradient
+        colors={getGameTheme(currentLevel.id).colors}
+        style={styles.outerFrame}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+      >
+        <View style={styles.innerFrame}>
+          <ThemedBackground level={currentLevelNumber} showParticles={animationsEnabled}>
+            <SafeAreaView style={styles.container}>
+              <StatusBar barStyle="light-content" />
 
         {/* Header */}
         <View style={styles.header}>
@@ -1396,11 +1404,23 @@ export default function GameScreen() {
         />
         </SafeAreaView>
       </ThemedBackground>
+        </View>
+      </LinearGradient>
     </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
+  // Colorful outer frame
+  outerFrame: {
+    flex: 1,
+    padding: 6,
+  },
+  innerFrame: {
+    flex: 1,
+    borderRadius: 20,
+    overflow: 'hidden',
+  },
   container: {
     flex: 1,
   },
@@ -2158,10 +2178,10 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
   },
-  // Fancy Feedback
+  // Fancy Feedback - Cursive Style like reference image
   fancyFeedbackContainer: {
     position: 'absolute',
-    top: '35%',
+    top: '30%',
     left: 0,
     right: 0,
     alignItems: 'center',
@@ -2169,18 +2189,19 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   fancyFeedbackText: {
-    fontSize: 32,
-    fontWeight: '900',
-    textShadowOffset: { width: 0, height: 3 },
-    textShadowRadius: 10,
-    letterSpacing: 2,
+    fontSize: 42,
+    fontWeight: '300',
+    fontStyle: 'italic',
+    textShadowOffset: { width: 0, height: 4 },
+    textShadowRadius: 15,
+    letterSpacing: 1,
   },
   fancyFeedbackSuccess: {
-    color: '#00d4aa',
-    textShadowColor: 'rgba(0, 212, 170, 0.6)',
+    color: '#ffd700',
+    textShadowColor: 'rgba(255, 215, 0, 0.8)',
   },
   fancyFeedbackError: {
-    color: '#e74c3c',
-    textShadowColor: 'rgba(231, 76, 60, 0.6)',
+    color: '#ff6b6b',
+    textShadowColor: 'rgba(255, 107, 107, 0.8)',
   },
 });
