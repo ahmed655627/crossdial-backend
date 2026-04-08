@@ -3,7 +3,10 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Crypto from 'expo-crypto';
 import { soundManager } from '../utils/sounds';
 
-const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
+const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL || '';
+
+// Debug: Log API URL on load
+console.log('API_URL:', API_URL || '(using relative paths)');
 
 export interface GridPosition {
   word: string;
