@@ -117,6 +117,7 @@ export default function GameScreen() {
     loading,
     error,
     currentLevel,
+    currentWord,
     progress,
     foundWords,
     bonusWordsFound,
