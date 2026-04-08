@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
     height: 50,
     alignItems: 'center',
     justifyContent: 'center',
-    transformOrigin: 'left center',
+    // transformOrigin removed - not supported on React Native mobile
     left: WHEEL_SIZE / 2,
     borderRadius: 5,
   },

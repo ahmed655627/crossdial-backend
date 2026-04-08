@@ -61,7 +61,7 @@ export const LetterWheel: React.FC = () => {
               left: start.x,
               top: start.y - 2,
               transform: [{ rotate: `${angle}deg` }],
-              transformOrigin: 'left center',
+              // transformOrigin removed - not supported on React Native mobile
             },
           ]}
         />

@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 6,
     borderRadius: 3,
-    transformOrigin: 'left center',
+    // transformOrigin removed - not supported on React Native mobile
   },
 });
 

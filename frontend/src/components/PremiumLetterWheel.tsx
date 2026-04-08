@@ -761,13 +761,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 8,
     borderRadius: 4,
-    transformOrigin: 'left center',
+    // transformOrigin removed - not supported on React Native mobile
   },
   lineGlow: {
     position: 'absolute',
     height: 16,
     borderRadius: 8,
-    transformOrigin: 'left center',
+    // transformOrigin removed - not supported on React Native mobile
   },
   centerCircleWrapper: {
     shadowColor: '#FFD700',
