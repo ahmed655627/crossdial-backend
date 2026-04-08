@@ -90,7 +90,7 @@ const styles = StyleSheet.create({
   progressContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   progressBar: {
     flex: 1,

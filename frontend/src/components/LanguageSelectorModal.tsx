@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 2,
     borderColor: 'transparent',
-    gap: 14,
+    // gap: 14, // REMOVED
   },
   languageCardSelected: {
     borderColor: '#10b981',

@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 12,
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   diffBadge: {
     paddingHorizontal: 10,
@@ -385,7 +385,7 @@ const styles = StyleSheet.create({
   sampleWords: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    // gap: 8, // REMOVED
     marginBottom: 12,
   },
   sampleWord: {

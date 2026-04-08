@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   title: {
     fontSize: 20,
@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 20,
     marginBottom: 10,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   importantTitle: {
     fontSize: 16,
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginTop: 10,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   contactText: {
     fontSize: 14,

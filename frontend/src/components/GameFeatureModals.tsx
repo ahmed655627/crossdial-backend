@@ -540,7 +540,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 14,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   shareText: {
     fontSize: 16,

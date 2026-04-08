@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    // gap: 8, // REMOVED
     marginBottom: 8,
   },
   sectionTitle: {
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 12,
     marginBottom: 15,
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   adsTextContainer: {
     flex: 1,
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 12,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   privacyLinkText: {
     fontSize: 14,
@@ -201,7 +201,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 10,
     marginTop: 10,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   parentInfoText: {
     flex: 1,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 16,
     borderRadius: 30,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   acceptButtonText: {
     color: '#fff',

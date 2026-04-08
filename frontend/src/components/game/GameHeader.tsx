@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 10,
     borderRadius: 20,
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   levelText: {
     color: '#fff',
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   iconButton: {
     width: 36,
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 15,
-    gap: 4,
+    // gap: 4, // REMOVED
   },
   coinText: {
     color: '#FFD700',
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 15,
-    gap: 4,
+    // gap: 4, // REMOVED
   },
   hintText: {
     color: '#9b59b6',

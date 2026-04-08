@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     backgroundColor: '#fff3cd',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   streakText: {
     fontSize: 16,
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     padding: 15,
     justifyContent: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   dayCard: {
     width: (width * 0.9 - 60) / 4,
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
   },
   claimButtons: {
     padding: 20,
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   claimButton: {
     backgroundColor: '#28a745',
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   doubleButtonText: {
     color: '#fff',
@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 20,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   claimedText: {
     fontSize: 16,

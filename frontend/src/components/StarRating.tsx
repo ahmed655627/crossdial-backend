@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    // gap: 2, // REMOVED
   },
   starContainer: {
     alignItems: 'center',

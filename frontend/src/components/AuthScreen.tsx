@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#db4437',
     padding: 16,
     borderRadius: 12,
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   googleButtonText: {
     color: '#fff',
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   errorText: {
     color: '#e74c3c',

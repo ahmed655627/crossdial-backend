@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 16,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   dot: {
     width: 8,
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
     width: 20,
   },
   buttons: {
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   nextButton: {
     backgroundColor: 'rgba(255,255,255,0.2)',

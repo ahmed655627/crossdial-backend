@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   header: {
     paddingVertical: 25,
     alignItems: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   title: {
     fontSize: 22,
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   options: {
-    gap: 12,
+    // gap: 12, // REMOVED
     marginBottom: 20,
   },
   optionButton: {
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
     marginBottom: 15,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   earnedText: {
     color: '#155724',
@@ -345,7 +345,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 16,
     borderRadius: 25,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   watchAdText: {
     color: '#fff',

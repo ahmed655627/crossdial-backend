@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
   },
   rewardsRow: {
     flexDirection: 'row',
-    gap: 12,
+    // gap: 12, // REMOVED
     marginBottom: 20,
   },
   rewardBox: {
@@ -353,7 +353,7 @@ const styles = StyleSheet.create({
   },
   levelsRow: {
     flexDirection: 'row',
-    gap: 8,
+    // gap: 8, // REMOVED
     paddingBottom: 8,
   },
   levelBadge: {
@@ -371,7 +371,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     padding: 16,
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   playButton: {
     padding: 16,

@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
     paddingHorizontal: 20,
-    gap: 16,
+    // gap: 16, // REMOVED
   },
   actionButton: {
     alignItems: 'center',

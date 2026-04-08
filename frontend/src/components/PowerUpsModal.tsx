@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     backgroundColor: '#f8f9fa',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   coinsText: {
     fontSize: 16,
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 12,
-    gap: 4,
+    // gap: 4, // REMOVED
   },
   costText: {
     fontSize: 12,

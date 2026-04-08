@@ -1629,7 +1629,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 18,
-    gap: 6,
+    // gap: 6, // REMOVED - not supported on RN mobile
   },
   levelText: {
     color: '#fff',
@@ -1639,7 +1639,7 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    // gap: 8, // REMOVED - not supported on RN mobile
   },
   iconButton: {
     width: 38,
@@ -1670,7 +1670,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 15,
-    gap: 4,
+    // gap: 4, // REMOVED - not supported on RN mobile
   },
   coinText: {
     color: '#FFD700',
@@ -1684,7 +1684,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 15,
-    gap: 4,
+    // gap: 4, // REMOVED - not supported on RN mobile
   },
   hintText: {
     color: '#9b59b6',
@@ -1713,7 +1713,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 14,
     paddingHorizontal: 16,
-    gap: 14,
+    // gap: 14, // REMOVED - not supported on RN mobile
     borderRadius: 10,
     marginVertical: 2,
     backgroundColor: 'rgba(0,0,0,0.02)',
@@ -1763,7 +1763,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     marginBottom: 10,
-    gap: 12,
+    // gap: 12, // REMOVED - not supported on RN mobile
   },
   progressBar: {
     flex: 1,
@@ -1850,7 +1850,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
+    // gap: 12, // REMOVED - not supported on RN mobile
     paddingVertical: 8,
     paddingBottom: Platform.OS === 'ios' ? 2 : 8,
   },
@@ -1932,7 +1932,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     borderRadius: 25,
     padding: 6,
-    gap: 8,
+    // gap: 8, // REMOVED - not supported on RN mobile
   },
   sidebarButton: {
     borderRadius: 20,
@@ -1958,7 +1958,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    gap: 8,
+    // gap: 8, // REMOVED - not supported on RN mobile
   },
   timerText: {
     fontSize: 20,
@@ -2024,7 +2024,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 15,
     marginVertical: 4,
-    gap: 15,
+    // gap: 15, // REMOVED - not supported on RN mobile
   },
   mascotContainer: {
     alignItems: 'center',
@@ -2047,7 +2047,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 14,
     paddingVertical: 6,
-    gap: 6,
+    // gap: 6, // REMOVED - not supported on RN mobile
   },
   comboText: {
     fontSize: 16,
@@ -2136,7 +2136,7 @@ const styles = StyleSheet.create({
   },
   hintPreviewButtons: {
     flexDirection: 'row',
-    gap: 12,
+    // gap: 12, // REMOVED - not supported on RN mobile
     width: '100%',
   },
   hintPreviewCancel: {
@@ -2161,7 +2161,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
-    gap: 8,
+    // gap: 8, // REMOVED - not supported on RN mobile
   },
   hintPreviewConfirmText: {
     fontSize: 14,
@@ -2208,7 +2208,7 @@ const styles = StyleSheet.create({
   levelStarsContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 4,
+    // gap: 4, // REMOVED - not supported on RN mobile
     marginVertical: 4,
   },
   levelStar: {
@@ -2250,7 +2250,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    // gap: 8, // REMOVED - not supported on RN mobile
     marginBottom: 6,
   },
   clueText: {
@@ -2263,7 +2263,7 @@ const styles = StyleSheet.create({
   progressWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    // gap: 12, // REMOVED - not supported on RN mobile
   },
   progressBarInner: {
     flex: 1,

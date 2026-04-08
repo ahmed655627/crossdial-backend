@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 20,
     marginBottom: 15,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   doubleRewardsText: {
     fontSize: 14,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 40,
     borderRadius: 30,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   continueButtonText: {
     fontSize: 18,

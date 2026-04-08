@@ -109,10 +109,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 6,
     borderRadius: 20,
-    gap: 5,
   },
   fireEmoji: {
     fontSize: 14,
+    marginRight: 5,
   },
   textContainer: {
     alignItems: 'center',

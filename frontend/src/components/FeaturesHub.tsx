@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     borderRadius: 20,
     backgroundColor: '#fff',
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   tabActive: {
     backgroundColor: '#e8ecff',

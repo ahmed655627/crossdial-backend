@@ -150,7 +150,6 @@ const styles = StyleSheet.create({
   lettersContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 3,
   },
   letterBox: {
     width: 28,
@@ -161,6 +160,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
+    marginHorizontal: 1.5,
   },
   letterBoxValid: {
     backgroundColor: 'rgba(46, 204, 113, 0.3)',

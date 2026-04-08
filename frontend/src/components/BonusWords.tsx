@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   wordGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   wordChip: {
     backgroundColor: 'rgba(34, 197, 94, 0.2)',

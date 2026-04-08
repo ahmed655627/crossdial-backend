@@ -80,12 +80,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
-    gap: 12,
   },
   statItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    marginRight: 12,
+  },
+  statItemInner: {
+    marginRight: 4,
   },
   levelBadge: {
     width: 24,

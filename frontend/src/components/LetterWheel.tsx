@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.12)',
   },

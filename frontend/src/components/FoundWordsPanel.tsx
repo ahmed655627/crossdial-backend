@@ -78,7 +78,9 @@ const styles = StyleSheet.create({
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+  },
+  headerIcon: {
+    marginRight: 6,
   },
   headerText: {
     fontSize: 12,
@@ -90,7 +92,6 @@ const styles = StyleSheet.create({
   },
   wordsList: {
     paddingHorizontal: 10,
-    gap: 6,
   },
   wordBadge: {
     flexDirection: 'row',
@@ -99,7 +100,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
-    gap: 4,
+    marginRight: 6,
+  },
+  wordCheckmark: {
+    marginRight: 4,
   },
   wordText: {
     fontSize: 11,

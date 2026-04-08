@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   modesContainer: {
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   modeCard: {
     borderRadius: 16,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    gap: 14,
+    // gap: 14, // REMOVED
   },
   modeIcon: {
     fontSize: 32,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 10,
-    gap: 4,
+    // gap: 4, // REMOVED
   },
   timerText: {
     fontSize: 12,

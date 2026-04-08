@@ -240,7 +240,7 @@ const styles = StyleSheet.create({
   volumeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   volumeButton: {
     fontSize: 24,

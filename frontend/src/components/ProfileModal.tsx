@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   userName: {
     fontSize: 24,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   nameInput: {
     borderWidth: 2,

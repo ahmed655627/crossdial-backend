@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     backgroundColor: '#2c3e50',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   bestTimeText: {
     fontSize: 16,

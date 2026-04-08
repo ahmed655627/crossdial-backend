@@ -390,7 +390,7 @@ const styles = StyleSheet.create({
   selectedRow: {
     flexDirection: 'row',
     marginBottom: 32,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   correctRow: {
     backgroundColor: 'rgba(34, 197, 94, 0.3)',
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   letterTile: {
     width: 50,
@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 24,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   successEmoji: {
     fontSize: 32,
@@ -537,7 +537,7 @@ const styles = StyleSheet.create({
   },
   difficultyBar: {
     flexDirection: 'row',
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   difficultyDot: {
     width: 16,
@@ -563,12 +563,12 @@ const styles = StyleSheet.create({
   rewardsRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 32,
+    // gap: 32, // REMOVED
   },
   rewardItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   rewardIcon: {
     fontSize: 24,
@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
     padding: 12,
     borderRadius: 12,
     marginBottom: 20,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   warningIcon: {
     fontSize: 20,

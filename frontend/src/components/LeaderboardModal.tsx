@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   title: {
     fontSize: 24,
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
   scoreContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    // gap: 5, // REMOVED
     paddingLeft: 10,
   },
   scoreText: {
@@ -455,7 +455,7 @@ const styles = StyleSheet.create({
   userStatItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   userStatLabel: {
     fontSize: 14,

@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
   achievementsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   achievementBadge: {
     width: 44,
@@ -356,7 +356,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   avatarOption: {
     width: 60,

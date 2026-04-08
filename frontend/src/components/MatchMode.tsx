@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingBottom: 30,
-    gap: 20,
+    // gap: 20, // REMOVED
   },
   progressText: {
     fontSize: 16,

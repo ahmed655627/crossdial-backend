@@ -463,7 +463,7 @@ const styles = StyleSheet.create({
   topBarRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   resourceBadge: {
     flexDirection: 'row',
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   resourceText: {
     color: '#a855f7',
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 20,
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   coinText: {
     color: '#fbbf24',
@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'nowrap',
     paddingHorizontal: 15,
-    gap: 8,
+    // gap: 8, // REMOVED
     marginBottom: 15,
     justifyContent: 'space-between',
   },
@@ -717,7 +717,7 @@ const styles = StyleSheet.create({
   featureRow: {
     flexDirection: 'row',
     paddingHorizontal: 20,
-    gap: 10,
+    // gap: 10, // REMOVED
     marginBottom: 15,
   },
   featureCard: {
@@ -731,7 +731,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 14,
     paddingHorizontal: 10,
-    gap: 8,
+    // gap: 8, // REMOVED
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 14,
@@ -788,7 +788,7 @@ const styles = StyleSheet.create({
   watchAdLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   watchAdText: {
     color: '#fff',
@@ -802,7 +802,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 12,
-    gap: 4,
+    // gap: 4, // REMOVED
   },
   watchAdCoins: {
     color: '#fbbf24',

@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     paddingHorizontal: 30,
     borderRadius: 30,
-    gap: 10,
+    // gap: 10, // REMOVED
   },
   spinButtonDisabled: {
     backgroundColor: '#95a5a6',
@@ -344,7 +344,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 12,
-    gap: 6,
+    // gap: 6, // REMOVED
     backgroundColor: 'rgba(52, 152, 219, 0.1)',
     paddingVertical: 8,
     paddingHorizontal: 16,
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 25,
     marginTop: 15,
-    gap: 8,
+    // gap: 8, // REMOVED
   },
   extraSpinButtonText: {
     color: '#fff',

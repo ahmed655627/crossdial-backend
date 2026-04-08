@@ -277,7 +277,7 @@ const styles = StyleSheet.create({
   livesRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    gap: 12,
+    // gap: 12, // REMOVED
     marginBottom: 24,
   },
   lifeHeart: {

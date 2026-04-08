@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   },
   colorPreview: {
     flexDirection: 'row',
-    gap: 6,
+    // gap: 6, // REMOVED
   },
   colorDot: {
     width: 16,

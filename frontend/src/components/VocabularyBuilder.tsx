@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 20,
+    // gap: 20, // REMOVED
   },
   statBox: {
     alignItems: 'center',
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   sortRow: {
     flexDirection: 'row',
     paddingHorizontal: 16,
-    gap: 8,
+    // gap: 8, // REMOVED
     marginBottom: 12,
   },
   sortButton: {

@@ -263,7 +263,7 @@ const styles = StyleSheet.create({
   },
   difficultyOptions: {
     flexDirection: 'row',
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   difficultyCard: {
     flex: 1,
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 20,
+    // gap: 20, // REMOVED
     marginBottom: 24,
   },
   statBox: {

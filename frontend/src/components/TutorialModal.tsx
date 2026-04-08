@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   },
   buttonRow: {
     flexDirection: 'row',
-    gap: 12,
+    // gap: 12, // REMOVED
   },
   prevButton: {
     paddingVertical: 14,
