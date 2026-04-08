@@ -751,7 +751,14 @@ export default function GameScreen() {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <HomeScreen
-          onPlay={() => setShowHomeScreen(false)}
+          onPlay={() => {
+            // Safety check: Only allow play if currentLevel is loaded
+            if (currentLevel) {
+              setShowHomeScreen(false);
+            } else {
+              Alert.alert('Loading', 'Game is still loading, please wait a moment...');
+            }
+          }}
           onDailyRewards={() => setShowDailyWheel(true)}
           onLeaderboard={() => setShowLeaderboard(true)}
           onSettings={() => setShowPrivacyPolicy(true)}
@@ -955,11 +962,14 @@ export default function GameScreen() {
     );
   }
 
+  // Get theme safely with fallback
+  const gameTheme = getGameTheme(currentLevel?.id || 1) || { colors: ['#1a1a2e', '#16213e'], icon: '🎯' };
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       {/* Colorful Outer Frame */}
       <LinearGradient
-        colors={getGameTheme(currentLevel.id).colors}
+        colors={gameTheme.colors}
         style={styles.outerFrame}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
@@ -1117,7 +1127,7 @@ export default function GameScreen() {
           >
             {/* Theme + Clue + Stars in one row */}
             <View style={styles.clueHeaderRow}>
-              <Text style={styles.themeIcon}>{getGameTheme(currentLevel.id).icon}</Text>
+              <Text style={styles.themeIcon}>{gameTheme.icon}</Text>
               <Text style={styles.clueText}>
                 {getCluesForLevel(currentLevel.id, language === 'it' ? 'it' : 'en')[0]}
               </Text>
