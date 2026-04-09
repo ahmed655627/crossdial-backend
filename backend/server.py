@@ -16,6 +16,7 @@ from routers.multiplayer import router as multiplayer_router
 from routers.notifications import router as notifications_router
 from routers.leaderboard import router as leaderboard_router
 from routers.legal import router as legal_router
+from routers.puzzle_modes import router as puzzle_modes_router
 
 # Import database client for shutdown
 from core.database import client
@@ -43,6 +44,7 @@ api_router.include_router(multiplayer_router)
 api_router.include_router(notifications_router)
 api_router.include_router(leaderboard_router)
 api_router.include_router(legal_router)
+api_router.include_router(puzzle_modes_router)
 
 # Include the API router in the main app
 app.include_router(api_router)

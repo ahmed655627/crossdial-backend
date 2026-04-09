@@ -93,6 +93,9 @@ import {
 import MatchMode from '../src/components/MatchMode';
 import { GameModeType } from '../src/data/gameModes';
 
+// NEW: Import puzzle modes service
+import { puzzleModesService } from '../src/services/puzzleModesService';
+
 // NEW: Import feature modals
 import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
@@ -144,6 +147,7 @@ export default function GameScreen() {
     toggleSound,
     selectedLetterIndices,
     selectLetter,
+    deviceId,
   } = useGameStore();
 
   const [showLevelSelect, setShowLevelSelect] = useState(false);
@@ -404,6 +408,14 @@ export default function GameScreen() {
       return cleanup;
     }
   }, [consentChecked]);
+
+  // Initialize puzzle modes service with device ID
+  useEffect(() => {
+    if (deviceId) {
+      puzzleModesService.setDeviceId(deviceId);
+      console.log('Puzzle modes service initialized with device ID');
+    }
+  }, [deviceId]);
 
   // Time Challenge timer effect
   useEffect(() => {
@@ -974,56 +986,63 @@ export default function GameScreen() {
         <MirrorWordsGame
           visible={activePuzzleMode === 'mirror'}
           onClose={() => setActivePuzzleMode(null)}
-          onComplete={(score) => {
+          onComplete={async (score) => {
             setPuzzleModesScore(prev => prev + score);
+            await puzzleModesService.updateProgress('mirror', 1, score);
             Alert.alert('Mode Complete!', `You earned ${score} points!`);
           }}
         />
         <MissingHeartsGame
           visible={activePuzzleMode === 'hearts'}
           onClose={() => setActivePuzzleMode(null)}
-          onComplete={(score) => {
+          onComplete={async (score) => {
             setPuzzleModesScore(prev => prev + score);
+            await puzzleModesService.updateProgress('hearts', 1, score);
             Alert.alert('Mode Complete!', `You earned ${score} points!`);
           }}
         />
         <LoveInLayersGame
           visible={activePuzzleMode === 'layers'}
           onClose={() => setActivePuzzleMode(null)}
-          onComplete={(score) => {
+          onComplete={async (score) => {
             setPuzzleModesScore(prev => prev + score);
+            await puzzleModesService.updateProgress('layers', 1, score);
             Alert.alert('Mode Complete!', `You earned ${score} points!`);
           }}
         />
         <EmotionChainGame
           visible={activePuzzleMode === 'chain'}
           onClose={() => setActivePuzzleMode(null)}
-          onComplete={(score) => {
+          onComplete={async (score) => {
             setPuzzleModesScore(prev => prev + score);
+            await puzzleModesService.updateProgress('chain', 1, score);
             Alert.alert('Mode Complete!', `You earned ${score} points!`);
           }}
         />
         <WordPairGame
           visible={activePuzzleMode === 'pair'}
           onClose={() => setActivePuzzleMode(null)}
-          onComplete={(score) => {
+          onComplete={async (score) => {
             setPuzzleModesScore(prev => prev + score);
+            await puzzleModesService.updateProgress('pair', 1, score);
             Alert.alert('Mode Complete!', `You earned ${score} points!`);
           }}
         />
         <FlipSolveGame
           visible={activePuzzleMode === 'flip'}
           onClose={() => setActivePuzzleMode(null)}
-          onComplete={(score) => {
+          onComplete={async (score) => {
             setPuzzleModesScore(prev => prev + score);
+            await puzzleModesService.updateProgress('flip', 1, score);
             Alert.alert('Mode Complete!', `You earned ${score} points!`);
           }}
         />
         <CrossedEmotionsGame
           visible={activePuzzleMode === 'crossed'}
           onClose={() => setActivePuzzleMode(null)}
-          onComplete={(score) => {
+          onComplete={async (score) => {
             setPuzzleModesScore(prev => prev + score);
+            await puzzleModesService.updateProgress('crossed', 1, score);
             Alert.alert('Mode Complete!', `You earned ${score} points!`);
           }}
         />
