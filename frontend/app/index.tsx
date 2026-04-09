@@ -78,6 +78,18 @@ import { getCluesForLevel, getCategoryForLevel as getClueCategory, getRandomFeed
 
 // NEW: Import game modes
 import GameModeSelector from '../src/components/GameModeSelector';
+
+// NEW: Import puzzle modes
+import {
+  PuzzleModesMenu,
+  MirrorWordsGame,
+  MissingHeartsGame,
+  LoveInLayersGame,
+  EmotionChainGame,
+  WordPairGame,
+  FlipSolveGame,
+  CrossedEmotionsGame,
+} from '../src/components/puzzleModes';
 import MatchMode from '../src/components/MatchMode';
 import { GameModeType } from '../src/data/gameModes';
 
@@ -207,6 +219,11 @@ export default function GameScreen() {
   const [timeChallengeActive, setTimeChallengeActive] = useState(false);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [challengeDifficulty, setChallengeDifficulty] = useState<'easy' | 'medium' | 'hard' | null>(null);
+  
+  // NEW: Puzzle Modes state
+  const [showPuzzleModes, setShowPuzzleModes] = useState(false);
+  const [activePuzzleMode, setActivePuzzleMode] = useState<string | null>(null);
+  const [puzzleModesScore, setPuzzleModesScore] = useState(0);
   
   // NEW FEATURES: Game enhancements
   const [recentWordsFound, setRecentWordsFound] = useState<string[]>([]);
@@ -772,6 +789,7 @@ export default function GameScreen() {
           onFeaturesHub={() => setShowFeaturesHub(true)}
           onTimedChallenge={() => setShowTimedChallenge(true)}
           onPhrasePuzzles={() => setShowPhrasePuzzles(true)}
+          onPuzzleModes={() => setShowPuzzleModes(true)}
         />
         
         {/* Banner Ad at bottom of Home Screen */}
@@ -940,6 +958,74 @@ export default function GameScreen() {
           }}
           onWatchAd={() => adManager.showVideoRewardedAd()}
           currentHints={progress?.hints_remaining || 0}
+        />
+        
+        {/* Puzzle Modes */}
+        <PuzzleModesMenu
+          visible={showPuzzleModes}
+          onClose={() => setShowPuzzleModes(false)}
+          onSelectMode={(modeId) => {
+            setShowPuzzleModes(false);
+            setActivePuzzleMode(modeId);
+          }}
+        />
+        
+        {/* Individual Puzzle Games */}
+        <MirrorWordsGame
+          visible={activePuzzleMode === 'mirror'}
+          onClose={() => setActivePuzzleMode(null)}
+          onComplete={(score) => {
+            setPuzzleModesScore(prev => prev + score);
+            Alert.alert('Mode Complete!', `You earned ${score} points!`);
+          }}
+        />
+        <MissingHeartsGame
+          visible={activePuzzleMode === 'hearts'}
+          onClose={() => setActivePuzzleMode(null)}
+          onComplete={(score) => {
+            setPuzzleModesScore(prev => prev + score);
+            Alert.alert('Mode Complete!', `You earned ${score} points!`);
+          }}
+        />
+        <LoveInLayersGame
+          visible={activePuzzleMode === 'layers'}
+          onClose={() => setActivePuzzleMode(null)}
+          onComplete={(score) => {
+            setPuzzleModesScore(prev => prev + score);
+            Alert.alert('Mode Complete!', `You earned ${score} points!`);
+          }}
+        />
+        <EmotionChainGame
+          visible={activePuzzleMode === 'chain'}
+          onClose={() => setActivePuzzleMode(null)}
+          onComplete={(score) => {
+            setPuzzleModesScore(prev => prev + score);
+            Alert.alert('Mode Complete!', `You earned ${score} points!`);
+          }}
+        />
+        <WordPairGame
+          visible={activePuzzleMode === 'pair'}
+          onClose={() => setActivePuzzleMode(null)}
+          onComplete={(score) => {
+            setPuzzleModesScore(prev => prev + score);
+            Alert.alert('Mode Complete!', `You earned ${score} points!`);
+          }}
+        />
+        <FlipSolveGame
+          visible={activePuzzleMode === 'flip'}
+          onClose={() => setActivePuzzleMode(null)}
+          onComplete={(score) => {
+            setPuzzleModesScore(prev => prev + score);
+            Alert.alert('Mode Complete!', `You earned ${score} points!`);
+          }}
+        />
+        <CrossedEmotionsGame
+          visible={activePuzzleMode === 'crossed'}
+          onClose={() => setActivePuzzleMode(null)}
+          onComplete={(score) => {
+            setPuzzleModesScore(prev => prev + score);
+            Alert.alert('Mode Complete!', `You earned ${score} points!`);
+          }}
         />
         
         <ConsentModal

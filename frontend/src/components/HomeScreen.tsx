@@ -30,6 +30,7 @@ interface HomeScreenProps {
   onFeaturesHub?: () => void;
   onTimedChallenge?: () => void;
   onPhrasePuzzles?: () => void;
+  onPuzzleModes?: () => void;
 }
 
 export const HomeScreen: React.FC<HomeScreenProps> = ({
@@ -46,6 +47,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
   onFeaturesHub,
   onTimedChallenge,
   onPhrasePuzzles,
+  onPuzzleModes,
 }) => {
   const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
   const [titleAnim] = useState(new Animated.Value(0));
@@ -357,6 +359,21 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             >
               <Ionicons name="apps" size={22} color="#f59e0b" />
               <Text style={styles.featureCardText}>More</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
+
+        {/* Feature Cards Row 3 - Puzzle Modes */}
+        <View style={styles.featureRow}>
+          {/* Puzzle Modes - NEW */}
+          <TouchableOpacity style={[styles.featureCard, styles.puzzleModesCard]} onPress={onPuzzleModes}>
+            <LinearGradient
+              colors={['rgba(236, 72, 153, 0.3)', 'rgba(168, 85, 247, 0.2)']}
+              style={styles.featureCardGradient}
+            >
+              <Text style={styles.puzzleModesIcon}>🧩</Text>
+              <Text style={[styles.featureCardText, { color: '#ec4899' }]}>Puzzle Modes</Text>
+              <Text style={styles.newBadge}>NEW</Text>
             </LinearGradient>
           </TouchableOpacity>
         </View>
@@ -740,6 +757,24 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 12,
     fontWeight: '600',
+  },
+  puzzleModesCard: {
+    maxWidth: '50%',
+  },
+  puzzleModesIcon: {
+    fontSize: 22,
+    marginRight: 8,
+  },
+  newBadge: {
+    backgroundColor: '#ef4444',
+    color: '#fff',
+    fontSize: 8,
+    fontWeight: 'bold',
+    paddingHorizontal: 6,
+    paddingVertical: 2,
+    borderRadius: 8,
+    marginLeft: 8,
+    overflow: 'hidden',
   },
   streakBanner: {
     marginHorizontal: 20,
