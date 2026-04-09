@@ -1313,51 +1313,54 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Letter Wheel - directly after grid */}
-        <View style={styles.wheelContainer}>
-          <LetterWheel />
-          {/* Bonus Words Counter - small badge on wheel */}
-          {bonusWordsFound.length > 0 && (
-            <View style={styles.bonusBadge}>
-              <Text style={styles.bonusBadgeText}>+{bonusWordsFound.length}</Text>
-            </View>
-          )}
+        {/* Letter Wheel with Action Buttons */}
+        <View style={styles.wheelAndActionsContainer}>
+          {/* Action Buttons - Left Side */}
+          <View style={styles.sideActionButtons}>
+            <TouchableOpacity 
+              style={[styles.sideActionButton, styles.gameModeButton]} 
+              onPress={() => setShowGameModeSelector(true)}
+            >
+              <Text style={styles.gameModeIcon}>🎮</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={[styles.sideActionButton, styles.shuffleButton]} onPress={handleShuffle}>
+              <Ionicons name="shuffle" size={18} color="#fff" />
+            </TouchableOpacity>
+          </View>
+
+          {/* Letter Wheel */}
+          <View style={styles.wheelContainer}>
+            <LetterWheel />
+            {/* Bonus Words Counter - small badge on wheel */}
+            {bonusWordsFound.length > 0 && (
+              <View style={styles.bonusBadge}>
+                <Text style={styles.bonusBadgeText}>+{bonusWordsFound.length}</Text>
+              </View>
+            )}
+          </View>
+
+          {/* Action Buttons - Right Side */}
+          <View style={styles.sideActionButtons}>
+            <TouchableOpacity
+              style={[styles.sideActionButton, styles.hintButton]}
+              onPress={handleHintWithPreview}
+            >
+              <Ionicons name="bulb" size={18} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={[styles.sideActionButton, styles.undoButton]} 
+              onPress={handleUndoLetter}
+              disabled={!selectedLetterIndices || selectedLetterIndices.length === 0}
+            >
+              <Ionicons name="arrow-undo" size={18} color="#fff" />
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* Action Buttons */}
-        <View style={styles.actionButtons}>
-          {/* Game Modes Button */}
-          <TouchableOpacity 
-            style={[styles.actionButton, styles.gameModeButton]} 
-            onPress={() => setShowGameModeSelector(true)}
-          >
-            <Text style={styles.gameModeIcon}>🎮</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.actionButton, styles.shuffleButton]} onPress={handleShuffle}>
-            <Ionicons name="shuffle" size={20} color="#fff" />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.actionButton, styles.hintButton]}
-            onPress={handleHintWithPreview}
-          >
-            <Ionicons name="bulb" size={20} color="#fff" />
-          </TouchableOpacity>
-
-          {/* NEW: Undo Button */}
-          <TouchableOpacity 
-            style={[styles.actionButton, styles.undoButton]} 
-            onPress={handleUndoLetter}
-            disabled={!selectedLetterIndices || selectedLetterIndices.length === 0}
-          >
-            <Ionicons name="arrow-undo" size={20} color="#fff" />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionButton} onPress={clearSelection}>
-            <Ionicons name="backspace" size={20} color="#fff" />
-          </TouchableOpacity>
-        </View>
+        {/* Clear Button - Below Wheel */}
+        <TouchableOpacity style={styles.clearButton} onPress={clearSelection}>
+          <Text style={styles.clearButtonText}>Clear</Text>
+        </TouchableOpacity>
 
         {/* Banner Ad in Game Screen */}
         <View style={styles.gameBannerAdContainer}>
@@ -1932,6 +1935,45 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 0,
     marginTop: 0,
+  },
+  wheelAndActionsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 10,
+  },
+  sideActionButtons: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 5,
+  },
+  sideActionButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    marginVertical: 5,
+  },
+  clearButton: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    paddingHorizontal: 40,
+    paddingVertical: 10,
+    borderRadius: 20,
+    marginTop: 8,
+    marginBottom: 5,
+    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  clearButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
   },
   actionButtons: {
     flexDirection: 'row',
