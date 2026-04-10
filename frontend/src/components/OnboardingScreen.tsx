@@ -8,16 +8,13 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
-  Image,
   FlatList,
   Animated,
+  useWindowDimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-
-const { width, height } = Dimensions.get('window');
 
 interface OnboardingSlide {
   id: string;
@@ -70,6 +67,7 @@ interface OnboardingScreenProps {
 }
 
 export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
+  const { width, height } = useWindowDimensions();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
   const scrollX = useRef(new Animated.Value(0)).current;
@@ -95,7 +93,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
   };
 
   const renderSlide = ({ item }: { item: OnboardingSlide }) => (
-    <View style={styles.slide}>
+    <View style={[styles.slide, { width, height: height * 0.75 }]}>
       <LinearGradient colors={item.gradient} style={styles.slideGradient}>
         <View style={styles.slideContent}>
           <View style={styles.iconContainer}>
@@ -128,7 +126,7 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
             <Animated.View
               style={[
                 styles.dot,
-                { width: dotWidth, opacity },
+                { width: dotWidth, opacity, marginHorizontal: 4 },
               ]}
             />
           </TouchableOpacity>
@@ -154,20 +152,23 @@ export const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }
           { useNativeDriver: false }
         )}
         scrollEventThrottle={32}
+        getItemLayout={(data, index) => ({
+          length: width,
+          offset: width * index,
+          index,
+        })}
       />
 
       <View style={styles.bottomContainer}>
         {renderDots()}
 
         <View style={styles.buttonRow}>
-          {currentIndex > 0 && (
-            <TouchableOpacity
-              style={styles.skipButton}
-              onPress={onComplete}
-            >
-              <Text style={styles.skipText}>Skip</Text>
-            </TouchableOpacity>
-          )}
+          <TouchableOpacity
+            style={styles.skipButton}
+            onPress={onComplete}
+          >
+            <Text style={styles.skipText}>Skip</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.nextButton}
@@ -202,8 +203,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#1a1a2e',
   },
   slide: {
-    width,
-    height: height * 0.75,
+    // width set dynamically via inline style
+    height: '75%',
   },
   slideGradient: {
     flex: 1,

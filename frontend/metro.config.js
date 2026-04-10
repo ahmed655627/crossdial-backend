@@ -11,6 +11,8 @@ config.cacheStores = [
   new FileStore({ root: path.join(root, 'cache') }),
 ];
 
+// Fix for Zustand ESM import.meta issue on web
+config.resolver.unstable_enablePackageExports = false;
 
 // // Exclude unnecessary directories from file watching
 // config.watchFolders = [__dirname];
