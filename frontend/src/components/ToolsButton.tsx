@@ -25,10 +25,10 @@ const ToolsButton: React.FC<ToolsButtonProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const expandAnim = useRef(new Animated.Value(0)).current;
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  // Progressive disclosure - only show after 2 words found
-  const shouldShow = wordsFound >= 2;
+  // Always show tools button (removed progressive disclosure requirement)
+  const shouldShow = true;
 
   useEffect(() => {
     if (shouldShow) {

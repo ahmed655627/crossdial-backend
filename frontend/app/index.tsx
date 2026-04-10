@@ -114,6 +114,7 @@ import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
 import { TimeChallengeModal } from '../src/components/TimeChallengeModal';
 import { ProfileModal } from '../src/components/ProfileModal';
+import ShopModal from '../src/components/ShopModal';
 
 // NEW: Import enhanced game features
 import TimedChallengeModal from '../src/components/TimedChallengeModal';
@@ -247,6 +248,7 @@ export default function GameScreen() {
   const [focusMode, setFocusMode] = useState(false);
   const [showProgressToast, setShowProgressToast] = useState(false);
   const [lastFoundWord, setLastFoundWord] = useState<string | null>(null);
+  const [showShop, setShowShop] = useState(false);
   
   // NEW FEATURES: Game enhancements
   const [recentWordsFound, setRecentWordsFound] = useState<string[]>([]);
@@ -895,8 +897,10 @@ export default function GameScreen() {
             setActiveTimedChallenge(challenge);
             setShowTimedChallenge(false);
             setShowHomeScreen(false);
-            // TODO: Start timed challenge gameplay
-            Alert.alert('Starting Challenge', `${challenge.name} - ${challenge.timeLimit}s`);
+            // Start the actual timed challenge
+            setTimeChallengeActive(true);
+            setTimeRemaining(challenge.timeLimit);
+            setChallengeDifficulty(challenge.difficulty);
           }}
           currentLevel={progress?.current_level || 1}
           completedChallenges={completedTimedChallenges}
@@ -931,6 +935,14 @@ export default function GameScreen() {
         <WordDefinitionPopup
           word={lastFoundWord}
           onDismiss={() => setLastFoundWord(null)}
+        />
+        
+        {/* Shop Modal */}
+        <ShopModal
+          visible={showShop}
+          onClose={() => setShowShop(false)}
+          currentCoins={progress?.coins || 0}
+          currentHints={progress?.hints_remaining || 3}
         />
         
         <DailyChallengeModal
