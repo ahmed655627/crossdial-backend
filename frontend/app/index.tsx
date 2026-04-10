@@ -96,6 +96,10 @@ import { GameModeType } from '../src/data/gameModes';
 // NEW: Import puzzle modes service
 import { puzzleModesService } from '../src/services/puzzleModesService';
 
+// NEW: Clean UI components
+import PauseMenu from '../src/components/PauseMenu';
+import ProgressToast from '../src/components/ProgressToast';
+
 // NEW: Import feature modals
 import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
@@ -229,6 +233,12 @@ export default function GameScreen() {
   const [activePuzzleMode, setActivePuzzleMode] = useState<string | null>(null);
   const [puzzleModesScore, setPuzzleModesScore] = useState(0);
   
+  // NEW: Clean UI state
+  const [showPauseMenu, setShowPauseMenu] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
+  const [showProgressToast, setShowProgressToast] = useState(false);
+  const [lastFoundWord, setLastFoundWord] = useState<string | null>(null);
+  
   // NEW FEATURES: Game enhancements
   const [recentWordsFound, setRecentWordsFound] = useState<string[]>([]);
   const [comboCount, setComboCount] = useState(0);
@@ -270,7 +280,7 @@ export default function GameScreen() {
   const [selectedThemePack, setSelectedThemePack] = useState('default');
   const [unlockedAchievementIds, setUnlockedAchievementIds] = useState<string[]>(['first_word']);
   const [showWordDefinitionPopup, setShowWordDefinitionPopup] = useState(false);
-  const [lastFoundWord, setLastFoundWord] = useState<string | null>(null);
+  // lastFoundWord already declared above in Clean UI state
   const [playerStats, setPlayerStats] = useState({
     wordsFound: 0,
     levelsCompleted: 0,
@@ -1085,145 +1095,89 @@ export default function GameScreen() {
             <SafeAreaView style={styles.container}>
               <StatusBar barStyle="light-content" />
 
-        {/* Header */}
-        <View style={styles.header}>
-          {/* Home Button */}
+        {/* CLEAN UI: Minimal Header */}
+        <View style={styles.cleanHeader}>
+          {/* Left: Pause Button */}
           <TouchableOpacity
-            style={styles.homeButton}
-            onPress={() => setShowHomeScreen(true)}
+            style={styles.pauseButton}
+            onPress={() => setShowPauseMenu(true)}
           >
-            <Ionicons name="home" size={22} color="#fff" />
+            <Ionicons name="pause" size={20} color="#fff" />
           </TouchableOpacity>
 
-          <TouchableOpacity
-            style={styles.levelButton}
-            onPress={() => setShowLevelSelect(true)}
-          >
-            <Ionicons name="map" size={20} color="#fff" />
-            <Text style={styles.levelText}>Level {currentLevel.id}</Text>
-          </TouchableOpacity>
-
-          <View style={styles.headerRight}>
-            {/* Achievements Button */}
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => setShowAchievements(true)}
-            >
-              <Ionicons name="medal" size={22} color="#f39c12" />
-            </TouchableOpacity>
-
-            {/* Leaderboard Button */}
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => setShowLeaderboard(true)}
-            >
-              <Ionicons name="trophy" size={22} color="#FFD700" />
-            </TouchableOpacity>
-
-            {/* Daily Wheel Button */}
-            <TouchableOpacity
-              style={[styles.iconButton, canSpin && styles.iconButtonGlow]}
-              onPress={() => setShowDailyWheel(true)}
-            >
-              <Ionicons name="gift" size={22} color={canSpin ? '#FFD700' : '#fff'} />
-              {canSpin && <View style={styles.notificationDot} />}
-            </TouchableOpacity>
-
-            {/* Menu Button */}
-            <TouchableOpacity
-              style={styles.iconButton}
-              onPress={() => setShowMenu(!showMenu)}
-            >
-              <Ionicons name="ellipsis-vertical" size={22} color="#fff" />
-            </TouchableOpacity>
-
-            {/* Coins & Hints */}
-            <View style={styles.coinContainer}>
-              <Ionicons name="diamond" size={18} color="#FFD700" />
-              <Text style={styles.coinText}>{progress?.coins || 0}</Text>
+          {/* Right: Coins & Hints (hidden in Focus Mode) */}
+          {!focusMode && (
+            <View style={styles.cleanHeaderRight}>
+              <View style={styles.compactStat}>
+                <Text style={styles.compactStatIcon}>💎</Text>
+                <Text style={styles.compactStatText}>{progress?.coins || 0}</Text>
+              </View>
+              <View style={styles.compactStat}>
+                <Text style={styles.compactStatIcon}>💡</Text>
+                <Text style={styles.compactStatText}>{progress?.hints_remaining || 0}</Text>
+              </View>
             </View>
-            
-            <View style={styles.hintContainer}>
-              <Ionicons name="bulb" size={18} color="#9b59b6" />
-              <Text style={styles.hintText}>{progress?.hints || 0}</Text>
+          )}
+          
+          {/* Focus Mode Indicator */}
+          {focusMode && (
+            <View style={styles.focusModeIndicator}>
+              <Text style={styles.focusModeText}>🧘 Focus</Text>
             </View>
-          </View>
+          )}
         </View>
 
-        {/* Dropdown Menu */}
-        {showMenu && (
-          <View style={styles.dropdownMenu}>
-            <TouchableOpacity style={styles.menuItem} onPress={handleReset}>
-              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(231, 76, 60, 0.15)' }]}>
-                <Ionicons name="refresh" size={22} color="#e74c3c" />
-              </View>
-              <Text style={styles.menuItemText}>Reset Level</Text>
-              <Ionicons name="play-circle" size={18} color="#bdc3c7" />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.menuItem} onPress={handleRestart}>
-              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(243, 156, 18, 0.15)' }]}>
-                <Ionicons name="reload" size={22} color="#f39c12" />
-              </View>
-              <Text style={styles.menuItemText}>Restart Level</Text>
-              <Ionicons name="play-circle" size={18} color="#bdc3c7" />
-            </TouchableOpacity>
-            <View style={styles.menuDivider} />
-            <TouchableOpacity style={styles.menuItem} onPress={toggleSound}>
-              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(52, 152, 219, 0.15)' }]}>
-                <Ionicons name={soundEnabled ? 'volume-high' : 'volume-mute'} size={22} color="#3498db" />
-              </View>
-              <Text style={styles.menuItemText}>Sound {soundEnabled ? 'On' : 'Off'}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.menuItem} 
-              onPress={() => {
-                setShowMenu(false);
-                setShowPrivacyPolicy(true);
-              }}
-            >
-              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(39, 174, 96, 0.15)' }]}>
-                <Ionicons name="shield-checkmark" size={22} color="#27ae60" />
-              </View>
-              <Text style={styles.menuItemText}>Privacy Policy</Text>
-            </TouchableOpacity>
-            {/* NEW: Language Selector Button */}
-            <TouchableOpacity 
-              style={styles.menuItem} 
-              onPress={() => {
-                setShowMenu(false);
-                setShowLanguageSelector(true);
-              }}
-            >
-              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(155, 89, 182, 0.15)' }]}>
-                <Ionicons name="language" size={22} color="#9b59b6" />
-              </View>
-              <Text style={styles.menuItemText}>{t('language')}</Text>
-            </TouchableOpacity>
-            <View style={styles.menuDivider} />
-            <TouchableOpacity style={[styles.menuItem, styles.menuItemClose]} onPress={() => setShowMenu(false)}>
-              <View style={[styles.menuIconBg, { backgroundColor: 'rgba(149, 165, 166, 0.15)' }]}>
-                <Ionicons name="close" size={22} color="#7f8c8d" />
-              </View>
-              <Text style={[styles.menuItemText, { color: '#7f8c8d' }]}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+        {/* Progress Toast (appears when word found) */}
+        <ProgressToast
+          visible={showProgressToast}
+          wordsFound={foundWords?.length || 0}
+          totalWords={currentLevel?.targetWords?.length || 0}
+          lastWord={lastFoundWord || undefined}
+          onHide={() => setShowProgressToast(false)}
+        />
+
+        {/* Pause Menu */}
+        <PauseMenu
+          visible={showPauseMenu}
+          onClose={() => setShowPauseMenu(false)}
+          onResume={() => setShowPauseMenu(false)}
+          onHome={() => {
+            setShowPauseMenu(false);
+            setShowHomeScreen(true);
+          }}
+          onShop={() => {
+            setShowPauseMenu(false);
+            setShowShop(true);
+          }}
+          onAchievements={() => {
+            setShowPauseMenu(false);
+            setShowAchievements(true);
+          }}
+          onSettings={() => {
+            setShowPauseMenu(false);
+            setShowPrivacyPolicy(true);
+          }}
+          onShuffle={() => {
+            setShowPauseMenu(false);
+            handleShuffle();
+          }}
+          onHint={() => {
+            setShowPauseMenu(false);
+            handleHintWithPreview();
+          }}
+          soundEnabled={soundEnabled}
+          onToggleSound={toggleSound}
+          focusMode={focusMode}
+          onToggleFocusMode={setFocusMode}
+          coins={progress?.coins || 0}
+          hints={progress?.hints_remaining || 0}
+          currentLevel={currentLevel?.id || 1}
+        />
 
         {/* Particle Effect for word found */}
         <ParticleEffect trigger={particleTrigger} type="confetti" />
 
-        {/* Combo Counter */}
-        <ComboCounter combo={comboCount} multiplier={comboMultiplier} />
-
-        {/* Mini Stats Bar */}
-        <MiniStatsBar
-          level={currentLevelNumber}
-          coins={progress?.coins || 0}
-          streak={dailyStreak}
-          soundEnabled={soundEnabled}
-          onSoundToggle={toggleSound}
-          onSettingsPress={() => setShowPrivacyPolicy(true)}
-        />
+        {/* Theme Clue - with more breathing room */}
 
         {/* Clue Card with Progress + Stars - Compact */}
         <View style={styles.clueCard}>
@@ -1659,6 +1613,58 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  // CLEAN UI STYLES
+  cleanHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    marginTop: 4,
+  },
+  pauseButton: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  cleanHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  compactStat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 16,
+    marginLeft: 8,
+  },
+  compactStatIcon: {
+    fontSize: 14,
+    marginRight: 4,
+  },
+  compactStatText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+  focusModeIndicator: {
+    backgroundColor: 'rgba(156, 39, 176, 0.3)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  focusModeText: {
+    color: '#ce93d8',
+    fontSize: 12,
+    fontWeight: '600',
   },
   loadingContainer: {
     flex: 1,
