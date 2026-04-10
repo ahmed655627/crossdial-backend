@@ -6,6 +6,8 @@ import * as Haptics from 'expo-haptics';
 class SoundManager {
   private isInitialized = false;
   private soundEnabled = true;
+  private ambientSound: Audio.Sound | null = null;
+  private ambientEnabled = false;
   private sounds: { [key: string]: Audio.Sound | null } = {
     click: null,
     wordFound: null,
@@ -14,6 +16,8 @@ class SoundManager {
     wrongWord: null,
     spin: null,
     reward: null,
+    letterTick: null,
+    wordChime: null,
   };
 
   async initialize() {
@@ -234,14 +238,15 @@ class SoundManager {
     }
   }
 
-  // Play letter select sound
+  // Play letter select sound - soft tick when letters connect
   async playLetterSelect() {
     await this.provideHapticFeedback('light');
     if (Platform.OS !== 'web') {
       try {
+        // Soft tick sound for letter selection
         const { sound } = await Audio.Sound.createAsync(
           { uri: 'https://assets.mixkit.co/active_storage/sfx/2571/2571-preview.mp3' },
-          { shouldPlay: true, volume: 0.2 }
+          { shouldPlay: true, volume: 0.15 }
         );
         sound.setOnPlaybackStatusUpdate((status) => {
           if (status.isLoaded && status.didJustFinish) {
@@ -252,6 +257,105 @@ class SoundManager {
         // Silent fail
       }
     }
+  }
+
+  // Play letter tick - even softer tick for each letter
+  async playLetterTick() {
+    if (!this.soundEnabled) return;
+    await this.provideHapticFeedback('light');
+    // On native, play a very soft tick
+    if (Platform.OS !== 'web') {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: 'https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3' },
+          { shouldPlay: true, volume: 0.1 }
+        );
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded && status.didJustFinish) {
+            sound.unloadAsync();
+          }
+        });
+      } catch (e) {
+        // Silent fail for tick
+      }
+    }
+  }
+
+  // Play word chime - pleasant chime when word is completed
+  async playWordChime() {
+    if (!this.soundEnabled) return;
+    await this.provideHapticFeedback('success');
+    if (Platform.OS !== 'web') {
+      try {
+        // Pleasant chime for word completion
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: 'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3' },
+          { shouldPlay: true, volume: 0.4 }
+        );
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded && status.didJustFinish) {
+            sound.unloadAsync();
+          }
+        });
+      } catch (e) {
+        console.log('Could not play word chime');
+      }
+    }
+  }
+
+  // Play combo chime - ascending chime for combos
+  async playComboChime(comboLevel: number = 1) {
+    if (!this.soundEnabled) return;
+    await this.provideHapticFeedback('medium');
+    if (Platform.OS !== 'web') {
+      try {
+        // Higher pitch for higher combos
+        const volume = Math.min(0.3 + (comboLevel * 0.1), 0.7);
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: 'https://assets.mixkit.co/active_storage/sfx/2870/2870-preview.mp3' },
+          { shouldPlay: true, volume }
+        );
+        sound.setOnPlaybackStatusUpdate((status) => {
+          if (status.isLoaded && status.didJustFinish) {
+            sound.unloadAsync();
+          }
+        });
+      } catch (e) {
+        console.log('Could not play combo chime');
+      }
+    }
+  }
+
+  // Toggle ambient sound (mountain wind loop)
+  async toggleAmbient(enabled: boolean) {
+    this.ambientEnabled = enabled;
+    
+    if (Platform.OS === 'web') return;
+    
+    if (enabled && !this.ambientSound) {
+      try {
+        const { sound } = await Audio.Sound.createAsync(
+          { uri: 'https://assets.mixkit.co/active_storage/sfx/147/147-preview.mp3' },
+          { shouldPlay: true, isLooping: true, volume: 0.1 }
+        );
+        this.ambientSound = sound;
+      } catch (e) {
+        console.log('Could not start ambient sound');
+      }
+    } else if (!enabled && this.ambientSound) {
+      try {
+        await this.ambientSound.stopAsync();
+        await this.ambientSound.unloadAsync();
+        this.ambientSound = null;
+      } catch (e) {
+        // Silent fail
+      }
+    }
+  }
+
+  // Check if ambient is enabled
+  isAmbientEnabled(): boolean {
+    return this.ambientEnabled;
   }
 }
 

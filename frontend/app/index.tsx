@@ -103,6 +103,12 @@ import WordPlaceholders from '../src/components/WordPlaceholders';
 import ToolsButton from '../src/components/ToolsButton';
 import DialOverlay from '../src/components/DialOverlay';
 
+// NEW: Contextual Hint Hook
+import { useContextualHint } from '../src/hooks/useContextualHint';
+
+// NEW: Clean Home Screen (decluttered)
+import { CleanHomeScreen } from '../src/components/CleanHomeScreen';
+
 // NEW: Import feature modals
 import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
@@ -330,6 +336,21 @@ export default function GameScreen() {
   // NEW: Onboarding state
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasSeenOnboarding, setHasSeenOnboarding] = useState(true);
+  
+  // NEW: Use decluttered home screen
+  const [useCleanHomeScreen, setUseCleanHomeScreen] = useState(true);
+  
+  // NEW: Contextual Hint - shows glow on tiles after 20s of being stuck
+  const { 
+    hintWord, 
+    isShowingHint, 
+    dismissHint,
+    resetTimer: resetHintTimer 
+  } = useContextualHint({
+    targetWords: currentLevel?.targetWords || [],
+    foundWords: foundWords || [],
+    enabled: !showHomeScreen && !showPauseMenu,
+  });
   
   // NEW: Get current theme based on level
   const currentLevelNumber = progress?.current_level || 1;
@@ -793,29 +814,53 @@ export default function GameScreen() {
   if (showHomeScreen) {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <HomeScreen
-          onPlay={() => {
-            // Safety check: Only allow play if currentLevel is loaded
-            if (currentLevel) {
-              setShowHomeScreen(false);
-            } else {
-              Alert.alert('Loading', 'Game is still loading, please wait a moment...');
-            }
-          }}
-          onDailyRewards={() => setShowDailyWheel(true)}
-          onLeaderboard={() => setShowLeaderboard(true)}
-          onSettings={() => setShowPrivacyPolicy(true)}
-          onAchievements={() => setShowAchievements(true)}
-          onDailyChallenge={() => setShowDailyChallenge(true)}
-          onWordOfDay={() => setShowWordOfDay(true)}
-          onStats={() => setShowStats(true)}
-          onThemes={() => setShowThemePacks(true)}
-          onWatchAdForCoins={handleWatchAdForCoins}
-          onFeaturesHub={() => setShowFeaturesHub(true)}
-          onTimedChallenge={() => setShowTimedChallenge(true)}
-          onPhrasePuzzles={() => setShowPhrasePuzzles(true)}
-          onPuzzleModes={() => setShowPuzzleModes(true)}
-        />
+        {useCleanHomeScreen ? (
+          <CleanHomeScreen
+            onPlay={() => {
+              if (currentLevel) {
+                setShowHomeScreen(false);
+              } else {
+                Alert.alert('Loading', 'Game is still loading, please wait a moment...');
+              }
+            }}
+            onDailyRewards={() => setShowDailyWheel(true)}
+            onDailyChallenge={() => setShowDailyChallenge(true)}
+            onLeaderboard={() => setShowLeaderboard(true)}
+            onAchievements={() => setShowAchievements(true)}
+            onSettings={() => setShowPrivacyPolicy(true)}
+            onPuzzleModes={() => setShowPuzzleModes(true)}
+            onTimedChallenge={() => setShowTimedChallenge(true)}
+            onPhrasePuzzles={() => setShowPhrasePuzzles(true)}
+            onThemes={() => setShowThemePacks(true)}
+            onWordOfDay={() => setShowWordOfDay(true)}
+            onStats={() => setShowStats(true)}
+            onWatchAdForCoins={handleWatchAdForCoins}
+          />
+        ) : (
+          <HomeScreen
+            onPlay={() => {
+              // Safety check: Only allow play if currentLevel is loaded
+              if (currentLevel) {
+                setShowHomeScreen(false);
+              } else {
+                Alert.alert('Loading', 'Game is still loading, please wait a moment...');
+              }
+            }}
+            onDailyRewards={() => setShowDailyWheel(true)}
+            onLeaderboard={() => setShowLeaderboard(true)}
+            onSettings={() => setShowPrivacyPolicy(true)}
+            onAchievements={() => setShowAchievements(true)}
+            onDailyChallenge={() => setShowDailyChallenge(true)}
+            onWordOfDay={() => setShowWordOfDay(true)}
+            onStats={() => setShowStats(true)}
+            onThemes={() => setShowThemePacks(true)}
+            onWatchAdForCoins={handleWatchAdForCoins}
+            onFeaturesHub={() => setShowFeaturesHub(true)}
+            onTimedChallenge={() => setShowTimedChallenge(true)}
+            onPhrasePuzzles={() => setShowPhrasePuzzles(true)}
+            onPuzzleModes={() => setShowPuzzleModes(true)}
+          />
+        )}
         
         {/* Banner Ad at bottom of Home Screen */}
         <View style={styles.bannerAdContainer}>
@@ -1260,10 +1305,12 @@ export default function GameScreen() {
           <CrosswordGrid />
         </View>
 
-        {/* Word Placeholders - Shows found words and locked placeholders */}
+        {/* Word Placeholders - Shows found words and locked placeholders with hint glow */}
         <WordPlaceholders
           targetWords={currentLevel?.targetWords || []}
           foundWords={foundWords || []}
+          hintWord={hintWord}
+          isShowingHint={isShowingHint}
         />
 
         {/* Dial Overlay - darkens background when dial is active */}
