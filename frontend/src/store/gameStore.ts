@@ -223,15 +223,39 @@ export const useGameStore = create<GameState>((set, get) => ({
         throw new Error('No levels loaded from server');
       }
       
+      // Set levels first (but don't set loading to false yet)
       set({ 
         progress, 
         levels,
-        loading: false 
       });
       
-      // Set current level
+      // Set current level before setting loading to false
       const currentLevelId = progress?.current_level || 1;
-      await get().setCurrentLevel(currentLevelId);
+      const level = levels.find((l: Level) => l.id === currentLevelId);
+      if (level) {
+        const foundWords = progress?.found_words?.[String(currentLevelId)] || [];
+        const bonusWords = progress?.bonus_words_found?.[String(currentLevelId)] || [];
+        set({ 
+          currentLevel: level, 
+          foundWords: foundWords.map((w: string) => w.toUpperCase()),
+          bonusWordsFound: bonusWords.map((w: string) => w.toUpperCase()),
+          currentWord: '',
+          selectedLetterIndices: [],
+          showLevelComplete: false,
+          lastWordResult: null,
+          hintLetter: null,
+          loading: false  // Set loading to false only after currentLevel is set
+        });
+      } else {
+        // Fallback to first level if current level not found
+        const firstLevel = levels[0];
+        set({ 
+          currentLevel: firstLevel, 
+          foundWords: [],
+          bonusWordsFound: [],
+          loading: false 
+        });
+      }
       
       // Load leaderboard (non-blocking)
       get().loadLeaderboard().catch(e => console.log('Leaderboard load failed:', e));
