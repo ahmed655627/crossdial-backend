@@ -99,6 +99,9 @@ import { puzzleModesService } from '../src/services/puzzleModesService';
 // NEW: Clean UI components
 import PauseMenu from '../src/components/PauseMenu';
 import ProgressToast from '../src/components/ProgressToast';
+import WordPlaceholders from '../src/components/WordPlaceholders';
+import ToolsButton from '../src/components/ToolsButton';
+import DialOverlay from '../src/components/DialOverlay';
 
 // NEW: Import feature modals
 import { PowerUpsModal } from '../src/components/PowerUpsModal';
@@ -1257,10 +1260,22 @@ export default function GameScreen() {
           <CrosswordGrid />
         </View>
 
-        {/* Found Words Panel - Collapsible */}
-        <FoundWordsPanel
-          foundWords={foundWords}
-          totalWords={targetWordsCount}
+        {/* Word Placeholders - Shows found words and locked placeholders */}
+        <WordPlaceholders
+          targetWords={currentLevel?.targetWords || []}
+          foundWords={foundWords || []}
+        />
+
+        {/* Dial Overlay - darkens background when dial is active */}
+        <DialOverlay isActive={currentWord && currentWord.length > 0} />
+
+        {/* Tools Button - Progressive disclosure after 2 words */}
+        <ToolsButton
+          wordsFound={foundWords?.length || 0}
+          onShuffle={handleShuffle}
+          onHint={handleHintWithPreview}
+          onUndo={handleUndoLetter}
+          canUndo={selectedLetterIndices && selectedLetterIndices.length > 0}
         />
 
         {/* Word Being Formed Display */}
@@ -1286,54 +1301,23 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Letter Wheel with Action Buttons */}
-        <View style={styles.wheelAndActionsContainer}>
-          {/* Action Buttons - Left Side */}
-          <View style={styles.sideActionButtons}>
-            <TouchableOpacity 
-              style={[styles.sideActionButton, styles.gameModeButton]} 
-              onPress={() => setShowGameModeSelector(true)}
-            >
-              <Text style={styles.gameModeIcon}>🎮</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.sideActionButton, styles.shuffleButton]} onPress={handleShuffle}>
-              <Ionicons name="shuffle" size={18} color="#fff" />
-            </TouchableOpacity>
-          </View>
-
-          {/* Letter Wheel */}
-          <View style={styles.wheelContainer}>
-            <LetterWheel />
-            {/* Bonus Words Counter - small badge on wheel */}
-            {bonusWordsFound.length > 0 && (
-              <View style={styles.bonusBadge}>
-                <Text style={styles.bonusBadgeText}>+{bonusWordsFound.length}</Text>
-              </View>
-            )}
-          </View>
-
-          {/* Action Buttons - Right Side */}
-          <View style={styles.sideActionButtons}>
-            <TouchableOpacity
-              style={[styles.sideActionButton, styles.hintButton]}
-              onPress={handleHintWithPreview}
-            >
-              <Ionicons name="bulb" size={18} color="#fff" />
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={[styles.sideActionButton, styles.undoButton]} 
-              onPress={handleUndoLetter}
-              disabled={!selectedLetterIndices || selectedLetterIndices.length === 0}
-            >
-              <Ionicons name="arrow-undo" size={18} color="#fff" />
-            </TouchableOpacity>
-          </View>
+        {/* Letter Wheel - Clean, centered, bigger */}
+        <View style={styles.cleanWheelContainer}>
+          <LetterWheel />
+          {/* Bonus Words Counter - small badge on wheel */}
+          {bonusWordsFound.length > 0 && (
+            <View style={styles.bonusBadge}>
+              <Text style={styles.bonusBadgeText}>+{bonusWordsFound.length}</Text>
+            </View>
+          )}
         </View>
 
-        {/* Clear Button - Below Wheel */}
-        <TouchableOpacity style={styles.clearButton} onPress={clearSelection}>
-          <Text style={styles.clearButtonText}>Clear</Text>
-        </TouchableOpacity>
+        {/* Clear Button - Ghost style, only visible when letters selected */}
+        {currentWord && currentWord.length > 0 && (
+          <TouchableOpacity style={styles.ghostClearButton} onPress={clearSelection}>
+            <Text style={styles.ghostClearButtonText}>Clear</Text>
+          </TouchableOpacity>
+        )}
 
         {/* Banner Ad in Game Screen */}
         <View style={styles.gameBannerAdContainer}>
