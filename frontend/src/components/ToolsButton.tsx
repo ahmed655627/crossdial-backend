@@ -115,9 +115,9 @@ const ToolsButton: React.FC<ToolsButtonProps> = ({
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    bottom: 180,
+    bottom: 200,
     left: 16,
-    zIndex: 100,
+    zIndex: 50,
   },
   mainButton: {
     flexDirection: 'row',

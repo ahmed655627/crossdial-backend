@@ -1986,6 +1986,12 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: 'bold',
   },
+  cleanWheelContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 8,
+    marginBottom: 16,
+  },
   wheelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
