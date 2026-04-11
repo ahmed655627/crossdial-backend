@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useGameStore } from '../store/gameStore';
+import { soundManager } from '../utils/sounds';
 
 const { width, height } = Dimensions.get('window');
 const WHEEL_SIZE = Math.min(width * 0.58, 220);
@@ -34,6 +35,8 @@ export const LetterWheel: React.FC = () => {
   const handleSelectLetter = (index: number) => {
     try {
       selectLetter(index);
+      // Play tick sound when letter is selected
+      soundManager.playLetterTick();
     } catch (e) {
       console.log('Error selecting letter:', e);
     }

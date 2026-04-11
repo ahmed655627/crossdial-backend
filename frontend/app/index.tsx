@@ -830,6 +830,7 @@ export default function GameScreen() {
             onLeaderboard={() => setShowLeaderboard(true)}
             onAchievements={() => setShowAchievements(true)}
             onSettings={() => setShowPrivacyPolicy(true)}
+            onShop={() => setShowShop(true)}
             onPuzzleModes={() => setShowPuzzleModes(true)}
             onTimedChallenge={() => setShowTimedChallenge(true)}
             onPhrasePuzzles={() => setShowPhrasePuzzles(true)}
@@ -912,8 +913,8 @@ export default function GameScreen() {
           onStartPuzzle={(puzzle) => {
             setActivePhrasePuzzle(puzzle);
             setShowPhrasePuzzles(false);
-            // TODO: Start phrase puzzle gameplay
-            Alert.alert('Starting Puzzle', `"${puzzle.clue}"`);
+            setShowHomeScreen(false);
+            // Start phrase puzzle mode - game will show the phrase puzzle
           }}
           completedPuzzles={completedPhrasePuzzles}
         />
@@ -951,6 +952,10 @@ export default function GameScreen() {
           onPlay={() => {
             setShowDailyChallenge(false);
             setShowHomeScreen(false);
+            // Start daily challenge with time limit
+            setTimeChallengeActive(true);
+            setTimeRemaining(300); // 5 minutes for daily challenge
+            setChallengeDifficulty('medium');
           }}
           dailyChallenge={getDailyChallengeData()}
         />

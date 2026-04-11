@@ -384,7 +384,7 @@ export const useGameStore = create<GameState>((set, get) => ({
           const newFoundWords = [...foundWords, word];
           set({ foundWords: newFoundWords });
           
-          if (soundEnabled) soundManager.playWordFound();
+          if (soundEnabled) soundManager.playWordChime();
           
           // Check if level complete
           const targetWords = currentLevel.targetWords.map(w => w.toUpperCase());

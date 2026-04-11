@@ -27,6 +27,7 @@ interface CleanHomeScreenProps {
   onLeaderboard: () => void;
   onAchievements: () => void;
   onSettings: () => void;
+  onShop?: () => void;
   onPuzzleModes?: () => void;
   // Grouped into "More" section
   onTimedChallenge?: () => void;
@@ -44,6 +45,7 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
   onLeaderboard,
   onAchievements,
   onSettings,
+  onShop,
   onPuzzleModes,
   onTimedChallenge,
   onPhrasePuzzles,
@@ -120,15 +122,16 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
           </TouchableOpacity>
           
           <View style={styles.resourcesRow}>
-            <View style={styles.resourceItem}>
+            <TouchableOpacity style={styles.resourceItem} onPress={onShop}>
               <Ionicons name="bulb" size={18} color="#a855f7" />
               <Text style={styles.resourceText}>{hints}</Text>
-            </View>
+            </TouchableOpacity>
             <View style={styles.resourceDivider} />
-            <View style={styles.resourceItem}>
+            <TouchableOpacity style={styles.resourceItem} onPress={onShop}>
               <Ionicons name="diamond" size={18} color="#fbbf24" />
               <Text style={styles.resourceText}>{coins}</Text>
-            </View>
+              <Ionicons name="add-circle" size={14} color="#00b894" style={styles.addIcon} />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -354,6 +357,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 6,
+  },
+  addIcon: {
+    marginLeft: 4,
   },
   resourceDivider: {
     width: 1,
