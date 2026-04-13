@@ -60,6 +60,15 @@ import { soundManager } from '../src/utils/sounds';
 import { notificationService } from '../src/services/notificationService';
 import { privacyService } from '../src/services/privacyService';
 
+// NEW: Import improvement components
+import ComboToast from '../src/components/ComboToast';
+import InteractiveTutorial from '../src/components/InteractiveTutorial';
+import ErrorBoundary from '../src/components/ErrorBoundary';
+import ShareButton from '../src/components/ShareButton';
+import HintPreview from '../src/components/HintPreview';
+import { useComboSystem } from '../src/hooks/useComboSystem';
+import { useHaptics } from '../src/hooks/useHaptics';
+
 // Import web stub for adManager (native modules don't work on web preview)
 // Native builds will use the real adManager through the components
 import { adManager } from '../src/utils/adManager.web';
@@ -360,6 +369,40 @@ export default function GameScreen() {
   const backgroundConfig = getBackgroundForLevel(currentLevelNumber);
   const wheelConfig = getWheelForLevel(currentLevelNumber);
 
+  // NEW: Combo System Hook
+  const {
+    comboCount: hookComboCount,
+    comboMultiplier: hookComboMultiplier,
+    showComboToast,
+    comboMessage,
+    registerWordFound,
+    resetCombo,
+  } = useComboSystem();
+  
+  // NEW: Haptic Feedback Hook
+  const { lightTap, successVibrate, errorVibrate } = useHaptics();
+  
+  // NEW: Interactive Tutorial State
+  const [showTutorial, setShowTutorial] = useState(false);
+  // hintPreviewWord already declared above
+
+  // Check for tutorial on first load
+  useEffect(() => {
+    const checkTutorial = async () => {
+      try {
+        const completed = await AsyncStorage.getItem('tutorial_completed');
+        const seen = await AsyncStorage.getItem('hasSeenOnboarding');
+        // Show tutorial after onboarding is complete and tutorial not seen
+        if (seen && !completed) {
+          setShowTutorial(true);
+        }
+      } catch (e) {
+        console.log('Error checking tutorial status');
+      }
+    };
+    checkTutorial();
+  }, [hasSeenOnboarding]);
+
   // Check for onboarding on first load
   useEffect(() => {
     const checkOnboarding = async () => {
@@ -522,7 +565,10 @@ export default function GameScreen() {
       // Update recent words
       setRecentWordsFound(prev => [lastWordResult.word, ...prev].slice(0, 5));
       
-      // Update combo
+      // Register word found for combo system (uses hook)
+      registerWordFound();
+      
+      // Also update local combo state for backward compatibility
       setComboCount(prev => {
         const newCount = prev + 1;
         // Set multiplier based on combo
@@ -534,6 +580,9 @@ export default function GameScreen() {
         else setComboMultiplier(1);
         return newCount;
       });
+      
+      // Haptic feedback on word found
+      successVibrate();
       
       // Update mascot mood
       setMascotMood('happy');
@@ -548,6 +597,8 @@ export default function GameScreen() {
       // Wrong word - reset combo, sad mascot
       setComboCount(0);
       setComboMultiplier(1);
+      resetCombo();
+      errorVibrate();
       setMascotMood('sad');
       setTimeout(() => setMascotMood('neutral'), 2000);
     }
@@ -1394,6 +1445,28 @@ export default function GameScreen() {
             <Text style={styles.errorBannerText}>{error}</Text>
           </View>
         )}
+        
+        {/* Combo Toast - Minimal, non-intrusive */}
+        <ComboToast visible={showComboToast} message={comboMessage} />
+        
+        {/* Interactive Tutorial Overlay */}
+        <InteractiveTutorial 
+          visible={showTutorial} 
+          onComplete={() => setShowTutorial(false)} 
+        />
+        
+        {/* Hint Preview Modal */}
+        <HintPreview
+          visible={showHintPreview}
+          onClose={() => setShowHintPreview(false)}
+          onConfirm={() => {
+            setShowHintPreview(false);
+            handleHintWithPreview();
+          }}
+          word={hintPreviewWord}
+          hintsRemaining={progress?.hints_remaining || 0}
+          hintCost={1}
+        />
 
         {/* Modals */}
         <LevelCompleteModal />
