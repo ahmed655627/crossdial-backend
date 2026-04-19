@@ -3,7 +3,7 @@ import { View, StyleSheet, Platform } from 'react-native';
 
 // Import AD_UNIT_IDS directly from constants, not from adManager (which may have native dependencies)
 const AD_UNIT_IDS = {
-  BANNER: 'ca-app-pub-1991020937935015/3076430560',
+  BANNER: 'ca-app-pub-1136319708640770/3885652182',
 };
 
 interface BannerAdComponentProps {

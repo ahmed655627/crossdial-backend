@@ -1,4 +1,4 @@
-# Multi-Language Puzzle Data
+# Multi-Language Puzzle Data - Extended Version
 # Supports: English, Italian, Spanish, French, German, Portuguese, Dutch, Arabic, Hindi, Japanese, Korean, Chinese
 
 LANGUAGE_CONFIG = {
@@ -16,411 +16,204 @@ LANGUAGE_CONFIG = {
     "zh": {"name": "中文", "flag": "🇨🇳", "direction": "ltr"},
 }
 
-# Italian Puzzles
+# ============================================
+# ITALIAN LEVELS (15 levels)
+# ============================================
 ITALIAN_LEVELS = [
-    {
-        "id": 1,
-        "language": "it",
-        "category": "Casa",
-        "theme": "La Cucina",
-        "letters": ["C", "A", "S", "A", "P", "O", "R", "T"],
-        "targetWords": ["CASA", "PORTA", "ROSA", "TOPO", "CARO"],
-        "bonusWords": ["ROCA", "POCA", "ARCO", "CAPO"],
-        "grid": [
-            {"word": "CASA", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "PORTA", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "ROSA", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "TOPO", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "CARO", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 2,
-        "language": "it",
-        "category": "Natura",
-        "theme": "Il Giardino",
-        "letters": ["F", "I", "O", "R", "E", "S", "L", "A"],
-        "targetWords": ["FIORE", "SOLE", "ARIA", "ISOLA", "RISO"],
-        "bonusWords": ["FILO", "LIRA", "SERA", "OLIO"],
-        "grid": [
-            {"word": "FIORE", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "SOLE", "row": 1, "col": 1, "direction": "horizontal"},
-            {"word": "ARIA", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "ISOLA", "row": 0, "col": 4, "direction": "vertical"},
-            {"word": "RISO", "row": 3, "col": 1, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 3,
-        "language": "it",
-        "category": "Cibo",
-        "theme": "Ristorante",
-        "letters": ["P", "A", "N", "E", "V", "I", "O", "L"],
-        "targetWords": ["PANE", "VINO", "OLIO", "NAVE", "PIANO"],
-        "bonusWords": ["PINO", "LINO", "PILA", "VELA"],
-        "grid": [
-            {"word": "PANE", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "VINO", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "OLIO", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "NAVE", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "PIANO", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "it", "category": "Casa", "theme": "La Cucina", "letters": ["C", "A", "S", "A", "P", "O", "R", "T"], "targetWords": ["CASA", "PORTA", "ROSA", "TOPO", "CARO"], "bonusWords": ["ROCA", "POCA", "ARCO", "CAPO"], "grid": [{"word": "CASA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PORTA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "ROSA", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "TOPO", "row": 0, "col": 3, "direction": "vertical"}, {"word": "CARO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "it", "category": "Natura", "theme": "Il Giardino", "letters": ["F", "I", "O", "R", "E", "S", "L", "A"], "targetWords": ["FIORE", "SOLE", "ARIA", "ISOLA", "RISO"], "bonusWords": ["FILO", "LIRA", "SERA", "OLIO"], "grid": [{"word": "FIORE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "SOLE", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "ARIA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "ISOLA", "row": 0, "col": 4, "direction": "vertical"}, {"word": "RISO", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 3, "language": "it", "category": "Cibo", "theme": "Ristorante", "letters": ["P", "A", "N", "E", "V", "I", "O", "L"], "targetWords": ["PANE", "VINO", "OLIO", "NAVE", "PIANO"], "bonusWords": ["PINO", "LINO", "PILA", "VELA"], "grid": [{"word": "PANE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VINO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "OLIO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "NAVE", "row": 0, "col": 3, "direction": "vertical"}, {"word": "PIANO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "it", "category": "Famiglia", "theme": "Parenti", "letters": ["M", "A", "D", "R", "E", "P", "I"], "targetWords": ["MADRE", "PADRE", "AMORE", "PRIMA", "MARE"], "bonusWords": ["DARE", "IDEA", "ARMA", "RIMA"], "grid": [{"word": "MADRE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PADRE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "AMORE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "PRIMA", "row": 0, "col": 4, "direction": "vertical"}, {"word": "MARE", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 5, "language": "it", "category": "Lavoro", "theme": "Ufficio", "letters": ["L", "A", "V", "O", "R", "T", "E"], "targetWords": ["LAVORO", "TAVOLO", "VOLTA", "TORRE", "ALTO"], "bonusWords": ["VOTO", "ROTA", "LEVA", "ARTO"], "grid": [{"word": "LAVORO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "TAVOLO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "VOLTA", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "TORRE", "row": 0, "col": 5, "direction": "vertical"}, {"word": "ALTO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "it", "category": "Tempo", "theme": "Stagioni", "letters": ["E", "S", "T", "A", "I", "N", "V", "R"], "targetWords": ["ESTATE", "INVERNO", "SERA", "NEVE", "VENTI"], "bonusWords": ["VENT", "REST", "TANE", "ANTE"], "grid": [{"word": "ESTATE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "INVERNO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "SERA", "row": 2, "col": 2, "direction": "horizontal"}, {"word": "NEVE", "row": 0, "col": 3, "direction": "vertical"}, {"word": "VENTI", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "it", "category": "Animali", "theme": "Fattoria", "letters": ["G", "A", "T", "O", "C", "N", "E"], "targetWords": ["GATTO", "CANE", "TANGO", "NOTTE", "GENTE"], "bonusWords": ["CENA", "NOTA", "ANTE", "TOGA"], "grid": [{"word": "GATTO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "CANE", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "TANGO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "NOTTE", "row": 0, "col": 4, "direction": "vertical"}, {"word": "GENTE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "it", "category": "Sport", "theme": "Calcio", "letters": ["C", "A", "L", "I", "O", "G", "R"], "targetWords": ["CALCIO", "GIOCO", "GOAL", "LARGO", "CARO"], "bonusWords": ["LAGO", "LIRA", "GIRO", "CIAO"], "grid": [{"word": "CALCIO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "GIOCO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "GOAL", "row": 2, "col": 2, "direction": "horizontal"}, {"word": "LARGO", "row": 0, "col": 5, "direction": "vertical"}, {"word": "CARO", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 9, "language": "it", "category": "Musica", "theme": "Concerto", "letters": ["M", "U", "S", "I", "C", "A", "N", "O"], "targetWords": ["MUSICA", "CANINO", "SUONO", "MANO", "CIMA"], "bonusWords": ["NASO", "CASO", "MUSO", "UNCO"], "grid": [{"word": "MUSICA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "CANINO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "SUONO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "MANO", "row": 0, "col": 5, "direction": "vertical"}, {"word": "CIMA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "it", "category": "Viaggio", "theme": "Vacanze", "letters": ["V", "I", "A", "G", "O", "M", "R", "E"], "targetWords": ["VIAGGIO", "MARE", "ROMA", "GIRO", "VERO"], "bonusWords": ["RAMO", "GARA", "MAGO", "GEMI"], "grid": [{"word": "VIAGGIO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "MARE", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "ROMA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "GIRO", "row": 0, "col": 6, "direction": "vertical"}, {"word": "VERO", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 11, "language": "it", "category": "Scuola", "theme": "Lezione", "letters": ["S", "C", "U", "O", "L", "A", "M", "E"], "targetWords": ["SCUOLA", "LEZIONE", "AULA", "SALE", "MELA"], "bonusWords": ["MALE", "LUCE", "SOME", "CULO"], "grid": [{"word": "SCUOLA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "AULA", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "SALE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "MELA", "row": 0, "col": 5, "direction": "vertical"}, {"word": "LUCE", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 12, "language": "it", "category": "Citta", "theme": "Milano", "letters": ["M", "I", "L", "A", "N", "O", "R", "E"], "targetWords": ["MILANO", "ROMA", "LIRA", "NOME", "ALONE"], "bonusWords": ["MANO", "LINO", "NERA", "RAMO"], "grid": [{"word": "MILANO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ROMA", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "LIRA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "NOME", "row": 0, "col": 5, "direction": "vertical"}, {"word": "ALONE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 13, "language": "it", "category": "Arte", "theme": "Pittura", "letters": ["A", "R", "T", "E", "P", "I", "U", "O"], "targetWords": ["ARTE", "PITTURA", "OPERA", "TIPO", "PURO"], "bonusWords": ["RUPE", "RAPE", "TOPI", "EURO"], "grid": [{"word": "ARTE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "OPERA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TIPO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "PURO", "row": 0, "col": 3, "direction": "vertical"}, {"word": "RUPE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 14, "language": "it", "category": "Colori", "theme": "Arcobaleno", "letters": ["R", "O", "S", "A", "B", "L", "U", "E"], "targetWords": ["ROSA", "BLU", "ROSSO", "SOLE", "ALBA"], "bonusWords": ["ROBA", "BASE", "LUSO", "ORSO"], "grid": [{"word": "ROSA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "BLU", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "ROSSO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "SOLE", "row": 0, "col": 3, "direction": "vertical"}, {"word": "ALBA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 15, "language": "it", "category": "Numeri", "theme": "Matematica", "letters": ["U", "N", "O", "D", "E", "T", "R", "S"], "targetWords": ["UNO", "DUE", "TRE", "UNDONE", "RENDE"], "bonusWords": ["NORD", "ORDE", "DURO", "NUDO"], "grid": [{"word": "UNO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "DUE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TRE", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "NORD", "row": 0, "col": 2, "direction": "vertical"}, {"word": "ORDE", "row": 3, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Spanish Puzzles
+# ============================================
+# SPANISH LEVELS (15 levels)
+# ============================================
 SPANISH_LEVELS = [
-    {
-        "id": 1,
-        "language": "es",
-        "category": "Hogar",
-        "theme": "La Casa",
-        "letters": ["C", "A", "S", "O", "M", "E", "R"],
-        "targetWords": ["CASA", "MESA", "COSA", "ROCA", "AMOR"],
-        "bonusWords": ["ROMA", "ARCO", "CARO", "SECAR"],
-        "grid": [
-            {"word": "CASA", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "MESA", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "COSA", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "ROCA", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "AMOR", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 2,
-        "language": "es",
-        "category": "Naturaleza",
-        "theme": "El Bosque",
-        "letters": ["S", "O", "L", "A", "R", "B", "E"],
-        "targetWords": ["SOL", "ROSA", "BOLA", "ARBOL", "LOBO"],
-        "bonusWords": ["RABO", "OBRA", "SOLA", "LOBA"],
-        "grid": [
-            {"word": "SOL", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "ROSA", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "BOLA", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "ARBOL", "row": 0, "col": 2, "direction": "vertical"},
-            {"word": "LOBO", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 3,
-        "language": "es",
-        "category": "Comida",
-        "theme": "Restaurante",
-        "letters": ["P", "A", "N", "O", "V", "I", "E", "L"],
-        "targetWords": ["PAN", "VINO", "NOVIA", "PIANO", "NAVE"],
-        "bonusWords": ["PINO", "LINO", "PIEL", "LEON"],
-        "grid": [
-            {"word": "PAN", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "VINO", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "NOVIA", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "PIANO", "row": 0, "col": 2, "direction": "vertical"},
-            {"word": "NAVE", "row": 3, "col": 1, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "es", "category": "Hogar", "theme": "La Casa", "letters": ["C", "A", "S", "O", "M", "E", "R"], "targetWords": ["CASA", "MESA", "COSA", "ROCA", "AMOR"], "bonusWords": ["ROMA", "ARCO", "CARO", "SECAR"], "grid": [{"word": "CASA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "MESA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "COSA", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "ROCA", "row": 0, "col": 3, "direction": "vertical"}, {"word": "AMOR", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "es", "category": "Naturaleza", "theme": "El Bosque", "letters": ["S", "O", "L", "A", "R", "B", "E"], "targetWords": ["SOL", "ROSA", "BOLA", "ARBOL", "LOBO"], "bonusWords": ["RABO", "OBRA", "SOLA", "LOBA"], "grid": [{"word": "SOL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ROSA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "BOLA", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "ARBOL", "row": 0, "col": 2, "direction": "vertical"}, {"word": "LOBO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "es", "category": "Comida", "theme": "Restaurante", "letters": ["P", "A", "N", "O", "V", "I", "E", "L"], "targetWords": ["PAN", "VINO", "NOVIA", "PIANO", "NAVE"], "bonusWords": ["PINO", "LINO", "PIEL", "LEON"], "grid": [{"word": "PAN", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VINO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "NOVIA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "PIANO", "row": 0, "col": 2, "direction": "vertical"}, {"word": "NAVE", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 4, "language": "es", "category": "Familia", "theme": "Parientes", "letters": ["H", "I", "J", "O", "P", "A", "D", "R", "E"], "targetWords": ["HIJO", "PADRE", "MADRE", "HOJA", "PARED"], "bonusWords": ["ROPA", "JARO", "HADO", "HORA"], "grid": [{"word": "HIJO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PADRE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "MADRE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "HOJA", "row": 0, "col": 3, "direction": "vertical"}, {"word": "PARED", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "es", "category": "Trabajo", "theme": "Oficina", "letters": ["T", "R", "A", "B", "J", "O", "S", "E"], "targetWords": ["TRABAJO", "JEFE", "BOTE", "ESTAR", "ROBE"], "bonusWords": ["TORO", "SETA", "RATO", "RETO"], "grid": [{"word": "TRABAJO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "JEFE", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "BOTE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "ESTAR", "row": 0, "col": 6, "direction": "vertical"}, {"word": "ROBE", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 6, "language": "es", "category": "Tiempo", "theme": "Estaciones", "letters": ["V", "E", "R", "A", "N", "O", "I"], "targetWords": ["VERANO", "INVIERNO", "VIENTO", "NIEVE", "AIRE"], "bonusWords": ["VENA", "RANA", "VANO", "NAVE"], "grid": [{"word": "VERANO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VIENTO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "NIEVE", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "AIRE", "row": 0, "col": 5, "direction": "vertical"}, {"word": "VENA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "es", "category": "Animales", "theme": "Granja", "letters": ["G", "A", "T", "O", "P", "R", "E"], "targetWords": ["GATO", "PERRO", "TORO", "RATA", "PATA"], "bonusWords": ["PERA", "ROPA", "GOTA", "TAPE"], "grid": [{"word": "GATO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PERRO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TORO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "RATA", "row": 0, "col": 3, "direction": "vertical"}, {"word": "PATA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "es", "category": "Deporte", "theme": "Futbol", "letters": ["F", "U", "T", "B", "O", "L", "G", "A"], "targetWords": ["FUTBOL", "GOL", "BOLA", "FALTA", "GALA"], "bonusWords": ["TUBO", "LOBO", "BOTA", "TOGA"], "grid": [{"word": "FUTBOL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "GOL", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "BOLA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "FALTA", "row": 0, "col": 5, "direction": "vertical"}, {"word": "GALA", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 9, "language": "es", "category": "Musica", "theme": "Concierto", "letters": ["M", "U", "S", "I", "C", "A", "N", "O"], "targetWords": ["MUSICA", "CANCION", "SUMO", "CUNA", "MANO"], "bonusWords": ["NUCA", "MONO", "CASO", "MUSA"], "grid": [{"word": "MUSICA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "SUMO", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "CUNA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "MANO", "row": 0, "col": 5, "direction": "vertical"}, {"word": "MONO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "es", "category": "Viaje", "theme": "Vacaciones", "letters": ["V", "I", "A", "J", "E", "P", "L", "Y"], "targetWords": ["VIAJE", "PLAYA", "AVION", "VALE", "JALE"], "bonusWords": ["PIEL", "VELA", "PAJA", "LIJA"], "grid": [{"word": "VIAJE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PLAYA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "AVION", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "VALE", "row": 0, "col": 4, "direction": "vertical"}, {"word": "JALE", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 11, "language": "es", "category": "Escuela", "theme": "Clase", "letters": ["E", "S", "C", "U", "L", "A", "M", "R"], "targetWords": ["ESCUELA", "CLASE", "AULA", "MESA", "CURA"], "bonusWords": ["SULA", "MULA", "USAR", "REMA"], "grid": [{"word": "ESCUELA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "CLASE", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "AULA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "MESA", "row": 0, "col": 6, "direction": "vertical"}, {"word": "CURA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 12, "language": "es", "category": "Ciudad", "theme": "Madrid", "letters": ["M", "A", "D", "R", "I", "C", "U", "L"], "targetWords": ["MADRID", "CIUDAD", "CALLE", "DURA", "MIRA"], "bonusWords": ["ARMA", "DAMA", "RUDA", "ALMA"], "grid": [{"word": "MADRID", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "CIUDAD", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "CALLE", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "DURA", "row": 0, "col": 5, "direction": "vertical"}, {"word": "MIRA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 13, "language": "es", "category": "Arte", "theme": "Pintura", "letters": ["A", "R", "T", "E", "P", "I", "N", "U"], "targetWords": ["ARTE", "PINTURA", "PIANO", "TINA", "PENA"], "bonusWords": ["RAPE", "PIRA", "RUIN", "ANTE"], "grid": [{"word": "ARTE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PINTURA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "PIANO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "TINA", "row": 0, "col": 3, "direction": "vertical"}, {"word": "PENA", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 14, "language": "es", "category": "Colores", "theme": "Arcoiris", "letters": ["R", "O", "J", "O", "A", "Z", "U", "L"], "targetWords": ["ROJO", "AZUL", "ROSA", "LOJA", "ZURRA"], "bonusWords": ["JURA", "ROZA", "LORO", "AURA"], "grid": [{"word": "ROJO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "AZUL", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "ROSA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "LOJA", "row": 0, "col": 3, "direction": "vertical"}, {"word": "JURA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 15, "language": "es", "category": "Numeros", "theme": "Matematicas", "letters": ["U", "N", "O", "D", "S", "T", "R", "E"], "targetWords": ["UNO", "DOS", "TRES", "NORTE", "RESTO"], "bonusWords": ["REDO", "NODE", "DURO", "NUDO"], "grid": [{"word": "UNO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "DOS", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TRES", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "NORTE", "row": 0, "col": 2, "direction": "vertical"}, {"word": "RESTO", "row": 3, "col": 0, "direction": "horizontal"}]},
 ]
 
-# French Puzzles
+# ============================================
+# FRENCH LEVELS (15 levels)
+# ============================================
 FRENCH_LEVELS = [
-    {
-        "id": 1,
-        "language": "fr",
-        "category": "Maison",
-        "theme": "La Cuisine",
-        "letters": ["M", "A", "I", "S", "O", "N", "R", "E"],
-        "targetWords": ["MAISON", "MOIS", "RIEN", "NOIR", "SOIR"],
-        "bonusWords": ["MARI", "MINE", "RAME", "REIN"],
-        "grid": [
-            {"word": "MAISON", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "MOIS", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "RIEN", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "NOIR", "row": 0, "col": 5, "direction": "vertical"},
-            {"word": "SOIR", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 2,
-        "language": "fr",
-        "category": "Nature",
-        "theme": "Le Jardin",
-        "letters": ["F", "L", "E", "U", "R", "S", "O", "I"],
-        "targetWords": ["FLEUR", "SOLEIL", "ROSE", "LIRE", "RUSE"],
-        "bonusWords": ["FUEL", "FILE", "SEUL", "LIEU"],
-        "grid": [
-            {"word": "FLEUR", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "SOLEIL", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "ROSE", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "LIRE", "row": 0, "col": 4, "direction": "vertical"},
-            {"word": "RUSE", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 3,
-        "language": "fr",
-        "category": "Nourriture",
-        "theme": "Restaurant",
-        "letters": ["P", "A", "I", "N", "V", "E", "U", "R"],
-        "targetWords": ["PAIN", "VIN", "PEUR", "RAVI", "PURE"],
-        "bonusWords": ["PAIX", "REIN", "PIRE", "VAIN"],
-        "grid": [
-            {"word": "PAIN", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "VIN", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "PEUR", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "RAVI", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "PURE", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "fr", "category": "Maison", "theme": "La Cuisine", "letters": ["M", "A", "I", "S", "O", "N", "R", "E"], "targetWords": ["MAISON", "MOIS", "RIEN", "NOIR", "SOIR"], "bonusWords": ["MARI", "MINE", "RAME", "REIN"], "grid": [{"word": "MAISON", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "MOIS", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "RIEN", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "NOIR", "row": 0, "col": 5, "direction": "vertical"}, {"word": "SOIR", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "fr", "category": "Nature", "theme": "Le Jardin", "letters": ["F", "L", "E", "U", "R", "S", "O", "I"], "targetWords": ["FLEUR", "SOLEIL", "ROSE", "LIRE", "RUSE"], "bonusWords": ["FUEL", "FILE", "SEUL", "LIEU"], "grid": [{"word": "FLEUR", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "SOLEIL", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "ROSE", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "LIRE", "row": 0, "col": 4, "direction": "vertical"}, {"word": "RUSE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "fr", "category": "Nourriture", "theme": "Restaurant", "letters": ["P", "A", "I", "N", "V", "E", "U", "R"], "targetWords": ["PAIN", "VIN", "PEUR", "RAVI", "PURE"], "bonusWords": ["PAIX", "REIN", "PIRE", "VAIN"], "grid": [{"word": "PAIN", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VIN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "PEUR", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "RAVI", "row": 0, "col": 3, "direction": "vertical"}, {"word": "PURE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "fr", "category": "Famille", "theme": "Parents", "letters": ["M", "E", "R", "P", "A", "I", "F", "L"], "targetWords": ["MERE", "PERE", "FAMILLE", "FIER", "RIRE"], "bonusWords": ["FAMI", "RIME", "FILE", "PAIE"], "grid": [{"word": "MERE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PERE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "FAMILLE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "FIER", "row": 0, "col": 3, "direction": "vertical"}, {"word": "RIRE", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 5, "language": "fr", "category": "Travail", "theme": "Bureau", "letters": ["T", "R", "A", "V", "I", "L", "U", "E"], "targetWords": ["TRAVAIL", "VILLE", "UTILE", "VITAL", "LIVRE"], "bonusWords": ["TIRE", "LEVA", "VITE", "RAVE"], "grid": [{"word": "TRAVAIL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VILLE", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "UTILE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "VITAL", "row": 0, "col": 6, "direction": "vertical"}, {"word": "LIVRE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "fr", "category": "Temps", "theme": "Saisons", "letters": ["E", "T", "H", "I", "V", "R", "P", "S"], "targetWords": ["ETE", "HIVER", "PRINTEMPS", "VERT", "REVE"], "bonusWords": ["HIER", "TIRE", "VISE", "PIRE"], "grid": [{"word": "ETE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "HIVER", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "VERT", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "REVE", "row": 0, "col": 2, "direction": "vertical"}, {"word": "PIRE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "fr", "category": "Animaux", "theme": "Ferme", "letters": ["C", "H", "A", "T", "I", "E", "N", "V"], "targetWords": ["CHAT", "CHIEN", "VACHE", "VENT", "NICHE"], "bonusWords": ["CHANT", "HAINE", "ACTE", "VITE"], "grid": [{"word": "CHAT", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "CHIEN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "VACHE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "VENT", "row": 0, "col": 3, "direction": "vertical"}, {"word": "NICHE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "fr", "category": "Sport", "theme": "Football", "letters": ["F", "O", "T", "B", "A", "L", "U", "G"], "targetWords": ["FOOTBALL", "GOAL", "BALLE", "FAUTE", "BOUT"], "bonusWords": ["TUBE", "LOBO", "BOTA", "TOGA"], "grid": [{"word": "FOOTBALL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "GOAL", "row": 1, "col": 3, "direction": "horizontal"}, {"word": "BALLE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "FAUTE", "row": 0, "col": 7, "direction": "vertical"}, {"word": "BOUT", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 9, "language": "fr", "category": "Musique", "theme": "Concert", "letters": ["M", "U", "S", "I", "Q", "E", "C", "N"], "targetWords": ["MUSIQUE", "SCENE", "UNIQUE", "MINE", "CIME"], "bonusWords": ["NIQUE", "SCIE", "MISE", "QUINE"], "grid": [{"word": "MUSIQUE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "SCENE", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "UNIQUE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "MINE", "row": 0, "col": 6, "direction": "vertical"}, {"word": "CIME", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "fr", "category": "Voyage", "theme": "Vacances", "letters": ["V", "O", "Y", "A", "G", "E", "P", "L"], "targetWords": ["VOYAGE", "PLAGE", "AVION", "VALE", "POLE"], "bonusWords": ["PAGE", "VELO", "GALE", "PAVE"], "grid": [{"word": "VOYAGE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PLAGE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "AVION", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "VALE", "row": 0, "col": 5, "direction": "vertical"}, {"word": "POLE", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 11, "language": "fr", "category": "Ecole", "theme": "Classe", "letters": ["E", "C", "O", "L", "S", "A", "M", "R"], "targetWords": ["ECOLE", "CLASSE", "AULA", "MESA", "ARME"], "bonusWords": ["ORME", "CALE", "RACE", "LAME"], "grid": [{"word": "ECOLE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "CLASSE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "AULA", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "MESA", "row": 0, "col": 4, "direction": "vertical"}, {"word": "ARME", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 12, "language": "fr", "category": "Ville", "theme": "Paris", "letters": ["P", "A", "R", "I", "S", "V", "L", "E"], "targetWords": ["PARIS", "VILLE", "RIVES", "VIVRE", "PAIRE"], "bonusWords": ["PAVE", "LIRE", "RAVI", "PALE"], "grid": [{"word": "PARIS", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VILLE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "RIVES", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "VIVRE", "row": 0, "col": 4, "direction": "vertical"}, {"word": "PAIRE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 13, "language": "fr", "category": "Art", "theme": "Peinture", "letters": ["A", "R", "T", "E", "P", "I", "N", "U"], "targetWords": ["ART", "PEINTURE", "PIANO", "TIEN", "PEAU"], "bonusWords": ["RAPE", "PIRA", "RUIN", "ANTE"], "grid": [{"word": "ART", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PEINTURE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "PIANO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "TIEN", "row": 0, "col": 2, "direction": "vertical"}, {"word": "PEAU", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 14, "language": "fr", "category": "Couleurs", "theme": "Arc-en-ciel", "letters": ["R", "O", "U", "G", "E", "B", "L", "N"], "targetWords": ["ROUGE", "BLEU", "NOIR", "BRUN", "LONG"], "bonusWords": ["ROBE", "GRUE", "LUNE", "BULLE"], "grid": [{"word": "ROUGE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "BLEU", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "NOIR", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "BRUN", "row": 0, "col": 4, "direction": "vertical"}, {"word": "LONG", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 15, "language": "fr", "category": "Nombres", "theme": "Mathematiques", "letters": ["U", "N", "D", "E", "X", "T", "R", "O"], "targetWords": ["UN", "DEUX", "TROIS", "NORD", "DOUX"], "bonusWords": ["NORD", "ORDE", "DURO", "NUDO"], "grid": [{"word": "UN", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "DEUX", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TROIS", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "NORD", "row": 0, "col": 1, "direction": "vertical"}, {"word": "DOUX", "row": 3, "col": 0, "direction": "horizontal"}]},
 ]
 
-# German Puzzles
+# ============================================
+# GERMAN LEVELS (15 levels)
+# ============================================
 GERMAN_LEVELS = [
-    {
-        "id": 1,
-        "language": "de",
-        "category": "Haus",
-        "theme": "Die Kuche",
-        "letters": ["H", "A", "U", "S", "T", "I", "R", "E"],
-        "targetWords": ["HAUS", "TIER", "HASE", "REIS", "STAR"],
-        "bonusWords": ["HAAR", "RAST", "RIST", "STUR"],
-        "grid": [
-            {"word": "HAUS", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "TIER", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "HASE", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "REIS", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "STAR", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 2,
-        "language": "de",
-        "category": "Natur",
-        "theme": "Der Garten",
-        "letters": ["B", "A", "U", "M", "R", "O", "S", "E"],
-        "targetWords": ["BAUM", "ROSE", "MAUS", "OBST", "RUHE"],
-        "bonusWords": ["RAUM", "SAUM", "ROBE", "ROEM"],
-        "grid": [
-            {"word": "BAUM", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "ROSE", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "MAUS", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "OBST", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "RUHE", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 3,
-        "language": "de",
-        "category": "Essen",
-        "theme": "Restaurant",
-        "letters": ["B", "R", "O", "T", "W", "E", "I", "N"],
-        "targetWords": ["BROT", "WEIN", "OBST", "REIN", "TORE"],
-        "bonusWords": ["WORT", "OBER", "ROBE", "NOTE"],
-        "grid": [
-            {"word": "BROT", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "WEIN", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "OBST", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "REIN", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "TORE", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "de", "category": "Haus", "theme": "Die Kuche", "letters": ["H", "A", "U", "S", "T", "I", "R", "E"], "targetWords": ["HAUS", "TIER", "HASE", "REIS", "STAR"], "bonusWords": ["HAAR", "RAST", "RIST", "STUR"], "grid": [{"word": "HAUS", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "TIER", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "HASE", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "REIS", "row": 0, "col": 3, "direction": "vertical"}, {"word": "STAR", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "de", "category": "Natur", "theme": "Der Garten", "letters": ["B", "A", "U", "M", "R", "O", "S", "E"], "targetWords": ["BAUM", "ROSE", "MAUS", "OBST", "RUHE"], "bonusWords": ["RAUM", "SAUM", "ROBE", "ROEM"], "grid": [{"word": "BAUM", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ROSE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "MAUS", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "OBST", "row": 0, "col": 3, "direction": "vertical"}, {"word": "RUHE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "de", "category": "Essen", "theme": "Restaurant", "letters": ["B", "R", "O", "T", "W", "E", "I", "N"], "targetWords": ["BROT", "WEIN", "OBST", "REIN", "TORE"], "bonusWords": ["WORT", "OBER", "ROBE", "NOTE"], "grid": [{"word": "BROT", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "WEIN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "OBST", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "REIN", "row": 0, "col": 3, "direction": "vertical"}, {"word": "TORE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "de", "category": "Familie", "theme": "Verwandte", "letters": ["M", "U", "T", "E", "R", "V", "A", "K"], "targetWords": ["MUTTER", "VATER", "TANTE", "AKTE", "KRAM"], "bonusWords": ["TURM", "RATA", "ARME", "VERM"], "grid": [{"word": "MUTTER", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VATER", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TANTE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "AKTE", "row": 0, "col": 5, "direction": "vertical"}, {"word": "KRAM", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 5, "language": "de", "category": "Arbeit", "theme": "Buro", "letters": ["A", "R", "B", "E", "I", "T", "S", "C"], "targetWords": ["ARBEIT", "REISE", "TASCHE", "BIST", "RAST"], "bonusWords": ["TIER", "SIRE", "RATE", "BIAS"], "grid": [{"word": "ARBEIT", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "REISE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TASCHE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "BIST", "row": 0, "col": 5, "direction": "vertical"}, {"word": "RAST", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 6, "language": "de", "category": "Zeit", "theme": "Jahreszeiten", "letters": ["S", "O", "M", "E", "R", "W", "I", "N"], "targetWords": ["SOMMER", "WINTER", "MORGEN", "WEIN", "IRON"], "bonusWords": ["MONS", "REIM", "WORM", "NORM"], "grid": [{"word": "SOMMER", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "WINTER", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "MORGEN", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "WEIN", "row": 0, "col": 5, "direction": "vertical"}, {"word": "IRON", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 7, "language": "de", "category": "Tiere", "theme": "Bauernhof", "letters": ["H", "U", "N", "D", "K", "A", "T", "Z"], "targetWords": ["HUND", "KATZE", "TANZ", "NACHT", "DUFT"], "bonusWords": ["TANK", "DUNST", "HAND", "UNKT"], "grid": [{"word": "HUND", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "KATZE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TANZ", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "NACHT", "row": 0, "col": 3, "direction": "vertical"}, {"word": "DUFT", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "de", "category": "Sport", "theme": "Fussball", "letters": ["F", "U", "S", "B", "A", "L", "T", "O"], "targetWords": ["FUSSBALL", "TOBALL", "STUFE", "OBST", "LOST"], "bonusWords": ["LUST", "BUSS", "TABU", "FLAU"], "grid": [{"word": "FUSSBALL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "STUFE", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "OBST", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "LOST", "row": 0, "col": 7, "direction": "vertical"}, {"word": "LUST", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 9, "language": "de", "category": "Musik", "theme": "Konzert", "letters": ["M", "U", "S", "I", "K", "A", "N", "O"], "targetWords": ["MUSIK", "KANON", "SUMO", "SINN", "MAUS"], "bonusWords": ["NUKA", "MONO", "KASO", "MUSA"], "grid": [{"word": "MUSIK", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "KANON", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "SUMO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "SINN", "row": 0, "col": 4, "direction": "vertical"}, {"word": "MAUS", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "de", "category": "Reise", "theme": "Urlaub", "letters": ["R", "E", "I", "S", "U", "L", "A", "B"], "targetWords": ["REISE", "URLAUB", "INSEL", "BASIS", "LIEBE"], "bonusWords": ["BLEI", "RAUS", "ALBE", "LAUB"], "grid": [{"word": "REISE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "URLAUB", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "INSEL", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "BASIS", "row": 0, "col": 4, "direction": "vertical"}, {"word": "LIEBE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 11, "language": "de", "category": "Schule", "theme": "Klasse", "letters": ["S", "C", "H", "U", "L", "E", "A", "R"], "targetWords": ["SCHULE", "LEHRER", "RAUM", "HAUL", "HERR"], "bonusWords": ["HAUS", "ELER", "RECH", "LACH"], "grid": [{"word": "SCHULE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "LEHRER", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "RAUM", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "HAUL", "row": 0, "col": 5, "direction": "vertical"}, {"word": "HERR", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 12, "language": "de", "category": "Stadt", "theme": "Berlin", "letters": ["B", "E", "R", "L", "I", "N", "S", "T"], "targetWords": ["BERLIN", "STERN", "INSEL", "BLEI", "REIST"], "bonusWords": ["LERN", "BIER", "LEST", "RENT"], "grid": [{"word": "BERLIN", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "STERN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "INSEL", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "BLEI", "row": 0, "col": 5, "direction": "vertical"}, {"word": "REIST", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 13, "language": "de", "category": "Kunst", "theme": "Malerei", "letters": ["K", "U", "N", "S", "T", "M", "A", "L"], "targetWords": ["KUNST", "MALEN", "STUNK", "SALM", "TANK"], "bonusWords": ["TALM", "NUSS", "KULM", "MAST"], "grid": [{"word": "KUNST", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "MALEN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "STUNK", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "SALM", "row": 0, "col": 4, "direction": "vertical"}, {"word": "TANK", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 14, "language": "de", "category": "Farben", "theme": "Regenbogen", "letters": ["R", "O", "T", "G", "E", "L", "B", "U"], "targetWords": ["ROT", "GELB", "BLUT", "GURT", "TORB"], "bonusWords": ["BERG", "GELT", "ROBE", "TUBE"], "grid": [{"word": "ROT", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "GELB", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "BLUT", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "GURT", "row": 0, "col": 2, "direction": "vertical"}, {"word": "TORB", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 15, "language": "de", "category": "Zahlen", "theme": "Mathematik", "letters": ["E", "I", "N", "S", "Z", "W", "D", "R"], "targetWords": ["EINS", "ZWEI", "DREI", "WIND", "ERDE"], "bonusWords": ["WEIN", "RIED", "WIED", "REIZ"], "grid": [{"word": "EINS", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ZWEI", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "DREI", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "WIND", "row": 0, "col": 3, "direction": "vertical"}, {"word": "ERDE", "row": 3, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Portuguese Puzzles  
+# ============================================
+# PORTUGUESE LEVELS (15 levels)
+# ============================================
 PORTUGUESE_LEVELS = [
-    {
-        "id": 1,
-        "language": "pt",
-        "category": "Casa",
-        "theme": "A Cozinha",
-        "letters": ["C", "A", "S", "O", "M", "E", "R"],
-        "targetWords": ["CASA", "MESA", "CARO", "AMOR", "SOMA"],
-        "bonusWords": ["ARCO", "RAMO", "SECO", "MOCA"],
-        "grid": [
-            {"word": "CASA", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "MESA", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "CARO", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "AMOR", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "SOMA", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 2,
-        "language": "pt",
-        "category": "Natureza",
-        "theme": "O Jardim",
-        "letters": ["S", "O", "L", "F", "R", "E", "A"],
-        "targetWords": ["SOL", "FLOR", "ROSA", "FOLHA", "SERA"],
-        "bonusWords": ["FORA", "SOFA", "REAL", "SOLA"],
-        "grid": [
-            {"word": "SOL", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "FLOR", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "ROSA", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "FOLHA", "row": 0, "col": 2, "direction": "vertical"},
-            {"word": "SERA", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 3,
-        "language": "pt",
-        "category": "Comida",
-        "theme": "Restaurante",
-        "letters": ["P", "A", "O", "V", "I", "N", "H"],
-        "targetWords": ["PAO", "VINHO", "NAVIO", "PINHA", "AVIAO"],
-        "bonusWords": ["PINO", "AIPO", "OPAH", "PAVA"],
-        "grid": [
-            {"word": "PAO", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "VINHO", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "NAVIO", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "PINHA", "row": 0, "col": 2, "direction": "vertical"},
-            {"word": "AVIAO", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "pt", "category": "Casa", "theme": "A Cozinha", "letters": ["C", "A", "S", "O", "M", "E", "R"], "targetWords": ["CASA", "MESA", "CARO", "AMOR", "SOMA"], "bonusWords": ["ARCO", "RAMO", "SECO", "MOCA"], "grid": [{"word": "CASA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "MESA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "CARO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "AMOR", "row": 0, "col": 3, "direction": "vertical"}, {"word": "SOMA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "pt", "category": "Natureza", "theme": "O Jardim", "letters": ["S", "O", "L", "F", "R", "E", "A"], "targetWords": ["SOL", "FLOR", "ROSA", "FOLHA", "SERA"], "bonusWords": ["FORA", "SOFA", "REAL", "SOLA"], "grid": [{"word": "SOL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "FLOR", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "ROSA", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "FOLHA", "row": 0, "col": 2, "direction": "vertical"}, {"word": "SERA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "pt", "category": "Comida", "theme": "Restaurante", "letters": ["P", "A", "O", "V", "I", "N", "H"], "targetWords": ["PAO", "VINHO", "NAVIO", "PINHA", "AVIAO"], "bonusWords": ["PINO", "AIPO", "OPAH", "PAVA"], "grid": [{"word": "PAO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VINHO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "NAVIO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "PINHA", "row": 0, "col": 2, "direction": "vertical"}, {"word": "AVIAO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "pt", "category": "Familia", "theme": "Parentes", "letters": ["M", "A", "E", "P", "I", "F", "L", "H"], "targetWords": ["MAE", "PAI", "FILHO", "FILHA", "AMEI"], "bonusWords": ["FAME", "FEIA", "LIMA", "PILA"], "grid": [{"word": "MAE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PAI", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "FILHO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "FILHA", "row": 0, "col": 2, "direction": "vertical"}, {"word": "AMEI", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "pt", "category": "Trabalho", "theme": "Escritorio", "letters": ["T", "R", "A", "B", "L", "H", "O", "E"], "targetWords": ["TRABALHO", "BOLA", "HORA", "ALTO", "RETO"], "bonusWords": ["TORA", "RATO", "BOTE", "LOTE"], "grid": [{"word": "TRABALHO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "BOLA", "row": 1, "col": 3, "direction": "horizontal"}, {"word": "HORA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "ALTO", "row": 0, "col": 7, "direction": "vertical"}, {"word": "RETO", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 6, "language": "pt", "category": "Tempo", "theme": "Estacoes", "letters": ["V", "E", "R", "A", "O", "I", "N", "T"], "targetWords": ["VERAO", "INVERNO", "VENTO", "NOITE", "TORRE"], "bonusWords": ["VEIA", "RATO", "TIRO", "NAVE"], "grid": [{"word": "VERAO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VENTO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "NOITE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "TORRE", "row": 0, "col": 4, "direction": "vertical"}, {"word": "RATO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "pt", "category": "Animais", "theme": "Fazenda", "letters": ["G", "A", "T", "O", "C", "H", "R", "E"], "targetWords": ["GATO", "CACHORRO", "RATO", "TOCA", "HORA"], "bonusWords": ["GOTA", "ROTA", "TORA", "ARCO"], "grid": [{"word": "GATO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "RATO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TOCA", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "HORA", "row": 0, "col": 3, "direction": "vertical"}, {"word": "GOTA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "pt", "category": "Esporte", "theme": "Futebol", "letters": ["F", "U", "T", "E", "B", "O", "L", "G"], "targetWords": ["FUTEBOL", "GOL", "BOLA", "FOLE", "LUTO"], "bonusWords": ["LOBO", "TUBO", "BOTE", "TULE"], "grid": [{"word": "FUTEBOL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "GOL", "row": 1, "col": 3, "direction": "horizontal"}, {"word": "BOLA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "FOLE", "row": 0, "col": 6, "direction": "vertical"}, {"word": "LUTO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 9, "language": "pt", "category": "Musica", "theme": "Concerto", "letters": ["M", "U", "S", "I", "C", "A", "N", "O"], "targetWords": ["MUSICA", "CANINO", "SUMO", "CUNA", "MANO"], "bonusWords": ["NUCA", "MONO", "CASO", "MUSA"], "grid": [{"word": "MUSICA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "CANINO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "SUMO", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "CUNA", "row": 0, "col": 5, "direction": "vertical"}, {"word": "MANO", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "pt", "category": "Viagem", "theme": "Ferias", "letters": ["V", "I", "A", "G", "E", "M", "P", "R"], "targetWords": ["VIAGEM", "PRAIA", "AVIAO", "MIRA", "RIMA"], "bonusWords": ["GEMA", "PEGA", "RAMO", "ARMA"], "grid": [{"word": "VIAGEM", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PRAIA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "AVIAO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "MIRA", "row": 0, "col": 5, "direction": "vertical"}, {"word": "RIMA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 11, "language": "pt", "category": "Escola", "theme": "Aula", "letters": ["E", "S", "C", "O", "L", "A", "M", "R"], "targetWords": ["ESCOLA", "AULA", "MESA", "SALA", "COLAR"], "bonusWords": ["ARCO", "MOLA", "RALO", "CALO"], "grid": [{"word": "ESCOLA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "AULA", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "MESA", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "SALA", "row": 0, "col": 5, "direction": "vertical"}, {"word": "COLAR", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 12, "language": "pt", "category": "Cidade", "theme": "Lisboa", "letters": ["L", "I", "S", "B", "O", "A", "P", "R"], "targetWords": ["LISBOA", "PRAIA", "BAIRRO", "SOPA", "BOLA"], "bonusWords": ["RISO", "BISO", "LISO", "SILO"], "grid": [{"word": "LISBOA", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PRAIA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "BAIRRO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "SOPA", "row": 0, "col": 5, "direction": "vertical"}, {"word": "BOLA", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 13, "language": "pt", "category": "Arte", "theme": "Pintura", "letters": ["A", "R", "T", "E", "P", "I", "N", "U"], "targetWords": ["ARTE", "PINTURA", "PINTO", "TINA", "PENA"], "bonusWords": ["RAPE", "PIRA", "RUIN", "ANTE"], "grid": [{"word": "ARTE", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "PINTURA", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "PINTO", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "TINA", "row": 0, "col": 3, "direction": "vertical"}, {"word": "PENA", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 14, "language": "pt", "category": "Cores", "theme": "Arco-iris", "letters": ["V", "E", "R", "M", "L", "H", "O", "A"], "targetWords": ["VERMELHO", "AMARELO", "VERDE", "ROER", "MORA"], "bonusWords": ["ROMA", "HORA", "MERO", "VERO"], "grid": [{"word": "VERMELHO", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "AMARELO", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "VERDE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "ROER", "row": 0, "col": 7, "direction": "vertical"}, {"word": "MORA", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 15, "language": "pt", "category": "Numeros", "theme": "Matematica", "letters": ["U", "M", "D", "O", "I", "S", "T", "R"], "targetWords": ["UM", "DOIS", "TRES", "MITO", "RISO"], "bonusWords": ["SIRI", "TIRO", "DURO", "MUDO"], "grid": [{"word": "UM", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "DOIS", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TRES", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "MITO", "row": 0, "col": 1, "direction": "vertical"}, {"word": "RISO", "row": 3, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Dutch Puzzles
+# ============================================
+# DUTCH LEVELS (15 levels)
+# ============================================
 DUTCH_LEVELS = [
-    {
-        "id": 1,
-        "language": "nl",
-        "category": "Huis",
-        "theme": "De Keuken",
-        "letters": ["H", "U", "I", "S", "T", "A", "F", "E"],
-        "targetWords": ["HUIS", "TAFEL", "STAF", "HEFT", "FASE"],
-        "bonusWords": ["HAAT", "FEIT", "STUK", "TUIN"],
-        "grid": [
-            {"word": "HUIS", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "TAFEL", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "STAF", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "HEFT", "row": 0, "col": 4, "direction": "vertical"},
-            {"word": "FASE", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 2,
-        "language": "nl",
-        "category": "Natuur",
-        "theme": "De Tuin",
-        "letters": ["B", "O", "O", "M", "R", "O", "Z", "E"],
-        "targetWords": ["BOOM", "ROOS", "ROZE", "ZOOM", "BOOR"],
-        "bonusWords": ["ROOM", "MOOR", "BOER", "ROEM"],
-        "grid": [
-            {"word": "BOOM", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "ROOS", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "ROZE", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "ZOOM", "row": 0, "col": 3, "direction": "vertical"},
-            {"word": "BOOR", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
-    {
-        "id": 3,
-        "language": "nl",
-        "category": "Eten",
-        "theme": "Restaurant",
-        "letters": ["B", "R", "O", "D", "W", "I", "J", "N"],
-        "targetWords": ["BROOD", "WIJN", "WIND", "ROND", "DORP"],
-        "bonusWords": ["WOORD", "BORD", "NOOD", "ROOD"],
-        "grid": [
-            {"word": "BROOD", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "WIJN", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "WIND", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "ROND", "row": 0, "col": 4, "direction": "vertical"},
-            {"word": "DORP", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "nl", "category": "Huis", "theme": "De Keuken", "letters": ["H", "U", "I", "S", "T", "A", "F", "E"], "targetWords": ["HUIS", "TAFEL", "STAF", "HEFT", "FASE"], "bonusWords": ["HAAT", "FEIT", "STUK", "TUIN"], "grid": [{"word": "HUIS", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "TAFEL", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "STAF", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "HEFT", "row": 0, "col": 4, "direction": "vertical"}, {"word": "FASE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "nl", "category": "Natuur", "theme": "De Tuin", "letters": ["B", "O", "O", "M", "R", "O", "Z", "E"], "targetWords": ["BOOM", "ROOS", "ROZE", "ZOOM", "BOOR"], "bonusWords": ["ROOM", "MOOR", "BOER", "ROEM"], "grid": [{"word": "BOOM", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ROOS", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "ROZE", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "ZOOM", "row": 0, "col": 3, "direction": "vertical"}, {"word": "BOOR", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "nl", "category": "Eten", "theme": "Restaurant", "letters": ["B", "R", "O", "D", "W", "I", "J", "N"], "targetWords": ["BROOD", "WIJN", "WIND", "ROND", "DORP"], "bonusWords": ["WOORD", "BORD", "NOOD", "ROOD"], "grid": [{"word": "BROOD", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "WIJN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "WIND", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "ROND", "row": 0, "col": 4, "direction": "vertical"}, {"word": "DORP", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "nl", "category": "Familie", "theme": "Verwanten", "letters": ["M", "O", "E", "D", "R", "V", "A", "K"], "targetWords": ["MOEDER", "VADER", "KIND", "DAME", "RAAD"], "bonusWords": ["MADE", "ADER", "RAAM", "DRAM"], "grid": [{"word": "MOEDER", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VADER", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "KIND", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "DAME", "row": 0, "col": 5, "direction": "vertical"}, {"word": "RAAD", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "nl", "category": "Werk", "theme": "Kantoor", "letters": ["W", "E", "R", "K", "B", "A", "N", "T"], "targetWords": ["WERK", "BANK", "TAAK", "BAAN", "TENT"], "bonusWords": ["TANK", "RANT", "WANT", "TEAK"], "grid": [{"word": "WERK", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "BANK", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "TAAK", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "BAAN", "row": 0, "col": 3, "direction": "vertical"}, {"word": "TENT", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "nl", "category": "Tijd", "theme": "Seizoenen", "letters": ["Z", "O", "M", "E", "R", "W", "I", "N"], "targetWords": ["ZOMER", "WINTER", "WIND", "MIER", "WORM"], "bonusWords": ["ZIEN", "RIEM", "NORM", "WIER"], "grid": [{"word": "ZOMER", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "WINTER", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "WIND", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "MIER", "row": 0, "col": 4, "direction": "vertical"}, {"word": "WORM", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "nl", "category": "Dieren", "theme": "Boerderij", "letters": ["H", "O", "N", "D", "K", "A", "T", "P"], "targetWords": ["HOND", "KAT", "POOT", "TANK", "NOTA"], "bonusWords": ["ANDA", "NOOT", "POND", "KNOP"], "grid": [{"word": "HOND", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "KAT", "row": 1, "col": 1, "direction": "horizontal"}, {"word": "POOT", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "TANK", "row": 0, "col": 3, "direction": "vertical"}, {"word": "NOTA", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "nl", "category": "Sport", "theme": "Voetbal", "letters": ["V", "O", "E", "T", "B", "A", "L", "G"], "targetWords": ["VOETBAL", "GOAL", "DOEL", "BAAT", "TAFEL"], "bonusWords": ["LOBE", "GAAT", "TAAL", "GALA"], "grid": [{"word": "VOETBAL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "GOAL", "row": 1, "col": 3, "direction": "horizontal"}, {"word": "DOEL", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "BAAT", "row": 0, "col": 6, "direction": "vertical"}, {"word": "TAFEL", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 9, "language": "nl", "category": "Muziek", "theme": "Concert", "letters": ["M", "U", "Z", "I", "E", "K", "N", "O"], "targetWords": ["MUZIEK", "NOTEN", "ZIEN", "MUIN", "KNIE"], "bonusWords": ["NEEM", "ZOEN", "MINK", "OINK"], "grid": [{"word": "MUZIEK", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "NOTEN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "ZIEN", "row": 2, "col": 1, "direction": "horizontal"}, {"word": "MUIN", "row": 0, "col": 5, "direction": "vertical"}, {"word": "KNIE", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "nl", "category": "Reis", "theme": "Vakantie", "letters": ["R", "E", "I", "S", "V", "A", "K", "N"], "targetWords": ["REIS", "VAKANTIE", "VIES", "RAAK", "NAAI"], "bonusWords": ["KAAS", "NIER", "SINK", "VIES"], "grid": [{"word": "REIS", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "VAKANTIE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "VIES", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "RAAK", "row": 0, "col": 3, "direction": "vertical"}, {"word": "NAAI", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 11, "language": "nl", "category": "School", "theme": "Klas", "letters": ["S", "C", "H", "O", "L", "E", "K", "A"], "targetWords": ["SCHOOL", "KLAS", "HALS", "KALE", "CASH"], "bonusWords": ["HOES", "OASE", "LACH", "OLES"], "grid": [{"word": "SCHOOL", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "KLAS", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "HALS", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "KALE", "row": 0, "col": 5, "direction": "vertical"}, {"word": "CASH", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 12, "language": "nl", "category": "Stad", "theme": "Amsterdam", "letters": ["A", "M", "S", "T", "E", "R", "D", "N"], "targetWords": ["AMSTERDAM", "STRAND", "STEM", "RAND", "DARM"], "bonusWords": ["RAAM", "MEST", "MAND", "NEST"], "grid": [{"word": "AMSTERDAM", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "STRAND", "row": 1, "col": 2, "direction": "horizontal"}, {"word": "STEM", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "RAND", "row": 0, "col": 8, "direction": "vertical"}, {"word": "DARM", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 13, "language": "nl", "category": "Kunst", "theme": "Schilderij", "letters": ["K", "U", "N", "S", "T", "M", "A", "L"], "targetWords": ["KUNST", "MALEN", "STUK", "SALM", "TANK"], "bonusWords": ["TALM", "NUST", "KULM", "MAST"], "grid": [{"word": "KUNST", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "MALEN", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "STUK", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "SALM", "row": 0, "col": 4, "direction": "vertical"}, {"word": "TANK", "row": 3, "col": 1, "direction": "horizontal"}]},
+    {"id": 14, "language": "nl", "category": "Kleuren", "theme": "Regenboog", "letters": ["R", "O", "O", "D", "G", "E", "L", "B"], "targetWords": ["ROOD", "GEEL", "BLAUW", "BERG", "LOER"], "bonusWords": ["BORG", "GOED", "LEEG", "BOER"], "grid": [{"word": "ROOD", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "GEEL", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "BLAUW", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "BERG", "row": 0, "col": 3, "direction": "vertical"}, {"word": "LOER", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 15, "language": "nl", "category": "Getallen", "theme": "Wiskunde", "letters": ["E", "E", "N", "T", "W", "D", "R", "I"], "targetWords": ["EEN", "TWEE", "DRIE", "WIND", "TIER"], "bonusWords": ["WEET", "RIET", "DIER", "WEER"], "grid": [{"word": "EEN", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "TWEE", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "DRIE", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "WIND", "row": 0, "col": 2, "direction": "vertical"}, {"word": "TIER", "row": 3, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Arabic Puzzles (simplified romanized for grid compatibility)
+# ============================================
+# ASIAN LANGUAGES (10 levels each)
+# ============================================
+
+# Arabic Levels (Simplified)
 ARABIC_LEVELS = [
-    {
-        "id": 1,
-        "language": "ar",
-        "category": "البيت",
-        "theme": "المطبخ",
-        "letters": ["ب", "ي", "ت", "ك", "ت", "ا", "ب"],
-        "targetWords": ["بيت", "كتاب", "باب", "تاب"],
-        "bonusWords": ["بات", "كاتب"],
-        "grid": [
-            {"word": "بيت", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "كتاب", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "باب", "row": 2, "col": 1, "direction": "horizontal"},
-            {"word": "تاب", "row": 3, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "ar", "category": "البيت", "theme": "المطبخ", "letters": ["ب", "ي", "ت", "ك", "ا", "ب"], "targetWords": ["بيت", "كتاب", "باب"], "bonusWords": ["بات"], "grid": [{"word": "بيت", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "كتاب", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "باب", "row": 2, "col": 1, "direction": "horizontal"}]},
+    {"id": 2, "language": "ar", "category": "الطعام", "theme": "المأكولات", "letters": ["م", "ا", "ء", "ط", "ع"], "targetWords": ["ماء", "طعام"], "bonusWords": ["عام"], "grid": [{"word": "ماء", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "طعام", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "ar", "category": "العائلة", "theme": "الأسرة", "letters": ["أ", "ب", "أ", "م", "ا"], "targetWords": ["أب", "أم", "ابن"], "bonusWords": ["اسم"], "grid": [{"word": "أب", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "أم", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "ابن", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "ar", "category": "الحيوانات", "theme": "المزرعة", "letters": ["ق", "ط", "ك", "ل", "ب"], "targetWords": ["قط", "كلب"], "bonusWords": ["طلب"], "grid": [{"word": "قط", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "كلب", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "ar", "category": "الألوان", "theme": "قوس قزح", "letters": ["أ", "ح", "م", "ر", "أ", "ز"], "targetWords": ["أحمر", "أزرق"], "bonusWords": ["رمز"], "grid": [{"word": "أحمر", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "أزرق", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "ar", "category": "المدرسة", "theme": "الفصل", "letters": ["م", "د", "ر", "س", "ة", "ك"], "targetWords": ["مدرسة", "كتاب"], "bonusWords": ["درس"], "grid": [{"word": "مدرسة", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "كتاب", "row": 1, "col": 1, "direction": "horizontal"}]},
+    {"id": 7, "language": "ar", "category": "الطبيعة", "theme": "الحديقة", "letters": ["ش", "ج", "ر", "و", "ر", "د"], "targetWords": ["شجر", "ورد"], "bonusWords": ["رود"], "grid": [{"word": "شجر", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ورد", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "ar", "category": "الأرقام", "theme": "العد", "letters": ["و", "ا", "ح", "د", "ث", "ن"], "targetWords": ["واحد", "اثنين"], "bonusWords": ["ثاني"], "grid": [{"word": "واحد", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "اثنين", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 9, "language": "ar", "category": "الجسم", "theme": "الوجه", "letters": ["ع", "ي", "ن", "أ", "ف"], "targetWords": ["عين", "أنف"], "bonusWords": ["نيف"], "grid": [{"word": "عين", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "أنف", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "ar", "category": "الوقت", "theme": "اليوم", "letters": ["ي", "و", "م", "ل", "ي"], "targetWords": ["يوم", "ليل"], "bonusWords": ["مولى"], "grid": [{"word": "يوم", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ليل", "row": 1, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Hindi Puzzles
+# Hindi Levels
 HINDI_LEVELS = [
-    {
-        "id": 1,
-        "language": "hi",
-        "category": "घर",
-        "theme": "रसोई",
-        "letters": ["घ", "र", "प", "ा", "न", "ी"],
-        "targetWords": ["घर", "पानी", "नाम"],
-        "bonusWords": ["राम", "पान"],
-        "grid": [
-            {"word": "घर", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "पानी", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "नाम", "row": 2, "col": 1, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "hi", "category": "घर", "theme": "रसोई", "letters": ["घ", "र", "प", "ा", "न", "ी"], "targetWords": ["घर", "पानी", "नाम"], "bonusWords": ["राम", "पान"], "grid": [{"word": "घर", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "पानी", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "नाम", "row": 2, "col": 1, "direction": "horizontal"}]},
+    {"id": 2, "language": "hi", "category": "खाना", "theme": "भोजन", "letters": ["र", "ो", "ट", "ी", "च", "ा"], "targetWords": ["रोटी", "चाय"], "bonusWords": ["चोट"], "grid": [{"word": "रोटी", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "चाय", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "hi", "category": "परिवार", "theme": "रिश्ते", "letters": ["म", "ा", "ं", "प", "ा", "प"], "targetWords": ["माँ", "पापा", "बाबा"], "bonusWords": ["मामा"], "grid": [{"word": "माँ", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "पापा", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "बाबा", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "hi", "category": "जानवर", "theme": "खेत", "letters": ["क", "ु", "त्", "त", "ा", "ब"], "targetWords": ["कुत्ता", "बिल्ली"], "bonusWords": ["कुल"], "grid": [{"word": "कुत्ता", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "बिल्ली", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "hi", "category": "रंग", "theme": "इंद्रधनुष", "letters": ["ल", "ा", "ल", "न", "ी"], "targetWords": ["लाल", "नीला"], "bonusWords": ["नाल"], "grid": [{"word": "लाल", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "नीला", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "hi", "category": "स्कूल", "theme": "कक्षा", "letters": ["क", "ि", "त", "ा", "ब", "प"], "targetWords": ["किताब", "पेन"], "bonusWords": ["काम"], "grid": [{"word": "किताब", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "पेन", "row": 1, "col": 1, "direction": "horizontal"}]},
+    {"id": 7, "language": "hi", "category": "प्रकृति", "theme": "बगीचा", "letters": ["प", "े", "ड़", "फ", "ू", "ल"], "targetWords": ["पेड़", "फूल"], "bonusWords": ["फल"], "grid": [{"word": "पेड़", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "फूल", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "hi", "category": "संख्या", "theme": "गिनती", "letters": ["ए", "क", "द", "ो", "त", "ी"], "targetWords": ["एक", "दो", "तीन"], "bonusWords": ["कई"], "grid": [{"word": "एक", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "दो", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "तीन", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 9, "language": "hi", "category": "शरीर", "theme": "अंग", "letters": ["आ", "ँ", "ख", "क", "ा", "न"], "targetWords": ["आँख", "कान", "नाक"], "bonusWords": ["खान"], "grid": [{"word": "आँख", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "कान", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "नाक", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "hi", "category": "समय", "theme": "दिन", "letters": ["द", "ि", "न", "र", "ा", "त"], "targetWords": ["दिन", "रात"], "bonusWords": ["दात"], "grid": [{"word": "दिन", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "रात", "row": 1, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Japanese Puzzles (Hiragana)
+# Japanese Levels (Hiragana)
 JAPANESE_LEVELS = [
-    {
-        "id": 1,
-        "language": "ja",
-        "category": "家",
-        "theme": "台所",
-        "letters": ["い", "え", "う", "ち", "か", "わ"],
-        "targetWords": ["いえ", "うち", "かわ"],
-        "bonusWords": ["いか", "うえ"],
-        "grid": [
-            {"word": "いえ", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "うち", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "かわ", "row": 2, "col": 1, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "ja", "category": "家", "theme": "台所", "letters": ["い", "え", "う", "ち", "か", "わ"], "targetWords": ["いえ", "うち", "かわ"], "bonusWords": ["いか"], "grid": [{"word": "いえ", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "うち", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "かわ", "row": 2, "col": 1, "direction": "horizontal"}]},
+    {"id": 2, "language": "ja", "category": "食べ物", "theme": "料理", "letters": ["み", "ず", "さ", "け", "も", "の"], "targetWords": ["みず", "さけ", "もの"], "bonusWords": ["のみ"], "grid": [{"word": "みず", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "さけ", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "もの", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "ja", "category": "家族", "theme": "親", "letters": ["は", "は", "ち", "ち", "こ", "ど"], "targetWords": ["はは", "ちち", "こども"], "bonusWords": ["はち"], "grid": [{"word": "はは", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ちち", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "こども", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "ja", "category": "動物", "theme": "農場", "letters": ["い", "ぬ", "ね", "こ", "う", "し"], "targetWords": ["いぬ", "ねこ", "うし"], "bonusWords": ["いし"], "grid": [{"word": "いぬ", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "ねこ", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "うし", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "ja", "category": "色", "theme": "虹", "letters": ["あ", "か", "あ", "お", "し", "ろ"], "targetWords": ["あか", "あお", "しろ"], "bonusWords": ["かお"], "grid": [{"word": "あか", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "あお", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "しろ", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "ja", "category": "学校", "theme": "授業", "letters": ["ほ", "ん", "え", "ん", "ぴ", "つ"], "targetWords": ["ほん", "えんぴつ"], "bonusWords": ["えん"], "grid": [{"word": "ほん", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "えんぴつ", "row": 1, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "ja", "category": "自然", "theme": "庭", "letters": ["き", "は", "な", "や", "ま", "も"], "targetWords": ["き", "はな", "やま"], "bonusWords": ["もや"], "grid": [{"word": "き", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "はな", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "やま", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "ja", "category": "数字", "theme": "数え方", "letters": ["い", "ち", "に", "さ", "ん", "ご"], "targetWords": ["いち", "に", "さん"], "bonusWords": ["ごさん"], "grid": [{"word": "いち", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "に", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "さん", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 9, "language": "ja", "category": "体", "theme": "顔", "letters": ["め", "は", "な", "み", "み", "く"], "targetWords": ["め", "はな", "みみ"], "bonusWords": ["くち"], "grid": [{"word": "め", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "はな", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "みみ", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "ja", "category": "時間", "theme": "日", "letters": ["あ", "さ", "よ", "る", "ひ", "る"], "targetWords": ["あさ", "よる", "ひる"], "bonusWords": ["さる"], "grid": [{"word": "あさ", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "よる", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "ひる", "row": 2, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Korean Puzzles
+# Korean Levels
 KOREAN_LEVELS = [
-    {
-        "id": 1,
-        "language": "ko",
-        "category": "집",
-        "theme": "부엌",
-        "letters": ["집", "문", "불", "물", "밥"],
-        "targetWords": ["집", "문", "불", "물", "밥"],
-        "bonusWords": [],
-        "grid": [
-            {"word": "집", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "문", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "불", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "물", "row": 3, "col": 0, "direction": "horizontal"},
-            {"word": "밥", "row": 4, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "ko", "category": "집", "theme": "부엌", "letters": ["집", "문", "불", "물", "밥"], "targetWords": ["집", "문", "불", "물", "밥"], "bonusWords": [], "grid": [{"word": "집", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "문", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "불", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "물", "row": 3, "col": 0, "direction": "horizontal"}, {"word": "밥", "row": 4, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "ko", "category": "음식", "theme": "요리", "letters": ["밥", "국", "김", "치", "물"], "targetWords": ["밥", "국", "김치"], "bonusWords": ["물"], "grid": [{"word": "밥", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "국", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "김치", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "ko", "category": "가족", "theme": "친척", "letters": ["엄", "마", "아", "빠", "언", "니"], "targetWords": ["엄마", "아빠", "언니"], "bonusWords": ["오빠"], "grid": [{"word": "엄마", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "아빠", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "언니", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "ko", "category": "동물", "theme": "농장", "letters": ["개", "고", "양", "이", "소"], "targetWords": ["개", "고양이", "소"], "bonusWords": ["양"], "grid": [{"word": "개", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "고양이", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "소", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "ko", "category": "색깔", "theme": "무지개", "letters": ["빨", "강", "파", "랑", "노", "랑"], "targetWords": ["빨강", "파랑", "노랑"], "bonusWords": ["초록"], "grid": [{"word": "빨강", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "파랑", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "노랑", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "ko", "category": "학교", "theme": "수업", "letters": ["책", "연", "필", "공", "부"], "targetWords": ["책", "연필", "공부"], "bonusWords": ["필통"], "grid": [{"word": "책", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "연필", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "공부", "row": 2, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "ko", "category": "자연", "theme": "정원", "letters": ["나", "무", "꽃", "산", "바", "다"], "targetWords": ["나무", "꽃", "산", "바다"], "bonusWords": ["풀"], "grid": [{"word": "나무", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "꽃", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "산", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "바다", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "ko", "category": "숫자", "theme": "세기", "letters": ["하", "나", "둘", "셋", "넷"], "targetWords": ["하나", "둘", "셋", "넷"], "bonusWords": ["다섯"], "grid": [{"word": "하나", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "둘", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "셋", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "넷", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 9, "language": "ko", "category": "몸", "theme": "얼굴", "letters": ["눈", "코", "입", "귀", "머", "리"], "targetWords": ["눈", "코", "입", "귀", "머리"], "bonusWords": [], "grid": [{"word": "눈", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "코", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "입", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "귀", "row": 3, "col": 0, "direction": "horizontal"}, {"word": "머리", "row": 4, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "ko", "category": "시간", "theme": "하루", "letters": ["아", "침", "낮", "밤", "점", "심"], "targetWords": ["아침", "낮", "밤", "점심"], "bonusWords": ["저녁"], "grid": [{"word": "아침", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "낮", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "밤", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "점심", "row": 3, "col": 0, "direction": "horizontal"}]},
 ]
 
-# Chinese Puzzles (Simplified)
+# Chinese Levels (Simplified)
 CHINESE_LEVELS = [
-    {
-        "id": 1,
-        "language": "zh",
-        "category": "家",
-        "theme": "厨房",
-        "letters": ["家", "门", "水", "火", "山"],
-        "targetWords": ["家", "门", "水", "火", "山"],
-        "bonusWords": [],
-        "grid": [
-            {"word": "家", "row": 0, "col": 0, "direction": "horizontal"},
-            {"word": "门", "row": 1, "col": 0, "direction": "horizontal"},
-            {"word": "水", "row": 2, "col": 0, "direction": "horizontal"},
-            {"word": "火", "row": 3, "col": 0, "direction": "horizontal"},
-            {"word": "山", "row": 4, "col": 0, "direction": "horizontal"},
-        ]
-    },
+    {"id": 1, "language": "zh", "category": "家", "theme": "厨房", "letters": ["家", "门", "水", "火", "山"], "targetWords": ["家", "门", "水", "火", "山"], "bonusWords": [], "grid": [{"word": "家", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "门", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "水", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "火", "row": 3, "col": 0, "direction": "horizontal"}, {"word": "山", "row": 4, "col": 0, "direction": "horizontal"}]},
+    {"id": 2, "language": "zh", "category": "食物", "theme": "美食", "letters": ["米", "饭", "面", "茶", "肉"], "targetWords": ["米饭", "面", "茶", "肉"], "bonusWords": ["汤"], "grid": [{"word": "米饭", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "面", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "茶", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "肉", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 3, "language": "zh", "category": "家人", "theme": "亲戚", "letters": ["妈", "妈", "爸", "爸", "哥", "姐"], "targetWords": ["妈妈", "爸爸", "哥哥", "姐姐"], "bonusWords": ["弟弟"], "grid": [{"word": "妈妈", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "爸爸", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "哥哥", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "姐姐", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 4, "language": "zh", "category": "动物", "theme": "农场", "letters": ["狗", "猫", "牛", "羊", "猪"], "targetWords": ["狗", "猫", "牛", "羊", "猪"], "bonusWords": ["马"], "grid": [{"word": "狗", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "猫", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "牛", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "羊", "row": 3, "col": 0, "direction": "horizontal"}, {"word": "猪", "row": 4, "col": 0, "direction": "horizontal"}]},
+    {"id": 5, "language": "zh", "category": "颜色", "theme": "彩虹", "letters": ["红", "蓝", "绿", "黄", "白", "黑"], "targetWords": ["红", "蓝", "绿", "黄", "白", "黑"], "bonusWords": [], "grid": [{"word": "红", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "蓝", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "绿", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "黄", "row": 3, "col": 0, "direction": "horizontal"}, {"word": "白", "row": 4, "col": 0, "direction": "horizontal"}, {"word": "黑", "row": 5, "col": 0, "direction": "horizontal"}]},
+    {"id": 6, "language": "zh", "category": "学校", "theme": "课堂", "letters": ["书", "本", "笔", "学", "生"], "targetWords": ["书", "本", "笔", "学生"], "bonusWords": ["老师"], "grid": [{"word": "书", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "本", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "笔", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "学生", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 7, "language": "zh", "category": "自然", "theme": "花园", "letters": ["树", "花", "草", "太", "阳", "月"], "targetWords": ["树", "花", "草", "太阳", "月"], "bonusWords": ["星"], "grid": [{"word": "树", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "花", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "草", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "太阳", "row": 3, "col": 0, "direction": "horizontal"}, {"word": "月", "row": 4, "col": 0, "direction": "horizontal"}]},
+    {"id": 8, "language": "zh", "category": "数字", "theme": "算术", "letters": ["一", "二", "三", "四", "五", "六"], "targetWords": ["一", "二", "三", "四", "五", "六"], "bonusWords": ["七"], "grid": [{"word": "一", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "二", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "三", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "四", "row": 3, "col": 0, "direction": "horizontal"}, {"word": "五", "row": 4, "col": 0, "direction": "horizontal"}, {"word": "六", "row": 5, "col": 0, "direction": "horizontal"}]},
+    {"id": 9, "language": "zh", "category": "身体", "theme": "五官", "letters": ["眼", "睛", "鼻", "子", "嘴", "耳"], "targetWords": ["眼睛", "鼻子", "嘴", "耳"], "bonusWords": ["头"], "grid": [{"word": "眼睛", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "鼻子", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "嘴", "row": 2, "col": 0, "direction": "horizontal"}, {"word": "耳", "row": 3, "col": 0, "direction": "horizontal"}]},
+    {"id": 10, "language": "zh", "category": "时间", "theme": "一天", "letters": ["早", "上", "中", "午", "晚"], "targetWords": ["早上", "中午", "晚上"], "bonusWords": ["下午"], "grid": [{"word": "早上", "row": 0, "col": 0, "direction": "horizontal"}, {"word": "中午", "row": 1, "col": 0, "direction": "horizontal"}, {"word": "晚上", "row": 2, "col": 0, "direction": "horizontal"}]},
 ]
 
 # Combine all multilingual levels
