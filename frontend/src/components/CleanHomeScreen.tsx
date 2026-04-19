@@ -844,21 +844,23 @@ const styles = StyleSheet.create({
   moreGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    justifyContent: 'space-between',
     marginTop: 8,
+    paddingHorizontal: 4,
   },
   moreItem: {
-    width: (width - 60) / 4,
+    width: '23%',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 12,
     paddingVertical: 14,
-    gap: 6,
+    marginBottom: 10,
   },
   moreItemText: {
     fontSize: 10,
     color: '#94a3b8',
     fontWeight: '500',
+    marginTop: 6,
   },
   langFlag: {
     fontSize: 18,
