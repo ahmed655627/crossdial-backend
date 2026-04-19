@@ -53,6 +53,10 @@ class AdManagerWeb {
   getUnityConfig(): any {
     return { gameId: '', adUnits: {} };
   }
+
+  setConsentGiven(consent: boolean): void {
+    console.log('[AdManager] Consent set (web stub):', consent);
+  }
 }
 
 export const adManager = new AdManagerWeb();

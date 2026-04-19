@@ -75,6 +75,7 @@ import { adManager } from '../src/utils/adManager.web';
 
 // NEW: Import themed components and settings
 import { ThemedBackground } from '../src/components/ThemedBackground';
+import { GameBackground } from '../src/components/GameBackground';
 import { AnimatedLetterWheel } from '../src/components/AnimatedLetterWheel';
 import { PremiumLetterWheel } from '../src/components/PremiumLetterWheel';
 import { useGameSettings } from '../src/stores/gameSettingsStore';
@@ -1285,7 +1286,7 @@ export default function GameScreen() {
         end={{ x: 1, y: 1 }}
       >
         <View style={styles.innerFrame}>
-          <ThemedBackground level={currentLevelNumber} showParticles={animationsEnabled}>
+          <GameBackground level={currentLevelNumber}>
             <SafeAreaView style={styles.container}>
               <StatusBar barStyle="light-content" />
 
@@ -1828,7 +1829,7 @@ export default function GameScreen() {
           currentLevel={progress?.current_level || 1}
         />
         </SafeAreaView>
-      </ThemedBackground>
+      </GameBackground>
         </View>
       </LinearGradient>
     </GestureHandlerRootView>
