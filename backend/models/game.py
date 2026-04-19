@@ -43,6 +43,22 @@ class UserProgress(BaseModel):
     username: str = "Player"
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
+    
+    # Enhanced user data fields
+    daily_streak: int = 0
+    best_streak: int = 0
+    last_login_date: Optional[str] = None
+    total_words_found: int = 0
+    total_time_played: int = 0  # in seconds
+    achievements: List[str] = []
+    selected_language: str = "en"
+    sound_enabled: bool = True
+    notifications_enabled: bool = True
+    avatar: str = "🦉"
+    theme_preference: str = "default"
+    daily_spin_count: int = 0
+    words_found_today: int = 0
+    last_active_date: Optional[str] = None
 
 class UserProgressCreate(BaseModel):
     device_id: str
@@ -57,6 +73,21 @@ class UserProgressUpdate(BaseModel):
     total_bonus_words: Optional[int] = None
     hints_used: Optional[int] = None
     username: Optional[str] = None
+    
+    # Enhanced fields
+    daily_streak: Optional[int] = None
+    best_streak: Optional[int] = None
+    last_login_date: Optional[str] = None
+    total_words_found: Optional[int] = None
+    total_time_played: Optional[int] = None
+    achievements: Optional[List[str]] = None
+    selected_language: Optional[str] = None
+    sound_enabled: Optional[bool] = None
+    notifications_enabled: Optional[bool] = None
+    avatar: Optional[str] = None
+    theme_preference: Optional[str] = None
+    words_found_today: Optional[int] = None
+    last_active_date: Optional[str] = None
 
 class LeaderboardEntry(BaseModel):
     username: str

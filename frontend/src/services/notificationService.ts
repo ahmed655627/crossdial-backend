@@ -109,24 +109,130 @@ class NotificationService {
 
   // Schedule local notification for daily rewards
   async scheduleDailyRewardReminder(): Promise<void> {
-    // Cancel any existing daily reward notifications
-    await Notifications.cancelScheduledNotificationAsync('daily-reward-reminder');
+    try {
+      // Cancel any existing daily reward notifications
+      await Notifications.cancelScheduledNotificationAsync('daily-reward-reminder');
 
-    // Schedule for 24 hours from now
-    await Notifications.scheduleNotificationAsync({
-      identifier: 'daily-reward-reminder',
-      content: {
-        title: '🎁 Daily Reward Available!',
-        body: 'Spin the wheel to win coins and hints!',
-        data: { type: 'daily_reward' },
-        sound: true,
-      },
-      trigger: {
-        type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
-        seconds: 24 * 60 * 60, // 24 hours
-        repeats: true,
-      },
-    });
+      // Schedule for 24 hours from now
+      await Notifications.scheduleNotificationAsync({
+        identifier: 'daily-reward-reminder',
+        content: {
+          title: '🎁 Daily Reward Available!',
+          body: 'Spin the wheel to win coins and hints!',
+          data: { type: 'daily_reward' },
+          sound: true,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 24 * 60 * 60, // 24 hours
+          repeats: true,
+        },
+      });
+    } catch (error) {
+      console.log('Failed to schedule daily reward reminder:', error);
+    }
+  }
+
+  // Schedule daily streak reminder
+  async scheduleStreakReminder(currentStreak: number): Promise<void> {
+    try {
+      // Cancel any existing streak notifications
+      await Notifications.cancelScheduledNotificationAsync('streak-reminder');
+      await Notifications.cancelScheduledNotificationAsync('streak-at-risk');
+
+      if (currentStreak > 0) {
+        // Schedule a "keep your streak" reminder for 20 hours
+        await Notifications.scheduleNotificationAsync({
+          identifier: 'streak-at-risk',
+          content: {
+            title: `🔥 Your ${currentStreak}-day streak is at risk!`,
+            body: 'Play now to keep your streak going!',
+            data: { type: 'streak_reminder' },
+            sound: true,
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+            seconds: 20 * 60 * 60, // 20 hours
+            repeats: false,
+          },
+        });
+
+        // Schedule a "streak lost" warning for 23 hours
+        await Notifications.scheduleNotificationAsync({
+          identifier: 'streak-reminder',
+          content: {
+            title: `⚠️ Last chance to save your streak!`,
+            body: `Don't lose your ${currentStreak}-day streak! Open now to play.`,
+            data: { type: 'streak_urgent' },
+            sound: true,
+          },
+          trigger: {
+            type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+            seconds: 23 * 60 * 60, // 23 hours
+            repeats: false,
+          },
+        });
+      }
+    } catch (error) {
+      console.log('Failed to schedule streak reminder:', error);
+    }
+  }
+
+  // Cancel streak reminders (when user plays)
+  async cancelStreakReminders(): Promise<void> {
+    try {
+      await Notifications.cancelScheduledNotificationAsync('streak-reminder');
+      await Notifications.cancelScheduledNotificationAsync('streak-at-risk');
+    } catch (error) {
+      console.log('Failed to cancel streak reminders:', error);
+    }
+  }
+
+  // Schedule level completion celebration
+  async scheduleCongratulationsNotification(levelNumber: number): Promise<void> {
+    try {
+      // Delayed congratulations (appears after 30 minutes if user leaves)
+      await Notifications.scheduleNotificationAsync({
+        identifier: 'level-congrats',
+        content: {
+          title: '🎉 Great job on Level ' + levelNumber + '!',
+          body: 'Ready for the next challenge?',
+          data: { type: 'level_congrats', level: levelNumber },
+          sound: true,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 30 * 60, // 30 minutes
+          repeats: false,
+        },
+      });
+    } catch (error) {
+      console.log('Failed to schedule congrats notification:', error);
+    }
+  }
+
+  // Schedule inactive player reminder
+  async scheduleInactiveReminder(): Promise<void> {
+    try {
+      await Notifications.cancelScheduledNotificationAsync('inactive-reminder');
+
+      await Notifications.scheduleNotificationAsync({
+        identifier: 'inactive-reminder',
+        content: {
+          title: '📚 Missing your word puzzles?',
+          body: 'New levels are waiting for you!',
+          data: { type: 'inactive_reminder' },
+          sound: true,
+        },
+        trigger: {
+          type: Notifications.SchedulableTriggerInputTypes.TIME_INTERVAL,
+          seconds: 3 * 24 * 60 * 60, // 3 days
+          repeats: false,
+        },
+      });
+    } catch (error) {
+      console.log('Failed to schedule inactive reminder:', error);
+    }
   }
 
   // Send local notification for level unlock

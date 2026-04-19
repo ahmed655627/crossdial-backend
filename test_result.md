@@ -294,6 +294,54 @@ backend:
         agent: "testing"
         comment: "Tested successfully - registration with existing email correctly returns 400 error with 'Email already registered' message"
 
+  - task: "POST /api/progress/{device_id}/sync - Cloud sync with streak calculation"
+    implemented: true
+    working: true
+    file: "routers/progress.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Tested successfully - sync endpoint working correctly with streak logic. First login sets streak to 1, updates last_login_date, best_streak, and syncs user data (total_words_found: 25, total_time_played: 1800, words_found_today: 5)"
+
+  - task: "POST /api/progress/{device_id}/update-settings - Update user settings"
+    implemented: true
+    working: true
+    file: "routers/progress.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Tested successfully - settings update working correctly. All settings (sound_enabled: true, notifications_enabled: false, avatar: 🎮, theme_preference: dark, selected_language: es) saved and persisted correctly"
+
+  - task: "POST /api/progress/{device_id}/add-achievement - Add achievements"
+    implemented: true
+    working: true
+    file: "routers/progress.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Tested successfully - achievement system working correctly. Adds new achievements (first_word_found) and prevents duplicates. Returns new_achievement: true for new achievements, false for duplicates"
+
+  - task: "GET /api/progress/{device_id}/full - Get complete user data"
+    implemented: true
+    working: true
+    file: "routers/progress.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "Tested successfully - full progress endpoint returns complete user data with all expected fields: device_id, current_level, coins, hints, completed_levels, found_words, bonus_words_found, daily_streak, best_streak, sound_enabled, notifications_enabled, avatar, theme_preference, selected_language, achievements, total_words_found, total_time_played"
+
 frontend:
   - task: "Game screen with letter wheel and crossword grid"
     implemented: true
@@ -390,3 +438,5 @@ agent_communication:
     message: "Backend API testing completed successfully. All 10 API endpoints tested and working correctly: GET /api/levels (8 levels), GET /api/levels/1 (Great Pyramid data), POST /api/validate-word (target/bonus/invalid words), POST /api/progress (create), GET /api/progress/{device_id} (retrieve), POST /api/progress/{device_id}/add-word (coins update), POST /api/progress/{device_id}/complete-level (level progression), POST /api/hint (letter reveal with coin deduction). All status codes, response structures, coin calculations, and level progression working as expected."
   - agent: "testing"
     message: "Authentication flow testing completed successfully. All 6 authentication endpoints tested and working correctly: POST /api/auth/register (user registration with session_token), POST /api/auth/login (login with credentials), GET /api/auth/me (get current user with Bearer token), POST /api/auth/logout (logout with session invalidation), error handling for wrong password (401), error handling for duplicate email (400). All authentication flows, token management, and error responses working as expected."
+  - agent: "testing"
+    message: "Cloud sync endpoints testing completed successfully. All 4 new cloud sync endpoints tested and working correctly: POST /api/progress/{device_id}/sync (streak calculation working - first login sets streak to 1), POST /api/progress/{device_id}/update-settings (all settings saved and persisted correctly), POST /api/progress/{device_id}/add-achievement (achievement system with duplicate prevention), GET /api/progress/{device_id}/full (complete user data retrieval with all expected fields). All cloud sync functionality, streak logic, settings persistence, and achievement management working as expected."

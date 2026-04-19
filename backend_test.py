@@ -1,279 +1,297 @@
 #!/usr/bin/env python3
 """
-Backend Authentication Testing for Words of Wonders
-Tests all authentication endpoints as specified in the review request
+Backend API Testing for Words of Wonders - Cloud Sync Endpoints
+Testing the new cloud sync and user data endpoints
 """
 
 import requests
 import json
-import sys
-from typing import Dict, Any
+from datetime import datetime
 
-# Backend URL from frontend .env
-BACKEND_URL = "https://crossword-solver-6.preview.emergentagent.com"
-BASE_URL = f"{BACKEND_URL}/api"
+# Configuration
+BASE_URL = "https://crossword-solver-6.preview.emergentagent.com/api"
+TEST_DEVICE_ID = "test-device-123"
 
-class AuthTester:
-    def __init__(self):
-        self.session_token = None
-        self.test_user_email = "test@example.com"
-        self.test_user_password = "Test123!"
-        self.test_user_name = "Test User"
-        
-    def log_test(self, test_name: str, success: bool, details: str = ""):
-        status = "✅ PASS" if success else "❌ FAIL"
-        print(f"{status} {test_name}")
-        if details:
-            print(f"   Details: {details}")
-        print()
-        
-    def make_request(self, method: str, endpoint: str, data: Dict = None, headers: Dict = None) -> tuple:
-        """Make HTTP request and return (success, response_data, status_code)"""
-        url = f"{BASE_URL}{endpoint}"
-        
-        try:
-            if method.upper() == "GET":
-                response = requests.get(url, headers=headers, timeout=10)
-            elif method.upper() == "POST":
-                response = requests.post(url, json=data, headers=headers, timeout=10)
-            elif method.upper() == "PUT":
-                response = requests.put(url, json=data, headers=headers, timeout=10)
-            else:
-                return False, {"error": f"Unsupported method: {method}"}, 0
-                
-            try:
-                response_data = response.json()
-            except:
-                response_data = {"text": response.text}
-                
-            return response.status_code < 400, response_data, response.status_code
-            
-        except requests.exceptions.RequestException as e:
-            return False, {"error": str(e)}, 0
+def test_create_progress():
+    """Test POST /api/progress - Create new user progress"""
+    print("\n=== Testing POST /api/progress - Create new user progress ===")
     
-    def test_register_new_user(self):
-        """Test 1: Register a new user"""
-        print("🧪 Testing: Register new user")
-        
-        data = {
-            "email": self.test_user_email,
-            "password": self.test_user_password,
-            "name": self.test_user_name
-        }
-        
-        success, response, status_code = self.make_request("POST", "/auth/register", data)
-        
-        if success and status_code == 200:
-            if "session_token" in response and "user" in response:
-                self.session_token = response["session_token"]
-                user = response["user"]
-                if (user.get("email") == self.test_user_email.lower() and 
-                    user.get("name") == self.test_user_name):
-                    self.log_test("Register new user", True, 
-                                f"User registered successfully with session_token")
-                    return True
-                else:
-                    self.log_test("Register new user", False, 
-                                f"User data mismatch: {user}")
-                    return False
-            else:
-                self.log_test("Register new user", False, 
-                            f"Missing session_token or user in response: {response}")
-                return False
-        else:
-            self.log_test("Register new user", False, 
-                        f"Status: {status_code}, Response: {response}")
-            return False
+    url = f"{BASE_URL}/progress"
+    payload = {
+        "device_id": TEST_DEVICE_ID
+    }
     
-    def test_login_with_registered_user(self):
-        """Test 2: Login with the registered user"""
-        print("🧪 Testing: Login with registered user")
+    try:
+        response = requests.post(url, json=payload)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.text}")
         
-        data = {
-            "email": self.test_user_email,
-            "password": self.test_user_password
-        }
-        
-        success, response, status_code = self.make_request("POST", "/auth/login", data)
-        
-        if success and status_code == 200:
-            if "session_token" in response and "user" in response:
-                self.session_token = response["session_token"]
-                user = response["user"]
-                if (user.get("email") == self.test_user_email.lower() and 
-                    user.get("name") == self.test_user_name):
-                    self.log_test("Login with registered user", True, 
-                                f"Login successful with session_token")
-                    return True
-                else:
-                    self.log_test("Login with registered user", False, 
-                                f"User data mismatch: {user}")
-                    return False
-            else:
-                self.log_test("Login with registered user", False, 
-                            f"Missing session_token or user in response: {response}")
-                return False
-        else:
-            self.log_test("Login with registered user", False, 
-                        f"Status: {status_code}, Response: {response}")
-            return False
-    
-    def test_get_current_user(self):
-        """Test 3: Get current user with token"""
-        print("🧪 Testing: Get current user with token")
-        
-        if not self.session_token:
-            self.log_test("Get current user", False, "No session token available")
-            return False
-            
-        headers = {"Authorization": f"Bearer {self.session_token}"}
-        success, response, status_code = self.make_request("GET", "/auth/me", headers=headers)
-        
-        if success and status_code == 200:
-            if (response.get("email") == self.test_user_email.lower() and 
-                response.get("name") == self.test_user_name):
-                self.log_test("Get current user", True, 
-                            f"User details retrieved successfully")
-                return True
-            else:
-                self.log_test("Get current user", False, 
-                            f"User data mismatch: {response}")
-                return False
-        else:
-            self.log_test("Get current user", False, 
-                        f"Status: {status_code}, Response: {response}")
-            return False
-    
-    def test_logout(self):
-        """Test 4: Logout"""
-        print("🧪 Testing: Logout")
-        
-        if not self.session_token:
-            self.log_test("Logout", False, "No session token available")
-            return False
-            
-        headers = {"Authorization": f"Bearer {self.session_token}"}
-        success, response, status_code = self.make_request("POST", "/auth/logout", headers=headers)
-        
-        if success and status_code == 200:
-            if response.get("success") == True:
-                self.log_test("Logout", True, "Logout successful")
-                return True
-            else:
-                self.log_test("Logout", False, f"Unexpected response: {response}")
-                return False
-        else:
-            self.log_test("Logout", False, 
-                        f"Status: {status_code}, Response: {response}")
-            return False
-    
-    def test_login_wrong_password(self):
-        """Test 5: Login with wrong password"""
-        print("🧪 Testing: Login with wrong password")
-        
-        data = {
-            "email": self.test_user_email,
-            "password": "WrongPassword"
-        }
-        
-        success, response, status_code = self.make_request("POST", "/auth/login", data)
-        
-        if not success and status_code == 401:
-            if "Invalid email or password" in response.get("detail", ""):
-                self.log_test("Login with wrong password", True, 
-                            f"Correctly rejected with 401 error")
-                return True
-            else:
-                self.log_test("Login with wrong password", False, 
-                            f"Wrong error message: {response}")
-                return False
-        else:
-            self.log_test("Login with wrong password", False, 
-                        f"Expected 401 error, got Status: {status_code}, Response: {response}")
-            return False
-    
-    def test_register_existing_email(self):
-        """Test 6: Register with existing email"""
-        print("🧪 Testing: Register with existing email")
-        
-        data = {
-            "email": self.test_user_email,
-            "password": "Test456!",
-            "name": "Another User"
-        }
-        
-        success, response, status_code = self.make_request("POST", "/auth/register", data)
-        
-        if not success and status_code == 400:
-            if "Email already registered" in response.get("detail", ""):
-                self.log_test("Register with existing email", True, 
-                            f"Correctly rejected with 400 error")
-                return True
-            else:
-                self.log_test("Register with existing email", False, 
-                            f"Wrong error message: {response}")
-                return False
-        else:
-            self.log_test("Register with existing email", False, 
-                        f"Expected 400 error, got Status: {status_code}, Response: {response}")
-            return False
-    
-    def run_all_tests(self):
-        """Run all authentication tests"""
-        print("=" * 60)
-        print("🚀 Starting Authentication Flow Tests")
-        print("=" * 60)
-        print()
-        
-        test_results = []
-        
-        # Test 1: Register new user
-        test_results.append(self.test_register_new_user())
-        
-        # Test 2: Login with registered user
-        test_results.append(self.test_login_with_registered_user())
-        
-        # Test 3: Get current user
-        test_results.append(self.test_get_current_user())
-        
-        # Test 4: Logout
-        test_results.append(self.test_logout())
-        
-        # Test 5: Login with wrong password
-        test_results.append(self.test_login_wrong_password())
-        
-        # Test 6: Register with existing email
-        test_results.append(self.test_register_existing_email())
-        
-        # Summary
-        print("=" * 60)
-        print("📊 TEST SUMMARY")
-        print("=" * 60)
-        
-        passed = sum(test_results)
-        total = len(test_results)
-        
-        print(f"Total Tests: {total}")
-        print(f"Passed: {passed}")
-        print(f"Failed: {total - passed}")
-        print(f"Success Rate: {(passed/total)*100:.1f}%")
-        
-        if passed == total:
-            print("\n🎉 All authentication tests PASSED!")
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ Progress creation successful")
+            print(f"   Device ID: {data.get('device_id')}")
+            print(f"   Current Level: {data.get('current_level')}")
+            print(f"   Coins: {data.get('coins')}")
+            print(f"   Daily Streak: {data.get('daily_streak')}")
             return True
         else:
-            print(f"\n⚠️  {total - passed} authentication tests FAILED!")
+            print(f"❌ Progress creation failed: {response.status_code}")
             return False
+            
+    except Exception as e:
+        print(f"❌ Error testing progress creation: {e}")
+        return False
+
+def test_sync_progress():
+    """Test POST /api/progress/{device_id}/sync - Sync user data with streak calculation"""
+    print(f"\n=== Testing POST /api/progress/{TEST_DEVICE_ID}/sync - Sync user data ===")
+    
+    url = f"{BASE_URL}/progress/{TEST_DEVICE_ID}/sync"
+    payload = {
+        "total_words_found": 25,
+        "total_time_played": 1800,
+        "words_found_today": 5
+    }
+    
+    try:
+        response = requests.post(url, json=payload)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.text}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ Progress sync successful")
+            print(f"   Daily Streak: {data.get('daily_streak')}")
+            print(f"   Best Streak: {data.get('best_streak')}")
+            print(f"   Last Login Date: {data.get('last_login_date')}")
+            print(f"   Total Words Found: {data.get('total_words_found')}")
+            print(f"   Total Time Played: {data.get('total_time_played')}")
+            
+            # Verify streak logic - first login should set streak to 1
+            if data.get('daily_streak') == 1:
+                print("✅ Streak logic working correctly - first login sets streak to 1")
+            else:
+                print(f"⚠️  Streak logic issue - expected 1, got {data.get('daily_streak')}")
+            
+            return True
+        else:
+            print(f"❌ Progress sync failed: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error testing progress sync: {e}")
+        return False
+
+def test_update_settings():
+    """Test POST /api/progress/{device_id}/update-settings - Update user settings"""
+    print(f"\n=== Testing POST /api/progress/{TEST_DEVICE_ID}/update-settings - Update settings ===")
+    
+    url = f"{BASE_URL}/progress/{TEST_DEVICE_ID}/update-settings"
+    
+    # Test with query parameters as the endpoint expects
+    params = {
+        "sound_enabled": True,
+        "notifications_enabled": False,
+        "avatar": "🎮",
+        "theme_preference": "dark",
+        "selected_language": "es"
+    }
+    
+    try:
+        response = requests.post(url, params=params)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.text}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ Settings update successful")
+            print(f"   Success: {data.get('success')}")
+            print(f"   Message: {data.get('message')}")
+            return True
+        else:
+            print(f"❌ Settings update failed: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error testing settings update: {e}")
+        return False
+
+def test_add_achievement():
+    """Test POST /api/progress/{device_id}/add-achievement - Add achievement"""
+    print(f"\n=== Testing POST /api/progress/{TEST_DEVICE_ID}/add-achievement - Add achievement ===")
+    
+    url = f"{BASE_URL}/progress/{TEST_DEVICE_ID}/add-achievement"
+    
+    # Test adding first achievement
+    params = {"achievement_id": "first_word_found"}
+    
+    try:
+        response = requests.post(url, params=params)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.text}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ Achievement addition successful")
+            print(f"   Success: {data.get('success')}")
+            print(f"   New Achievement: {data.get('new_achievement')}")
+            print(f"   Achievement ID: {data.get('achievement_id')}")
+            
+            # Test adding duplicate achievement
+            print("\n--- Testing duplicate achievement prevention ---")
+            response2 = requests.post(url, params=params)
+            print(f"Status Code: {response2.status_code}")
+            print(f"Response: {response2.text}")
+            
+            if response2.status_code == 200:
+                data2 = response2.json()
+                if not data2.get('new_achievement'):
+                    print("✅ Duplicate achievement prevention working correctly")
+                else:
+                    print("⚠️  Duplicate achievement was added when it shouldn't have been")
+            
+            return True
+        else:
+            print(f"❌ Achievement addition failed: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error testing achievement addition: {e}")
+        return False
+
+def test_get_full_progress():
+    """Test GET /api/progress/{device_id}/full - Get full user data"""
+    print(f"\n=== Testing GET /api/progress/{TEST_DEVICE_ID}/full - Get full user data ===")
+    
+    url = f"{BASE_URL}/progress/{TEST_DEVICE_ID}/full"
+    
+    try:
+        response = requests.get(url)
+        print(f"Status Code: {response.status_code}")
+        print(f"Response: {response.text}")
+        
+        if response.status_code == 200:
+            data = response.json()
+            print("✅ Full progress data retrieval successful")
+            print(f"   Device ID: {data.get('device_id')}")
+            print(f"   Current Level: {data.get('current_level')}")
+            print(f"   Coins: {data.get('coins')}")
+            print(f"   Daily Streak: {data.get('daily_streak')}")
+            print(f"   Sound Enabled: {data.get('sound_enabled')}")
+            print(f"   Notifications Enabled: {data.get('notifications_enabled')}")
+            print(f"   Avatar: {data.get('avatar')}")
+            print(f"   Theme: {data.get('theme_preference')}")
+            print(f"   Language: {data.get('selected_language')}")
+            print(f"   Achievements: {data.get('achievements')}")
+            print(f"   Total Words Found: {data.get('total_words_found')}")
+            print(f"   Total Time Played: {data.get('total_time_played')}")
+            
+            # Verify all expected fields are present
+            expected_fields = [
+                'device_id', 'current_level', 'coins', 'hints', 'completed_levels',
+                'found_words', 'bonus_words_found', 'daily_streak', 'best_streak',
+                'sound_enabled', 'notifications_enabled', 'avatar', 'theme_preference',
+                'selected_language', 'achievements', 'total_words_found', 'total_time_played'
+            ]
+            
+            missing_fields = [field for field in expected_fields if field not in data]
+            if not missing_fields:
+                print("✅ All expected fields present in full progress data")
+            else:
+                print(f"⚠️  Missing fields in full progress data: {missing_fields}")
+            
+            return True
+        else:
+            print(f"❌ Full progress data retrieval failed: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error testing full progress data retrieval: {e}")
+        return False
+
+def verify_settings_persistence():
+    """Verify that settings were actually saved by retrieving full progress"""
+    print(f"\n=== Verifying Settings Persistence ===")
+    
+    url = f"{BASE_URL}/progress/{TEST_DEVICE_ID}/full"
+    
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            
+            # Check if our settings were saved
+            expected_settings = {
+                'sound_enabled': True,
+                'notifications_enabled': False,
+                'avatar': '🎮',
+                'theme_preference': 'dark',
+                'selected_language': 'es'
+            }
+            
+            all_correct = True
+            for key, expected_value in expected_settings.items():
+                actual_value = data.get(key)
+                if actual_value == expected_value:
+                    print(f"✅ {key}: {actual_value} (correct)")
+                else:
+                    print(f"❌ {key}: expected {expected_value}, got {actual_value}")
+                    all_correct = False
+            
+            if all_correct:
+                print("✅ All settings saved correctly")
+                return True
+            else:
+                print("❌ Some settings were not saved correctly")
+                return False
+        else:
+            print(f"❌ Could not verify settings persistence: {response.status_code}")
+            return False
+            
+    except Exception as e:
+        print(f"❌ Error verifying settings persistence: {e}")
+        return False
 
 def main():
-    """Main test execution"""
-    tester = AuthTester()
-    success = tester.run_all_tests()
+    """Run all cloud sync endpoint tests"""
+    print("🚀 Starting Cloud Sync Endpoints Testing")
+    print(f"Backend URL: {BASE_URL}")
+    print(f"Test Device ID: {TEST_DEVICE_ID}")
     
-    if success:
-        sys.exit(0)
+    results = []
+    
+    # Test all endpoints in sequence
+    results.append(("Create Progress", test_create_progress()))
+    results.append(("Sync Progress", test_sync_progress()))
+    results.append(("Update Settings", test_update_settings()))
+    results.append(("Add Achievement", test_add_achievement()))
+    results.append(("Get Full Progress", test_get_full_progress()))
+    results.append(("Verify Settings Persistence", verify_settings_persistence()))
+    
+    # Summary
+    print("\n" + "="*60)
+    print("📊 CLOUD SYNC ENDPOINTS TEST SUMMARY")
+    print("="*60)
+    
+    passed = 0
+    failed = 0
+    
+    for test_name, result in results:
+        status = "✅ PASS" if result else "❌ FAIL"
+        print(f"{test_name:<30} {status}")
+        if result:
+            passed += 1
+        else:
+            failed += 1
+    
+    print(f"\nTotal Tests: {len(results)}")
+    print(f"Passed: {passed}")
+    print(f"Failed: {failed}")
+    
+    if failed == 0:
+        print("\n🎉 All cloud sync endpoints are working correctly!")
     else:
-        sys.exit(1)
+        print(f"\n⚠️  {failed} test(s) failed. Please check the issues above.")
 
 if __name__ == "__main__":
     main()

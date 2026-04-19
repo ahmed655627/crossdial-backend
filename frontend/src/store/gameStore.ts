@@ -39,6 +39,23 @@ export interface UserProgress {
   last_wheel_spin: string | null;
   total_score: number;
   username: string;
+  
+  // Enhanced user data fields
+  daily_streak?: number;
+  best_streak?: number;
+  last_login_date?: string | null;
+  total_words_found?: number;
+  total_time_played?: number;
+  achievements?: string[];
+  selected_language?: string;
+  sound_enabled?: boolean;
+  notifications_enabled?: boolean;
+  avatar?: string;
+  theme_preference?: string;
+  daily_spin_count?: number;
+  words_found_today?: number;
+  last_active_date?: string | null;
+  hints_remaining?: number; // Alias for hints
 }
 
 export interface LeaderboardEntry {
