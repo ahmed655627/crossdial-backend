@@ -1,195 +1,311 @@
 /**
- * Language Selector Component
- * Beautiful language selection modal
+ * Language Selector Modal
+ * Allows users to select puzzle language for multilingual support
  */
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
+  StyleSheet,
   TouchableOpacity,
   Modal,
-  ScrollView,
-  StyleSheet,
+  FlatList,
+  ActivityIndicator,
   Dimensions,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 import { BlurView } from 'expo-blur';
-import { 
-  SupportedLanguage, 
-  languageNames, 
-  languageFlags,
-  isRTL 
-} from '../utils/localization';
-import { useGameSettings } from '../stores/gameSettingsStore';
+import Constants from 'expo-constants';
 
-const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
+
+interface Language {
+  code: string;
+  name: string;
+  flag: string;
+  direction: string;
+  levelCount: number;
+}
 
 interface LanguageSelectorProps {
   visible: boolean;
   onClose: () => void;
+  onSelectLanguage: (languageCode: string, languageName: string) => void;
+  currentLanguage?: string;
 }
 
-const languages: SupportedLanguage[] = [
-  'en', 'it', 'es', 'fr', 'de', 'pt', 'ru', 'ja', 'ko', 'zh', 'ar', 'hi'
-];
+const API_URL = Constants.expoConfig?.extra?.EXPO_BACKEND_URL || '';
 
-export const LanguageSelector: React.FC<LanguageSelectorProps> = ({
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   visible,
   onClose,
+  onSelectLanguage,
+  currentLanguage = 'en',
 }) => {
-  const { language, setLanguage, t } = useGameSettings();
+  const [languages, setLanguages] = useState<Language[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSelect = (lang: SupportedLanguage) => {
-    setLanguage(lang);
-    onClose();
+  useEffect(() => {
+    if (visible) {
+      fetchLanguages();
+    }
+  }, [visible]);
+
+  const fetchLanguages = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await fetch(`${API_URL}/api/languages`);
+      if (!response.ok) throw new Error('Failed to fetch languages');
+      const data = await response.json();
+      
+      // Add English as default first option
+      const allLanguages = [
+        { code: 'en', name: 'English', flag: '🇺🇸', direction: 'ltr', levelCount: 150 },
+        ...data.languages
+      ];
+      setLanguages(allLanguages);
+    } catch (err) {
+      console.error('Error fetching languages:', err);
+      setError('Failed to load languages');
+      // Fallback to default languages
+      setLanguages([
+        { code: 'en', name: 'English', flag: '🇺🇸', direction: 'ltr', levelCount: 150 },
+        { code: 'it', name: 'Italiano', flag: '🇮🇹', direction: 'ltr', levelCount: 3 },
+        { code: 'es', name: 'Español', flag: '🇪🇸', direction: 'ltr', levelCount: 3 },
+        { code: 'fr', name: 'Français', flag: '🇫🇷', direction: 'ltr', levelCount: 3 },
+        { code: 'de', name: 'Deutsch', flag: '🇩🇪', direction: 'ltr', levelCount: 3 },
+        { code: 'pt', name: 'Português', flag: '🇧🇷', direction: 'ltr', levelCount: 3 },
+        { code: 'nl', name: 'Nederlands', flag: '🇳🇱', direction: 'ltr', levelCount: 3 },
+        { code: 'ar', name: 'العربية', flag: '🇸🇦', direction: 'rtl', levelCount: 1 },
+        { code: 'hi', name: 'हिंदी', flag: '🇮🇳', direction: 'ltr', levelCount: 1 },
+        { code: 'ja', name: '日本語', flag: '🇯🇵', direction: 'ltr', levelCount: 1 },
+        { code: 'ko', name: '한국어', flag: '🇰🇷', direction: 'ltr', levelCount: 1 },
+        { code: 'zh', name: '中文', flag: '🇨🇳', direction: 'ltr', levelCount: 1 },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const renderLanguageItem = ({ item }: { item: Language }) => {
+    const isSelected = item.code === currentLanguage;
+    
+    return (
+      <TouchableOpacity
+        style={[styles.languageItem, isSelected && styles.languageItemSelected]}
+        onPress={() => onSelectLanguage(item.code, item.name)}
+        activeOpacity={0.7}
+      >
+        <View style={styles.languageInfo}>
+          <Text style={styles.languageFlag}>{item.flag}</Text>
+          <View style={styles.languageTextContainer}>
+            <Text style={[styles.languageName, isSelected && styles.languageNameSelected]}>
+              {item.name}
+            </Text>
+            <Text style={styles.levelCount}>
+              {item.levelCount} {item.levelCount === 1 ? 'level' : 'levels'}
+            </Text>
+          </View>
+        </View>
+        {isSelected && (
+          <Ionicons name="checkmark-circle" size={24} color="#00b894" />
+        )}
+      </TouchableOpacity>
+    );
   };
 
   return (
     <Modal
       visible={visible}
       transparent
-      animationType="fade"
+      animationType="slide"
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
-        <BlurView intensity={20} style={styles.blur}>
-          <View style={styles.container}>
+      <BlurView intensity={20} style={styles.backdrop}>
+        <View style={styles.container}>
+          <LinearGradient
+            colors={['#1a1a2e', '#16213e', '#0f3460']}
+            style={styles.gradient}
+          >
             {/* Header */}
             <View style={styles.header}>
-              <Text style={styles.title}>{t('language')}</Text>
-              <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
-                <Text style={styles.closeBtnText}>✕</Text>
+              <Text style={styles.title}>Select Language</Text>
+              <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+                <Ionicons name="close" size={24} color="#fff" />
               </TouchableOpacity>
             </View>
 
+            <Text style={styles.subtitle}>
+              Play puzzles in your favorite language
+            </Text>
+
             {/* Language List */}
-            <ScrollView 
-              style={styles.list}
-              showsVerticalScrollIndicator={false}
-            >
-              {languages.map((lang) => (
-                <TouchableOpacity
-                  key={lang}
-                  style={[
-                    styles.languageItem,
-                    language === lang && styles.selectedItem,
-                  ]}
-                  onPress={() => handleSelect(lang)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.flag}>{languageFlags[lang]}</Text>
-                  <Text 
-                    style={[
-                      styles.languageName,
-                      language === lang && styles.selectedText,
-                      isRTL(lang) && styles.rtlText,
-                    ]}
-                  >
-                    {languageNames[lang]}
-                  </Text>
-                  {language === lang && (
-                    <View style={styles.checkmark}>
-                      <Text style={styles.checkmarkText}>✓</Text>
-                    </View>
-                  )}
+            {loading ? (
+              <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#FFD700" />
+                <Text style={styles.loadingText}>Loading languages...</Text>
+              </View>
+            ) : error ? (
+              <View style={styles.errorContainer}>
+                <Ionicons name="alert-circle" size={48} color="#e74c3c" />
+                <Text style={styles.errorText}>{error}</Text>
+                <TouchableOpacity style={styles.retryButton} onPress={fetchLanguages}>
+                  <Text style={styles.retryButtonText}>Retry</Text>
                 </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </BlurView>
-      </View>
+              </View>
+            ) : (
+              <FlatList
+                data={languages}
+                renderItem={renderLanguageItem}
+                keyExtractor={(item) => item.code}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={styles.listContent}
+              />
+            )}
+
+            {/* Footer Note */}
+            <View style={styles.footer}>
+              <Ionicons name="information-circle-outline" size={16} color="#8892b0" />
+              <Text style={styles.footerText}>
+                More languages and levels coming soon!
+              </Text>
+            </View>
+          </LinearGradient>
+        </View>
+      </BlurView>
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-  overlay: {
+  backdrop: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  blur: {
-    borderRadius: 20,
-    overflow: 'hidden',
+    justifyContent: 'flex-end',
   },
   container: {
-    width: SCREEN_WIDTH * 0.85,
-    maxHeight: SCREEN_HEIGHT * 0.7,
-    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    borderRadius: 20,
-    padding: 20,
+    height: height * 0.75,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    overflow: 'hidden',
+  },
+  gradient: {
+    flex: 1,
+    paddingHorizontal: 20,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 15,
-    paddingBottom: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
+    paddingTop: 20,
+    paddingBottom: 10,
   },
   title: {
-    fontSize: 22,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#fff',
   },
-  closeBtn: {
-    width: 35,
-    height: 35,
-    borderRadius: 18,
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    justifyContent: 'center',
+  closeButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  closeBtnText: {
-    fontSize: 18,
-    color: '#666',
+  subtitle: {
+    fontSize: 14,
+    color: '#8892b0',
+    marginBottom: 20,
   },
-  list: {
-    maxHeight: SCREEN_HEIGHT * 0.5,
+  listContent: {
+    paddingBottom: 20,
   },
   languageItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 15,
-    borderRadius: 12,
-    marginBottom: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.03)',
+    justifyContent: 'space-between',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'transparent',
   },
-  selectedItem: {
-    backgroundColor: 'rgba(100, 150, 255, 0.15)',
-    borderWidth: 2,
-    borderColor: 'rgba(100, 150, 255, 0.5)',
+  languageItemSelected: {
+    backgroundColor: 'rgba(0, 184, 148, 0.1)',
+    borderColor: '#00b894',
   },
-  flag: {
-    fontSize: 28,
-    marginRight: 15,
+  languageInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  languageFlag: {
+    fontSize: 32,
+    marginRight: 16,
+  },
+  languageTextContainer: {
+    justifyContent: 'center',
   },
   languageName: {
-    fontSize: 17,
-    color: '#333',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
+  },
+  languageNameSelected: {
+    color: '#00b894',
+  },
+  levelCount: {
+    fontSize: 12,
+    color: '#8892b0',
+    marginTop: 2,
+  },
+  loadingContainer: {
     flex: 1,
-  },
-  selectedText: {
-    fontWeight: 'bold',
-    color: '#4A90D9',
-  },
-  rtlText: {
-    textAlign: 'right',
-  },
-  checkmark: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: '#4A90D9',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  checkmarkText: {
+  loadingText: {
+    color: '#8892b0',
+    marginTop: 12,
+    fontSize: 14,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    color: '#e74c3c',
+    marginTop: 12,
+    fontSize: 14,
+  },
+  retryButton: {
+    marginTop: 16,
+    paddingHorizontal: 24,
+    paddingVertical: 10,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 20,
+  },
+  retryButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  footerText: {
+    color: '#8892b0',
+    fontSize: 12,
+    marginLeft: 6,
   },
 });
 

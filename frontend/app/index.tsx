@@ -77,7 +77,6 @@ import { adManager } from '../src/utils/adManager.web';
 import { ThemedBackground } from '../src/components/ThemedBackground';
 import { AnimatedLetterWheel } from '../src/components/AnimatedLetterWheel';
 import { PremiumLetterWheel } from '../src/components/PremiumLetterWheel';
-import { LanguageSelector } from '../src/components/LanguageSelector';
 import { useGameSettings } from '../src/stores/gameSettingsStore';
 import { getThemeForLevel, getBackgroundForLevel, getWheelForLevel } from '../src/utils/gameThemes';
 
@@ -131,6 +130,7 @@ import OfflineIndicator from '../src/components/OfflineIndicator';
 import EnhancedConfetti from '../src/components/EnhancedConfetti';
 import SoundToggle from '../src/components/SoundToggle';
 import StreakFlame from '../src/components/StreakFlame';
+import LanguageSelector from '../src/components/LanguageSelector';
 
 // NEW: Import enhanced game features
 import TimedChallengeModal from '../src/components/TimedChallengeModal';
@@ -269,6 +269,7 @@ export default function GameScreen() {
   const [showAppSplash, setShowAppSplash] = useState(true);
   const [showRateApp, setShowRateApp] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
+  const [currentLanguage, setCurrentLanguage] = useState('en');
   
   // NEW FEATURES: Game enhancements
   const [recentWordsFound, setRecentWordsFound] = useState<string[]>([]);
@@ -592,7 +593,8 @@ export default function GameScreen() {
         return newCount;
       });
       
-      // Haptic feedback on word found
+      // Play sound effect and haptic feedback
+      soundManager.playWordChime();
       successVibrate();
       
       // Update mascot mood
@@ -609,6 +611,7 @@ export default function GameScreen() {
       setComboCount(0);
       setComboMultiplier(1);
       resetCombo();
+      soundManager.playWrongWord();
       errorVibrate();
       setMascotMood('sad');
       setTimeout(() => setMascotMood('neutral'), 2000);
@@ -931,7 +934,9 @@ export default function GameScreen() {
             onWordOfDay={() => setShowWordOfDay(true)}
             onStats={() => setShowStats(true)}
             onWatchAdForCoins={handleWatchAdForCoins}
+            onLanguageSelect={() => setShowLanguageSelector(true)}
             streakDays={progress?.daily_streak || 0}
+            currentLanguage={currentLanguage}
           />
         ) : (
           <HomeScreen
@@ -1537,6 +1542,13 @@ export default function GameScreen() {
         <LanguageSelector
           visible={showLanguageSelector}
           onClose={() => setShowLanguageSelector(false)}
+          currentLanguage={currentLanguage}
+          onSelectLanguage={(code, name) => {
+            setCurrentLanguage(code);
+            setShowLanguageSelector(false);
+            // TODO: Load levels for selected language
+            Alert.alert('Language Changed', `Puzzles will now be in ${name}`);
+          }}
         />
         
         {/* NEW: Game Mode Selector */}

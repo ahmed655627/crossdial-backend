@@ -38,8 +38,10 @@ interface CleanHomeScreenProps {
   onWordOfDay?: () => void;
   onStats?: () => void;
   onWatchAdForCoins?: () => void;
+  onLanguageSelect?: () => void;
   // Streak display
   streakDays?: number;
+  currentLanguage?: string;
 }
 
 export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
@@ -56,7 +58,9 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
   onWordOfDay,
   onStats,
   onWatchAdForCoins,
+  onLanguageSelect,
   streakDays = 0,
+  currentLanguage = 'en',
 }) => {
   const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
   const [showMoreFeatures, setShowMoreFeatures] = useState(false);
@@ -315,6 +319,25 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
                 <TouchableOpacity style={styles.moreItem} onPress={onWatchAdForCoins}>
                   <Ionicons name="play-circle" size={20} color="#10b981" />
                   <Text style={styles.moreItemText}>Free Coins</Text>
+                </TouchableOpacity>
+              )}
+              {onLanguageSelect && (
+                <TouchableOpacity style={styles.moreItem} onPress={onLanguageSelect}>
+                  <Text style={styles.languageFlag}>
+                    {currentLanguage === 'en' ? '🇺🇸' : 
+                     currentLanguage === 'it' ? '🇮🇹' :
+                     currentLanguage === 'es' ? '🇪🇸' :
+                     currentLanguage === 'fr' ? '🇫🇷' :
+                     currentLanguage === 'de' ? '🇩🇪' :
+                     currentLanguage === 'pt' ? '🇧🇷' :
+                     currentLanguage === 'nl' ? '🇳🇱' :
+                     currentLanguage === 'ar' ? '🇸🇦' :
+                     currentLanguage === 'hi' ? '🇮🇳' :
+                     currentLanguage === 'ja' ? '🇯🇵' :
+                     currentLanguage === 'ko' ? '🇰🇷' :
+                     currentLanguage === 'zh' ? '🇨🇳' : '🌍'}
+                  </Text>
+                  <Text style={styles.moreItemText}>Language</Text>
                 </TouchableOpacity>
               )}
             </View>
@@ -607,6 +630,9 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: '#8892b0',
     marginTop: 6,
+  },
+  languageFlag: {
+    fontSize: 20,
   },
   footer: {
     alignItems: 'center',
