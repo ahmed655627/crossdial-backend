@@ -657,7 +657,7 @@ export default function GameScreen() {
     }
   }, [lastWordResult]);
 
-  // Check for level completion to trigger confetti and rate app
+  // Check for level completion to trigger confetti, rate app, and interstitial ad
   useEffect(() => {
     const checkLevelComplete = async () => {
       if (currentLevel && foundWords && currentLevel.targetWords) {
@@ -667,6 +667,9 @@ export default function GameScreen() {
         if (allFound && foundWords.length === currentLevel.targetWords.length) {
           // Trigger confetti on level complete
           setConfettiTrigger(prev => prev + 1);
+          
+          // Show interstitial ad every 3 levels (Play Store compliant)
+          await adManager.onLevelComplete();
           
           // Check if should show rate app modal (at level 10, 20, 30, etc.)
           const currentLevelNum = progress?.current_level || 1;
@@ -705,25 +708,109 @@ export default function GameScreen() {
     }
   };
 
-  // Handle hint with ad (REWARDED - user chooses)
+  // Handle hint - ALWAYS requires watching ad first (Play Store compliant)
   const handleHint = async () => {
-    Alert.alert(
-      'Use Hint',
-      'Watch a short video to get a hint?',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Watch & Get Hint',
-          onPress: async () => {
-            setAdMessage('Watch ad for hint...');
-            setShowAdLoading(true);
-            await adManager.showRewardedAd();
-            setShowAdLoading(false);
-            await useHint();
-          },
-        },
-      ]
-    );
+    setShowHintPreview(false);
+    
+    // Show ad loading modal
+    setAdMessage('Loading ad for hint...');
+    setShowAdLoading(true);
+    
+    try {
+      // User MUST watch ad to get hint
+      const adWatched = await adManager.showRewardedAd();
+      
+      setShowAdLoading(false);
+      
+      if (adWatched) {
+        // Ad was watched successfully - give the hint
+        const success = await useHint();
+        if (success) {
+          setHintsUsedThisLevel(prev => prev + 1);
+          // Play sound effect
+          if (soundEnabled) {
+            soundManager.playClick();
+          }
+        }
+      } else {
+        Alert.alert(
+          'Ad Not Available',
+          'Please try again in a moment.',
+          [{ text: 'OK' }]
+        );
+      }
+    } catch (error) {
+      setShowAdLoading(false);
+      console.error('Hint ad error:', error);
+      Alert.alert('Error', 'Could not load ad. Please try again.');
+    }
+  };
+
+  // Handle watching ad for free coins
+  const handleWatchAdForCoins = async () => {
+    setAdMessage('Watch ad for free coins...');
+    setShowAdLoading(true);
+    
+    try {
+      const adWatched = await adManager.showVideoRewardedAd();
+      setShowAdLoading(false);
+      
+      if (adWatched) {
+        // Give bonus coins
+        await useGameStore.getState().addDailyReward('coins', 50);
+        Alert.alert('🎉 Coins Added!', 'You received 50 bonus coins!');
+      }
+    } catch (error) {
+      setShowAdLoading(false);
+      console.error('Ad error:', error);
+    }
+  };
+
+  // Handle watching ad for extra daily spin
+  const handleWatchAdForSpin = async () => {
+    setAdMessage('Watch ad for extra spin...');
+    setShowAdLoading(true);
+    
+    try {
+      const adWatched = await adManager.showVideoRewardedAd();
+      setShowAdLoading(false);
+      
+      if (adWatched) {
+        // Add extra spin
+        useGameStore.getState().addExtraSpin();
+        Alert.alert('🎰 Spin Added!', 'You got an extra spin!');
+      }
+    } catch (error) {
+      setShowAdLoading(false);
+      console.error('Ad error:', error);
+    }
+  };
+
+  // Handle watching ad to reveal bonus word
+  const handleWatchAdForBonusReveal = async () => {
+    setAdMessage('Watch ad to reveal bonus word...');
+    setShowAdLoading(true);
+    
+    try {
+      const adWatched = await adManager.showRewardedAd();
+      setShowAdLoading(false);
+      
+      if (adWatched && currentLevel?.bonusWords?.length > 0) {
+        // Find an unfound bonus word
+        const foundBonus = bonusWordsFound || [];
+        const unfoundBonus = currentLevel.bonusWords.find(
+          (w: string) => !foundBonus.includes(w.toUpperCase())
+        );
+        if (unfoundBonus) {
+          Alert.alert('💎 Bonus Word Hint!', `Try the word: ${unfoundBonus.charAt(0)}${'_'.repeat(unfoundBonus.length - 1)}`);
+        } else {
+          Alert.alert('No Bonus Words', 'All bonus words found!');
+        }
+      }
+    } catch (error) {
+      setShowAdLoading(false);
+      console.error('Ad error:', error);
+    }
   };
 
   // Handle reset - NO AD (free action)
@@ -861,19 +948,6 @@ export default function GameScreen() {
       setUnlockedThemes([...unlockedThemes, theme.id]);
       setCurrentTheme(theme.id);
       // Deduct coins (would need to call backend in real implementation)
-    }
-  };
-
-  // Handle watch ad for coins
-  const handleWatchAdForCoins = async () => {
-    setShowAdLoading(true);
-    setAdMessage('Watch ad for +50 coins...');
-    const rewarded = await adManager.showVideoRewardedAd();
-    setShowAdLoading(false);
-    if (rewarded) {
-      // Add 50 coins through the game store
-      // For now, just show the reward was given
-      Alert.alert('Reward!', 'You earned 50 coins!');
     }
   };
 
