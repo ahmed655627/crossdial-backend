@@ -123,7 +123,14 @@ import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
 import { TimeChallengeModal } from '../src/components/TimeChallengeModal';
 import { ProfileModal } from '../src/components/ProfileModal';
-import ShopModal from '../src/components/ShopModal';
+
+// NEW: Import enhanced UI components
+import LoadingSplash from '../src/components/LoadingSplash';
+import RateAppModal, { shouldShowRateModal } from '../src/components/RateAppModal';
+import OfflineIndicator from '../src/components/OfflineIndicator';
+import EnhancedConfetti from '../src/components/EnhancedConfetti';
+import SoundToggle from '../src/components/SoundToggle';
+import StreakFlame from '../src/components/StreakFlame';
 
 // NEW: Import enhanced game features
 import TimedChallengeModal from '../src/components/TimedChallengeModal';
@@ -257,7 +264,11 @@ export default function GameScreen() {
   const [focusMode, setFocusMode] = useState(false);
   const [showProgressToast, setShowProgressToast] = useState(false);
   const [lastFoundWord, setLastFoundWord] = useState<string | null>(null);
-  const [showShop, setShowShop] = useState(false);
+  
+  // NEW: Enhanced UI component states
+  const [showAppSplash, setShowAppSplash] = useState(true);
+  const [showRateApp, setShowRateApp] = useState(false);
+  const [confettiTrigger, setConfettiTrigger] = useState(0);
   
   // NEW FEATURES: Game enhancements
   const [recentWordsFound, setRecentWordsFound] = useState<string[]>([]);
@@ -604,6 +615,29 @@ export default function GameScreen() {
     }
   }, [lastWordResult]);
 
+  // Check for level completion to trigger confetti and rate app
+  useEffect(() => {
+    const checkLevelComplete = async () => {
+      if (currentLevel && foundWords && currentLevel.targetWords) {
+        const allFound = currentLevel.targetWords.every(
+          (word: string) => foundWords.includes(word)
+        );
+        if (allFound && foundWords.length === currentLevel.targetWords.length) {
+          // Trigger confetti on level complete
+          setConfettiTrigger(prev => prev + 1);
+          
+          // Check if should show rate app modal (at level 10, 20, 30, etc.)
+          const currentLevelNum = progress?.current_level || 1;
+          const shouldShowRate = await shouldShowRateModal(currentLevelNum);
+          if (shouldShowRate) {
+            setTimeout(() => setShowRateApp(true), 2000); // Delay to not interrupt celebration
+          }
+        }
+      }
+    };
+    checkLevelComplete();
+  }, [foundWords, currentLevel]);
+
   // Undo last letter
   const handleUndoLetter = () => {
     if (selectedLetterIndices && selectedLetterIndices.length > 0) {
@@ -690,6 +724,15 @@ export default function GameScreen() {
   const handleShuffle = () => {
     shuffleLetters();
   };
+
+  // Show LoadingSplash on app startup
+  if (showAppSplash) {
+    return (
+      <LoadingSplash 
+        onFinish={() => setShowAppSplash(false)} 
+      />
+    );
+  }
 
   if (loading) {
     return (
@@ -881,7 +924,6 @@ export default function GameScreen() {
             onLeaderboard={() => setShowLeaderboard(true)}
             onAchievements={() => setShowAchievements(true)}
             onSettings={() => setShowPrivacyPolicy(true)}
-            onShop={() => setShowShop(true)}
             onPuzzleModes={() => setShowPuzzleModes(true)}
             onTimedChallenge={() => setShowTimedChallenge(true)}
             onPhrasePuzzles={() => setShowPhrasePuzzles(true)}
@@ -889,6 +931,7 @@ export default function GameScreen() {
             onWordOfDay={() => setShowWordOfDay(true)}
             onStats={() => setShowStats(true)}
             onWatchAdForCoins={handleWatchAdForCoins}
+            streakDays={progress?.daily_streak || 0}
           />
         ) : (
           <HomeScreen
@@ -987,14 +1030,6 @@ export default function GameScreen() {
         <WordDefinitionPopup
           word={lastFoundWord}
           onDismiss={() => setLastFoundWord(null)}
-        />
-        
-        {/* Shop Modal */}
-        <ShopModal
-          visible={showShop}
-          onClose={() => setShowShop(false)}
-          currentCoins={progress?.coins || 0}
-          currentHints={progress?.hints_remaining || 3}
         />
         
         <DailyChallengeModal
@@ -1261,10 +1296,6 @@ export default function GameScreen() {
             setShowPauseMenu(false);
             setShowHomeScreen(true);
           }}
-          onShop={() => {
-            setShowPauseMenu(false);
-            setShowShop(true);
-          }}
           onAchievements={() => {
             setShowPauseMenu(false);
             setShowAchievements(true);
@@ -1289,6 +1320,12 @@ export default function GameScreen() {
           hints={progress?.hints_remaining || 0}
           currentLevel={currentLevel?.id || 1}
         />
+
+        {/* Offline Indicator - Shows at top when offline */}
+        <OfflineIndicator />
+        
+        {/* Enhanced Confetti for level completion */}
+        <EnhancedConfetti trigger={confettiTrigger} />
 
         {/* Particle Effect for word found */}
         <ParticleEffect trigger={particleTrigger} type="confetti" />
@@ -1712,6 +1749,13 @@ export default function GameScreen() {
           onClose={() => setShowWordDefinition(false)}
           word={lastWordDefinition.word}
           definition={lastWordDefinition.definition}
+        />
+        
+        {/* Rate App Modal - Subtle, only appears at level 10, 20, etc. */}
+        <RateAppModal
+          visible={showRateApp}
+          onClose={() => setShowRateApp(false)}
+          currentLevel={progress?.current_level || 1}
         />
         </SafeAreaView>
       </ThemedBackground>

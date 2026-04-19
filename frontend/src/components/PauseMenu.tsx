@@ -16,7 +16,6 @@ interface PauseMenuProps {
   onClose: () => void;
   onResume: () => void;
   onHome: () => void;
-  onShop: () => void;
   onAchievements: () => void;
   onSettings: () => void;
   onShuffle: () => void;
@@ -35,7 +34,6 @@ const PauseMenu: React.FC<PauseMenuProps> = ({
   onClose,
   onResume,
   onHome,
-  onShop,
   onAchievements,
   onSettings,
   onShuffle,
@@ -102,12 +100,6 @@ const PauseMenu: React.FC<PauseMenuProps> = ({
 
             {/* Menu Items */}
             <View style={styles.menuItems}>
-              <TouchableOpacity style={styles.menuItem} onPress={onShop}>
-                <Ionicons name="cart" size={20} color="#4fc3f7" />
-                <Text style={styles.menuItemText}>Shop</Text>
-                <Ionicons name="chevron-forward" size={18} color="#666" />
-              </TouchableOpacity>
-
               <TouchableOpacity style={styles.menuItem} onPress={onAchievements}>
                 <Ionicons name="trophy" size={20} color="#FFD700" />
                 <Text style={styles.menuItemText}>Achievements</Text>

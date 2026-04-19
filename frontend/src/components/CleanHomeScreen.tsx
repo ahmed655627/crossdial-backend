@@ -17,6 +17,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { useGameStore } from '../store/gameStore';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import StreakFlame from './StreakFlame';
+import SoundToggle from './SoundToggle';
+import OfflineIndicator from './OfflineIndicator';
 
 const { width } = Dimensions.get('window');
 
@@ -27,7 +30,6 @@ interface CleanHomeScreenProps {
   onLeaderboard: () => void;
   onAchievements: () => void;
   onSettings: () => void;
-  onShop?: () => void;
   onPuzzleModes?: () => void;
   // Grouped into "More" section
   onTimedChallenge?: () => void;
@@ -36,6 +38,8 @@ interface CleanHomeScreenProps {
   onWordOfDay?: () => void;
   onStats?: () => void;
   onWatchAdForCoins?: () => void;
+  // Streak display
+  streakDays?: number;
 }
 
 export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
@@ -45,7 +49,6 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
   onLeaderboard,
   onAchievements,
   onSettings,
-  onShop,
   onPuzzleModes,
   onTimedChallenge,
   onPhrasePuzzles,
@@ -53,6 +56,7 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
   onWordOfDay,
   onStats,
   onWatchAdForCoins,
+  streakDays = 0,
 }) => {
   const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
   const [showMoreFeatures, setShowMoreFeatures] = useState(false);
@@ -109,6 +113,9 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
         colors={['#1a1a2e', '#16213e', '#0f0f23']}
         style={StyleSheet.absoluteFill}
       />
+      
+      {/* Offline Indicator - Shows only when offline */}
+      <OfflineIndicator />
 
       <ScrollView 
         style={styles.scrollView}
@@ -117,21 +124,29 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
       >
         {/* Header Bar - Minimal */}
         <View style={styles.headerBar}>
-          <TouchableOpacity style={styles.settingsBtn} onPress={onSettings}>
-            <Ionicons name="settings-outline" size={24} color="#8892b0" />
-          </TouchableOpacity>
+          <View style={styles.headerLeft}>
+            <TouchableOpacity style={styles.settingsBtn} onPress={onSettings}>
+              <Ionicons name="settings-outline" size={24} color="#8892b0" />
+            </TouchableOpacity>
+            <SoundToggle size={20} style={styles.soundToggle} />
+          </View>
           
           <View style={styles.resourcesRow}>
-            <TouchableOpacity style={styles.resourceItem} onPress={onShop}>
+            {/* Streak Flame */}
+            {streakDays > 0 && (
+              <View style={styles.streakContainer}>
+                <StreakFlame streakDays={streakDays} size="small" />
+              </View>
+            )}
+            <View style={styles.resourceItem}>
               <Ionicons name="bulb" size={18} color="#a855f7" />
               <Text style={styles.resourceText}>{hints}</Text>
-            </TouchableOpacity>
+            </View>
             <View style={styles.resourceDivider} />
-            <TouchableOpacity style={styles.resourceItem} onPress={onShop}>
+            <View style={styles.resourceItem}>
               <Ionicons name="diamond" size={18} color="#fbbf24" />
               <Text style={styles.resourceText}>{coins}</Text>
-              <Ionicons name="add-circle" size={14} color="#00b894" style={styles.addIcon} />
-            </TouchableOpacity>
+            </View>
           </View>
         </View>
 
@@ -332,6 +347,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
   },
+  headerLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   settingsBtn: {
     width: 44,
     height: 44,
@@ -340,6 +359,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  soundToggle: {
+    marginLeft: 8,
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
   resourcesRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -347,6 +370,9 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 8,
+  },
+  streakContainer: {
+    marginRight: 8,
   },
   resourceItem: {
     flexDirection: 'row',
@@ -357,9 +383,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     marginLeft: 6,
-  },
-  addIcon: {
-    marginLeft: 4,
   },
   resourceDivider: {
     width: 1,
