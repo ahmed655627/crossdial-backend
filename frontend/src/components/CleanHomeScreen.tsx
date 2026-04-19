@@ -1,10 +1,9 @@
 /**
- * Clean Home Screen - Enhanced Version
- * Features: Animated Background, Seasonal Themes, Global Stats, 
- * Challenge Friends, Spin Countdown, Level Preview
+ * Clean Home Screen - Premium Professional Design
+ * Ultra-clean, modern UI with subtle animations
  */
 
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useMemo } from 'react';
 import {
   View,
   Text,
@@ -27,334 +26,125 @@ import OfflineIndicator from './OfflineIndicator';
 const { width, height } = Dimensions.get('window');
 
 // ============================================
-// SEASONAL THEMES - Auto-changes based on date
+// SEASONAL THEMES
 // ============================================
 const getSeasonalTheme = () => {
   const now = new Date();
   const month = now.getMonth();
   const day = now.getDate();
 
-  // Christmas (Dec 15 - Jan 5)
   if ((month === 11 && day >= 15) || (month === 0 && day <= 5)) {
     return {
-      name: 'christmas',
-      primary: ['#1a472a', '#2d5a3d', '#165B33'],
-      accent: '#c41e3a',
-      secondary: '#FFD700',
-      emoji: '🎄',
-      particles: ['❄️', '🎁', '⭐', '🔔'],
+      name: 'Christmas',
+      gradient: ['#0d1f12', '#1a2f1c', '#0a1a0d'],
+      accent: '#e74c3c',
+      glow: '#27ae60',
+      icon: '🎄',
     };
   }
   
-  // Halloween (Oct 15 - Nov 1)
   if ((month === 9 && day >= 15) || (month === 10 && day <= 1)) {
     return {
-      name: 'halloween',
-      primary: ['#1a1a2e', '#2d1f3d', '#0f0f23'],
-      accent: '#ff6600',
-      secondary: '#9b59b6',
-      emoji: '🎃',
-      particles: ['🎃', '👻', '🦇', '🕷️'],
+      name: 'Halloween',
+      gradient: ['#1a0f1f', '#2d1a2e', '#0f0a12'],
+      accent: '#f39c12',
+      glow: '#9b59b6',
+      icon: '🎃',
     };
   }
   
-  // Valentine's (Feb 1-15)
   if (month === 1 && day <= 15) {
     return {
-      name: 'valentine',
-      primary: ['#2d1a2e', '#3d1f3d', '#1a0f1a'],
-      accent: '#ff6b9d',
-      secondary: '#ff4081',
-      emoji: '💕',
-      particles: ['💝', '💖', '💗', '❤️'],
+      name: 'Valentine',
+      gradient: ['#1f0f15', '#2e1a22', '#120a0d'],
+      accent: '#e91e63',
+      glow: '#ec407a',
+      icon: '💕',
     };
   }
   
-  // Easter (March 15 - April 20)
   if ((month === 2 && day >= 15) || (month === 3 && day <= 20)) {
     return {
-      name: 'easter',
-      primary: ['#1a2e2a', '#1f3d35', '#0f2320'],
-      accent: '#98d8c8',
-      secondary: '#f7dc6f',
-      emoji: '🐰',
-      particles: ['🥚', '🐣', '🌸', '🐰'],
+      name: 'Spring',
+      gradient: ['#0f1f1a', '#1a2e28', '#0a1512'],
+      accent: '#26a69a',
+      glow: '#4db6ac',
+      icon: '🌸',
     };
   }
   
-  // Summer (June - August)
   if (month >= 5 && month <= 7) {
     return {
-      name: 'summer',
-      primary: ['#1a2e3e', '#1f3d4d', '#0f2330'],
+      name: 'Summer',
+      gradient: ['#0f1a1f', '#1a282e', '#0a1215'],
       accent: '#00bcd4',
-      secondary: '#ffeb3b',
-      emoji: '☀️',
-      particles: ['☀️', '🌊', '🏖️', '🌴'],
+      glow: '#4dd0e1',
+      icon: '☀️',
     };
   }
   
-  // Default theme
   return {
-    name: 'default',
-    primary: ['#1a1a2e', '#16213e', '#0f0f23'],
-    accent: '#667eea',
-    secondary: '#764ba2',
-    emoji: '🌍',
-    particles: ['✨', '⭐', '💫', '🌟'],
+    name: null,
+    gradient: ['#0a0e1a', '#111827', '#0a0e14'],
+    accent: '#6366f1',
+    glow: '#818cf8',
+    icon: '✨',
   };
 };
 
 // ============================================
-// FLOATING PARTICLES COMPONENT
+// SUBTLE GLOW PARTICLES
 // ============================================
-const FloatingParticles: React.FC<{ particles: string[] }> = ({ particles }) => {
-  const particleAnims = useRef(
-    Array.from({ length: 12 }, () => ({
-      x: new Animated.Value(Math.random() * width),
-      y: new Animated.Value(Math.random() * height),
-      opacity: new Animated.Value(Math.random() * 0.5 + 0.2),
-      scale: new Animated.Value(Math.random() * 0.5 + 0.5),
-    }))
-  ).current;
-
-  useEffect(() => {
-    particleAnims.forEach((anim, index) => {
-      const animateParticle = () => {
-        const duration = 8000 + Math.random() * 4000;
-        Animated.parallel([
-          Animated.timing(anim.y, {
-            toValue: -50,
-            duration,
-            useNativeDriver: true,
-          }),
-          Animated.sequence([
-            Animated.timing(anim.opacity, {
-              toValue: 0.6,
-              duration: duration / 2,
-              useNativeDriver: true,
-            }),
-            Animated.timing(anim.opacity, {
-              toValue: 0,
-              duration: duration / 2,
-              useNativeDriver: true,
-            }),
-          ]),
-        ]).start(() => {
-          anim.x.setValue(Math.random() * width);
-          anim.y.setValue(height + 50);
-          anim.opacity.setValue(0.2);
-          animateParticle();
-        });
-      };
-      
-      setTimeout(animateParticle, index * 600);
-    });
-  }, []);
+const GlowParticles: React.FC<{ color: string }> = ({ color }) => {
+  const particles = useMemo(() => 
+    Array.from({ length: 6 }, (_, i) => ({
+      id: i,
+      left: `${15 + Math.random() * 70}%`,
+      size: 100 + Math.random() * 150,
+      delay: i * 1500,
+    })), []
+  );
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
-      {particleAnims.map((anim, index) => (
-        <Animated.Text
-          key={index}
+      {particles.map((p) => (
+        <View
+          key={p.id}
           style={[
-            styles.particle,
+            styles.glowOrb,
             {
-              transform: [
-                { translateX: anim.x },
-                { translateY: anim.y },
-                { scale: anim.scale },
-              ],
-              opacity: anim.opacity,
+              left: p.left,
+              top: `${20 + Math.random() * 60}%`,
+              width: p.size,
+              height: p.size,
+              backgroundColor: color,
+              opacity: 0.03,
             },
           ]}
-        >
-          {particles[index % particles.length]}
-        </Animated.Text>
+        />
       ))}
     </View>
   );
 };
 
 // ============================================
-// SPIN COUNTDOWN COMPONENT
+// ANIMATED STAT COUNTER
 // ============================================
-const SpinCountdown: React.FC<{ nextSpinTime?: Date; onPress: () => void }> = ({ 
-  nextSpinTime, 
-  onPress 
-}) => {
-  const [timeLeft, setTimeLeft] = useState('');
-  const [canSpin, setCanSpin] = useState(true);
-
+const AnimatedCounter: React.FC<{ value: number; suffix?: string }> = ({ value, suffix = '' }) => {
+  const [displayValue, setDisplayValue] = useState(value);
+  
   useEffect(() => {
-    if (!nextSpinTime) {
-      setCanSpin(true);
-      return;
-    }
-
-    const updateTimer = () => {
-      const now = new Date();
-      const diff = nextSpinTime.getTime() - now.getTime();
-      
-      if (diff <= 0) {
-        setCanSpin(true);
-        setTimeLeft('');
-        return;
-      }
-      
-      setCanSpin(false);
-      const hours = Math.floor(diff / (1000 * 60 * 60));
-      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-      
-      if (hours > 0) {
-        setTimeLeft(`${hours}h ${minutes}m`);
-      } else {
-        setTimeLeft(`${minutes}m ${seconds}s`);
-      }
-    };
-
-    updateTimer();
-    const interval = setInterval(updateTimer, 1000);
-    return () => clearInterval(interval);
-  }, [nextSpinTime]);
-
-  return (
-    <TouchableOpacity 
-      style={[styles.spinCountdown, canSpin && styles.spinCountdownReady]} 
-      onPress={onPress}
-      activeOpacity={0.8}
-    >
-      <View style={styles.spinIconContainer}>
-        <Ionicons 
-          name={canSpin ? "gift" : "time-outline"} 
-          size={20} 
-          color={canSpin ? "#FFD700" : "#8892b0"} 
-        />
-      </View>
-      <View style={styles.spinTextContainer}>
-        <Text style={[styles.spinLabel, canSpin && styles.spinLabelReady]}>
-          {canSpin ? 'Free Spin!' : 'Next Spin'}
-        </Text>
-        {!canSpin && timeLeft && (
-          <Text style={styles.spinTimer}>{timeLeft}</Text>
-        )}
-      </View>
-      {canSpin && (
-        <View style={styles.spinBadge}>
-          <Text style={styles.spinBadgeText}>1</Text>
-        </View>
-      )}
-    </TouchableOpacity>
-  );
-};
-
-// ============================================
-// GLOBAL STATS COMPONENT
-// ============================================
-const GlobalStats: React.FC = () => {
-  const [stats, setStats] = useState({
-    wordsFoundToday: 1247893,
-    playersOnline: 12453,
-    puzzlesSolved: 89234,
-  });
-
-  // Simulate live updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setStats(prev => ({
-        wordsFoundToday: prev.wordsFoundToday + Math.floor(Math.random() * 50),
-        playersOnline: Math.max(10000, prev.playersOnline + Math.floor(Math.random() * 100) - 50),
-        puzzlesSolved: prev.puzzlesSolved + Math.floor(Math.random() * 5),
-      }));
-    }, 3000);
-    return () => clearInterval(interval);
-  }, []);
+    const timer = setTimeout(() => setDisplayValue(value), 100);
+    return () => clearTimeout(timer);
+  }, [value]);
 
   const formatNumber = (num: number) => {
     if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
     if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
-    return num.toString();
+    return num.toLocaleString();
   };
 
-  return (
-    <View style={styles.globalStats}>
-      <View style={styles.globalStatsHeader}>
-        <View style={styles.liveDot} />
-        <Text style={styles.globalStatsTitle}>Live Stats</Text>
-      </View>
-      <View style={styles.statsRow}>
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{formatNumber(stats.wordsFoundToday)}</Text>
-          <Text style={styles.statLabel}>Words Today</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{formatNumber(stats.playersOnline)}</Text>
-          <Text style={styles.statLabel}>Playing Now</Text>
-        </View>
-        <View style={styles.statDivider} />
-        <View style={styles.statItem}>
-          <Text style={styles.statValue}>{formatNumber(stats.puzzlesSolved)}</Text>
-          <Text style={styles.statLabel}>Puzzles Solved</Text>
-        </View>
-      </View>
-    </View>
-  );
-};
-
-// ============================================
-// LEVEL PREVIEW COMPONENT
-// ============================================
-const LevelPreview: React.FC<{ level: number; theme: any }> = ({ level, theme }) => {
-  const getNextLevelInfo = () => {
-    const themes = [
-      { range: [1, 20], name: 'Basics', icon: '📚', difficulty: 'Easy' },
-      { range: [21, 40], name: 'Nature', icon: '🌿', difficulty: 'Easy' },
-      { range: [41, 60], name: 'Travel', icon: '✈️', difficulty: 'Medium' },
-      { range: [61, 80], name: 'Food', icon: '🍕', difficulty: 'Medium' },
-      { range: [81, 100], name: 'Science', icon: '🔬', difficulty: 'Hard' },
-      { range: [101, 120], name: 'Culture', icon: '🎭', difficulty: 'Hard' },
-      { range: [121, 140], name: 'Advanced', icon: '🎓', difficulty: 'Expert' },
-      { range: [141, 160], name: 'Master', icon: '👑', difficulty: 'Master' },
-    ];
-    
-    const nextLevel = level + 1;
-    for (const t of themes) {
-      if (nextLevel >= t.range[0] && nextLevel <= t.range[1]) {
-        return { ...t, level: nextLevel };
-      }
-    }
-    return { name: 'Bonus', icon: '🌟', difficulty: 'Special', level: nextLevel };
-  };
-
-  const nextInfo = getNextLevelInfo();
-  const isNewTheme = level % 20 === 0;
-
-  return (
-    <View style={styles.levelPreview}>
-      <View style={styles.levelPreviewHeader}>
-        <Text style={styles.levelPreviewTitle}>Next Up</Text>
-        {isNewTheme && (
-          <View style={styles.newThemeBadge}>
-            <Text style={styles.newThemeText}>NEW THEME!</Text>
-          </View>
-        )}
-      </View>
-      <View style={styles.levelPreviewContent}>
-        <Text style={styles.levelPreviewIcon}>{nextInfo.icon}</Text>
-        <View style={styles.levelPreviewInfo}>
-          <Text style={styles.levelPreviewName}>
-            Level {nextInfo.level}: {nextInfo.name}
-          </Text>
-          <View style={styles.difficultyBadge}>
-            <Text style={styles.difficultyText}>{nextInfo.difficulty}</Text>
-          </View>
-        </View>
-        <Ionicons name="chevron-forward" size={20} color={theme.accent} />
-      </View>
-    </View>
-  );
+  return <Text style={styles.statValue}>{formatNumber(displayValue)}{suffix}</Text>;
 };
 
 // ============================================
@@ -397,35 +187,52 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
   streakDays = 0,
   currentLanguage = 'en',
 }) => {
-  const { progress, levels, canSpinWheel, spinsRemaining } = useGameStore();
-  const [showMoreFeatures, setShowMoreFeatures] = useState(false);
-  const [pulseAnim] = useState(new Animated.Value(1));
-  const [fadeAnim] = useState(new Animated.Value(0));
+  const { progress, levels, canSpinWheel } = useGameStore();
+  const [showMore, setShowMore] = useState(false);
+  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const fadeAnim = useRef(new Animated.Value(0)).current;
   
-  // Get seasonal theme
   const theme = getSeasonalTheme();
+  
+  // Live stats simulation
+  const [stats, setStats] = useState({
+    words: 1247893,
+    players: 12453,
+    puzzles: 89234,
+  });
 
   useEffect(() => {
     Animated.timing(fadeAnim, {
       toValue: 1,
-      duration: 400,
+      duration: 500,
       useNativeDriver: true,
     }).start();
 
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 1200,
+          toValue: 1.02,
+          duration: 1500,
           useNativeDriver: true,
         }),
         Animated.timing(pulseAnim, {
           toValue: 1,
-          duration: 1200,
+          duration: 1500,
           useNativeDriver: true,
         }),
       ])
     ).start();
+
+    // Update stats periodically
+    const interval = setInterval(() => {
+      setStats(prev => ({
+        words: prev.words + Math.floor(Math.random() * 30),
+        players: Math.max(10000, prev.players + Math.floor(Math.random() * 50) - 25),
+        puzzles: prev.puzzles + Math.floor(Math.random() * 3),
+      }));
+    }, 4000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const currentLevel = progress?.current_level || 1;
@@ -434,299 +241,284 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
   const coins = progress?.coins || 0;
   const hints = progress?.hints_remaining || 3;
   const canSpin = canSpinWheel?.() || false;
+  const progressPercent = Math.round((completedLevels / totalLevels) * 100);
 
-  const getCategoryName = () => {
-    if (currentLevel <= 20) return 'Basics';
-    if (currentLevel <= 40) return 'Nature';
-    if (currentLevel <= 60) return 'Travel';
-    if (currentLevel <= 80) return 'Food';
-    if (currentLevel <= 100) return 'Science';
-    if (currentLevel <= 120) return 'Culture';
-    if (currentLevel <= 140) return 'Advanced';
-    return 'Master';
+  const getCategoryInfo = () => {
+    const categories = [
+      { max: 20, name: 'Basics', icon: '📚', next: 'Nature' },
+      { max: 40, name: 'Nature', icon: '🌿', next: 'Travel' },
+      { max: 60, name: 'Travel', icon: '✈️', next: 'Food' },
+      { max: 80, name: 'Food', icon: '🍕', next: 'Science' },
+      { max: 100, name: 'Science', icon: '🔬', next: 'Culture' },
+      { max: 120, name: 'Culture', icon: '🎭', next: 'Advanced' },
+      { max: 140, name: 'Advanced', icon: '🎓', next: 'Master' },
+      { max: 999, name: 'Master', icon: '👑', next: null },
+    ];
+    return categories.find(c => currentLevel <= c.max) || categories[0];
   };
 
-  // Challenge Friend handler
-  const handleChallengePress = async () => {
+  const category = getCategoryInfo();
+
+  const handleChallenge = async () => {
     try {
-      const message = `🎮 I challenge you to beat my score on CrossDial Puzzles!\n\n` +
-        `📊 I'm on Level ${currentLevel} with ${coins} coins.\n\n` +
-        `Can you beat that? Download now and let's play!\n` +
-        `🔗 https://crossdial.app/challenge/${Date.now()}`;
-      
       await Share.share({
-        message,
+        message: `🎮 Beat my Level ${currentLevel} on CrossDial Puzzles!\n\n🏆 ${coins} coins collected\n\nDownload: https://crossdial.app`,
         title: 'CrossDial Challenge',
       });
-    } catch (error) {
-      console.log('Share error:', error);
-    }
+    } catch (e) {}
+  };
+
+  const getLanguageFlag = () => {
+    const flags: Record<string, string> = {
+      en: '🇺🇸', it: '🇮🇹', es: '🇪🇸', fr: '🇫🇷', de: '🇩🇪',
+      pt: '🇧🇷', nl: '🇳🇱', ar: '🇸🇦', hi: '🇮🇳', ja: '🇯🇵',
+      ko: '🇰🇷', zh: '🇨🇳',
+    };
+    return flags[currentLanguage] || '🌍';
   };
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <LinearGradient
-        colors={theme.primary as [string, string, string]}
+        colors={theme.gradient as [string, string, string]}
         style={StyleSheet.absoluteFill}
       />
       
-      {/* Animated Floating Particles */}
-      <FloatingParticles particles={theme.particles} />
-      
-      {/* Offline Indicator */}
+      <GlowParticles color={theme.glow} />
       <OfflineIndicator />
 
-      <ScrollView 
-        style={styles.scrollView}
+      <Animated.ScrollView 
+        style={[styles.scrollView, { opacity: fadeAnim }]}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
-        {/* Header Bar */}
-        <View style={styles.headerBar}>
+        {/* Minimal Header */}
+        <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <TouchableOpacity style={styles.settingsBtn} onPress={onSettings}>
-              <Ionicons name="settings-outline" size={24} color="#8892b0" />
+            <TouchableOpacity style={styles.iconBtn} onPress={onSettings}>
+              <Ionicons name="settings-outline" size={22} color="#64748b" />
             </TouchableOpacity>
-            <SoundToggle size={20} style={styles.soundToggle} />
+            <SoundToggle size={18} style={styles.soundBtn} />
           </View>
           
-          <View style={styles.resourcesRow}>
+          <View style={styles.headerRight}>
             {streakDays > 0 && (
-              <View style={styles.streakContainer}>
-                <StreakFlame streakDays={streakDays} size="small" />
+              <View style={styles.streakBadge}>
+                <Text style={styles.streakIcon}>🔥</Text>
+                <Text style={styles.streakText}>{streakDays}</Text>
               </View>
             )}
-            <View style={styles.resourceItem}>
-              <Ionicons name="bulb" size={18} color="#a855f7" />
-              <Text style={styles.resourceText}>{hints}</Text>
+            <View style={styles.resourcePill}>
+              <Ionicons name="bulb" size={14} color="#a855f7" />
+              <Text style={styles.resourceValue}>{hints}</Text>
             </View>
-            <View style={styles.resourceDivider} />
-            <View style={styles.resourceItem}>
-              <Ionicons name="diamond" size={18} color="#fbbf24" />
-              <Text style={styles.resourceText}>{coins}</Text>
+            <View style={styles.resourcePill}>
+              <Ionicons name="diamond" size={14} color="#fbbf24" />
+              <Text style={styles.resourceValue}>{coins}</Text>
             </View>
           </View>
         </View>
 
-        {/* Logo & Title with Seasonal Emoji */}
-        <View style={styles.logoSection}>
-          <Text style={styles.logoEmoji}>{theme.emoji}</Text>
-          <Text style={styles.appTitle}>CrossDial</Text>
-          <Text style={styles.appSubtitle}>PUZZLES</Text>
-          {theme.name !== 'default' && (
-            <View style={[styles.seasonalBadge, { backgroundColor: theme.accent + '30' }]}>
-              <Text style={[styles.seasonalText, { color: theme.accent }]}>
-                {theme.name.charAt(0).toUpperCase() + theme.name.slice(1)} Edition
+        {/* Brand Section */}
+        <View style={styles.brandSection}>
+          <View style={styles.logoContainer}>
+            <Text style={styles.logoIcon}>{theme.icon}</Text>
+          </View>
+          <Text style={styles.brandName}>CrossDial</Text>
+          <Text style={styles.brandTagline}>WORD PUZZLES</Text>
+          {theme.name && (
+            <View style={[styles.seasonBadge, { backgroundColor: theme.accent + '20' }]}>
+              <Text style={[styles.seasonText, { color: theme.accent }]}>
+                {theme.name} Edition
               </Text>
             </View>
           )}
         </View>
 
-        {/* Global Stats */}
-        <GlobalStats />
-
-        {/* Current Level Card */}
-        <View style={styles.levelCard}>
-          <LinearGradient
-            colors={[`${theme.accent}25`, `${theme.secondary}15`]}
-            style={styles.levelCardGradient}
-          >
-            <View style={styles.levelInfo}>
-              <Text style={styles.categoryLabel}>{getCategoryName()}</Text>
-              <Text style={styles.levelNumber}>Level {currentLevel}</Text>
-            </View>
-            <View style={styles.progressMini}>
-              <View style={styles.progressBarMini}>
-                <View 
-                  style={[
-                    styles.progressFillMini, 
-                    { 
-                      width: `${Math.max(3, (completedLevels / totalLevels) * 100)}%`,
-                      backgroundColor: theme.accent,
-                    }
-                  ]} 
-                />
-              </View>
-              <Text style={styles.progressTextMini}>{completedLevels}/{totalLevels}</Text>
-            </View>
-          </LinearGradient>
+        {/* Live Stats Bar */}
+        <View style={styles.statsBar}>
+          <View style={styles.statItem}>
+            <AnimatedCounter value={stats.words} />
+            <Text style={styles.statLabel}>Words Today</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <AnimatedCounter value={stats.players} />
+            <Text style={styles.statLabel}>Playing</Text>
+          </View>
+          <View style={styles.statDivider} />
+          <View style={styles.statItem}>
+            <AnimatedCounter value={stats.puzzles} />
+            <Text style={styles.statLabel}>Solved</Text>
+          </View>
         </View>
 
-        {/* Level Preview */}
-        <LevelPreview level={currentLevel} theme={theme} />
+        {/* Current Progress Card */}
+        <View style={styles.progressCard}>
+          <View style={styles.progressHeader}>
+            <View>
+              <Text style={styles.categoryName}>{category.icon} {category.name}</Text>
+              <Text style={styles.levelText}>Level {currentLevel}</Text>
+            </View>
+            <View style={styles.progressRight}>
+              <Text style={styles.progressPercent}>{progressPercent}%</Text>
+              <Text style={styles.progressLabel}>{completedLevels}/{totalLevels}</Text>
+            </View>
+          </View>
+          <View style={styles.progressBarContainer}>
+            <View style={styles.progressBarBg}>
+              <LinearGradient
+                colors={[theme.accent, theme.glow]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={[styles.progressBarFill, { width: `${Math.max(2, progressPercent)}%` }]}
+              />
+            </View>
+          </View>
+          {category.next && (
+            <Text style={styles.nextCategory}>
+              Next: {category.next} at Level {Math.ceil(currentLevel / 20) * 20 + 1}
+            </Text>
+          )}
+        </View>
 
-        {/* Play Button */}
+        {/* PLAY Button */}
         <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-          <TouchableOpacity 
-            style={[styles.playButton, { shadowColor: theme.accent }]} 
-            onPress={onPlay}
-            activeOpacity={0.9}
-          >
+          <TouchableOpacity style={styles.playBtn} onPress={onPlay} activeOpacity={0.9}>
             <LinearGradient
-              colors={[theme.accent, theme.secondary]}
+              colors={[theme.accent, theme.glow]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              style={styles.playButtonGradient}
+              style={styles.playBtnGradient}
             >
-              <Ionicons name="play" size={32} color="#fff" />
-              <Text style={styles.playButtonText}>PLAY</Text>
+              <Ionicons name="play" size={28} color="#fff" />
+              <Text style={styles.playBtnText}>PLAY</Text>
             </LinearGradient>
           </TouchableOpacity>
         </Animated.View>
 
-        {/* Quick Actions Row */}
-        <View style={styles.quickActionsRow}>
-          <TouchableOpacity style={styles.quickAction} onPress={onDailyRewards}>
-            <View style={[styles.quickActionIcon, { backgroundColor: '#fbbf2420' }]}>
-              <Ionicons name="gift" size={22} color="#fbbf24" />
+        {/* Quick Actions */}
+        <View style={styles.quickActions}>
+          <TouchableOpacity style={styles.quickBtn} onPress={onDailyRewards}>
+            <View style={[styles.quickIcon, { backgroundColor: 'rgba(251, 191, 36, 0.1)' }]}>
+              <Ionicons name="gift" size={20} color="#fbbf24" />
             </View>
-            <Text style={styles.quickActionText}>Rewards</Text>
-            {canSpin && <View style={styles.notificationDot} />}
+            <Text style={styles.quickLabel}>Rewards</Text>
+            {canSpin && <View style={styles.quickDot} />}
           </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.quickAction} onPress={onDailyChallenge}>
-            <View style={[styles.quickActionIcon, { backgroundColor: '#10b98120' }]}>
-              <Ionicons name="calendar" size={22} color="#10b981" />
+
+          <TouchableOpacity style={styles.quickBtn} onPress={onDailyChallenge}>
+            <View style={[styles.quickIcon, { backgroundColor: 'rgba(16, 185, 129, 0.1)' }]}>
+              <Ionicons name="calendar" size={20} color="#10b981" />
             </View>
-            <Text style={styles.quickActionText}>Daily</Text>
+            <Text style={styles.quickLabel}>Daily</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.quickAction} onPress={onAchievements}>
-            <View style={[styles.quickActionIcon, { backgroundColor: '#f59e0b20' }]}>
-              <Ionicons name="trophy" size={22} color="#f59e0b" />
+
+          <TouchableOpacity style={styles.quickBtn} onPress={onAchievements}>
+            <View style={[styles.quickIcon, { backgroundColor: 'rgba(245, 158, 11, 0.1)' }]}>
+              <Ionicons name="trophy" size={20} color="#f59e0b" />
             </View>
-            <Text style={styles.quickActionText}>Trophies</Text>
+            <Text style={styles.quickLabel}>Awards</Text>
           </TouchableOpacity>
-          
-          <TouchableOpacity style={styles.quickAction} onPress={onLeaderboard}>
-            <View style={[styles.quickActionIcon, { backgroundColor: '#8b5cf620' }]}>
-              <Ionicons name="podium" size={22} color="#8b5cf6" />
+
+          <TouchableOpacity style={styles.quickBtn} onPress={onLeaderboard}>
+            <View style={[styles.quickIcon, { backgroundColor: 'rgba(139, 92, 246, 0.1)' }]}>
+              <Ionicons name="podium" size={20} color="#8b5cf6" />
             </View>
-            <Text style={styles.quickActionText}>Ranks</Text>
+            <Text style={styles.quickLabel}>Ranks</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Spin Countdown */}
-        <SpinCountdown 
-          nextSpinTime={canSpin ? undefined : new Date(Date.now() + 4 * 60 * 60 * 1000)} 
-          onPress={onDailyRewards} 
-        />
-
-        {/* Challenge Friend Button */}
-        <TouchableOpacity style={styles.challengeButton} onPress={handleChallengePress}>
-          <LinearGradient
-            colors={['#ec4899', '#8b5cf6']}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            style={styles.challengeGradient}
-          >
-            <Ionicons name="paper-plane" size={20} color="#fff" />
-            <Text style={styles.challengeText}>Challenge a Friend</Text>
-            <Ionicons name="chevron-forward" size={18} color="#fff" />
-          </LinearGradient>
+        {/* Challenge Friend */}
+        <TouchableOpacity style={styles.challengeBtn} onPress={handleChallenge}>
+          <Ionicons name="paper-plane-outline" size={18} color="#ec4899" />
+          <Text style={styles.challengeText}>Challenge a Friend</Text>
+          <Ionicons name="chevron-forward" size={16} color="#64748b" />
         </TouchableOpacity>
 
         {/* Puzzle Modes */}
         {onPuzzleModes && (
-          <TouchableOpacity style={styles.puzzleModesBtn} onPress={onPuzzleModes}>
-            <View style={styles.puzzleModesBtnContent}>
-              <Ionicons name="grid-outline" size={22} color="#a855f7" />
-              <Text style={styles.puzzleModesText}>Puzzle Modes</Text>
+          <TouchableOpacity style={styles.modesBtn} onPress={onPuzzleModes}>
+            <View style={styles.modesBtnLeft}>
+              <Ionicons name="apps-outline" size={20} color={theme.accent} />
+              <Text style={styles.modesBtnText}>Puzzle Modes</Text>
             </View>
-            <Ionicons name="chevron-forward" size={20} color="#666" />
+            <View style={styles.modesBadge}>
+              <Text style={styles.modesBadgeText}>12+</Text>
+            </View>
           </TouchableOpacity>
         )}
 
-        {/* More Features Toggle */}
+        {/* More Options */}
         <TouchableOpacity 
           style={styles.moreToggle}
-          onPress={() => setShowMoreFeatures(!showMoreFeatures)}
+          onPress={() => setShowMore(!showMore)}
         >
           <Text style={styles.moreToggleText}>
-            {showMoreFeatures ? 'Less Features' : 'More Features'}
+            {showMore ? 'Show Less' : 'More Options'}
           </Text>
           <Ionicons 
-            name={showMoreFeatures ? 'chevron-up' : 'chevron-down'} 
-            size={18} 
-            color="#8892b0" 
+            name={showMore ? 'chevron-up' : 'chevron-down'} 
+            size={16} 
+            color="#64748b" 
           />
         </TouchableOpacity>
 
-        {showMoreFeatures && (
-          <Animated.View style={[styles.moreSection, { opacity: fadeAnim }]}>
-            <View style={styles.moreGrid}>
-              {onTimedChallenge && (
-                <TouchableOpacity style={styles.moreItem} onPress={onTimedChallenge}>
-                  <Ionicons name="timer-outline" size={20} color="#f97316" />
-                  <Text style={styles.moreItemText}>Timed</Text>
-                </TouchableOpacity>
-              )}
-              {onPhrasePuzzles && (
-                <TouchableOpacity style={styles.moreItem} onPress={onPhrasePuzzles}>
-                  <Ionicons name="chatbubble-outline" size={20} color="#06b6d4" />
-                  <Text style={styles.moreItemText}>Phrases</Text>
-                </TouchableOpacity>
-              )}
-              {onThemes && (
-                <TouchableOpacity style={styles.moreItem} onPress={onThemes}>
-                  <Ionicons name="color-palette-outline" size={20} color="#ec4899" />
-                  <Text style={styles.moreItemText}>Themes</Text>
-                </TouchableOpacity>
-              )}
-              {onWordOfDay && (
-                <TouchableOpacity style={styles.moreItem} onPress={onWordOfDay}>
-                  <Ionicons name="today-outline" size={20} color="#14b8a6" />
-                  <Text style={styles.moreItemText}>Word of Day</Text>
-                </TouchableOpacity>
-              )}
-              {onStats && (
-                <TouchableOpacity style={styles.moreItem} onPress={onStats}>
-                  <Ionicons name="stats-chart" size={20} color="#6366f1" />
-                  <Text style={styles.moreItemText}>Statistics</Text>
-                </TouchableOpacity>
-              )}
-              {onWatchAdForCoins && (
-                <TouchableOpacity style={styles.moreItem} onPress={onWatchAdForCoins}>
-                  <Ionicons name="play-circle" size={20} color="#10b981" />
-                  <Text style={styles.moreItemText}>Free Coins</Text>
-                </TouchableOpacity>
-              )}
-              {onLanguageSelect && (
-                <TouchableOpacity style={styles.moreItem} onPress={onLanguageSelect}>
-                  <Text style={styles.languageFlag}>
-                    {currentLanguage === 'en' ? '🇺🇸' : 
-                     currentLanguage === 'it' ? '🇮🇹' :
-                     currentLanguage === 'es' ? '🇪🇸' :
-                     currentLanguage === 'fr' ? '🇫🇷' :
-                     currentLanguage === 'de' ? '🇩🇪' :
-                     currentLanguage === 'pt' ? '🇧🇷' :
-                     currentLanguage === 'nl' ? '🇳🇱' :
-                     currentLanguage === 'ar' ? '🇸🇦' :
-                     currentLanguage === 'hi' ? '🇮🇳' :
-                     currentLanguage === 'ja' ? '🇯🇵' :
-                     currentLanguage === 'ko' ? '🇰🇷' :
-                     currentLanguage === 'zh' ? '🇨🇳' : '🌍'}
-                  </Text>
-                  <Text style={styles.moreItemText}>Language</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </Animated.View>
+        {showMore && (
+          <View style={styles.moreGrid}>
+            {onTimedChallenge && (
+              <TouchableOpacity style={styles.moreItem} onPress={onTimedChallenge}>
+                <Ionicons name="stopwatch-outline" size={18} color="#f97316" />
+                <Text style={styles.moreItemText}>Timed</Text>
+              </TouchableOpacity>
+            )}
+            {onPhrasePuzzles && (
+              <TouchableOpacity style={styles.moreItem} onPress={onPhrasePuzzles}>
+                <Ionicons name="chatbubble-ellipses-outline" size={18} color="#06b6d4" />
+                <Text style={styles.moreItemText}>Phrases</Text>
+              </TouchableOpacity>
+            )}
+            {onThemes && (
+              <TouchableOpacity style={styles.moreItem} onPress={onThemes}>
+                <Ionicons name="color-palette-outline" size={18} color="#ec4899" />
+                <Text style={styles.moreItemText}>Themes</Text>
+              </TouchableOpacity>
+            )}
+            {onWordOfDay && (
+              <TouchableOpacity style={styles.moreItem} onPress={onWordOfDay}>
+                <Ionicons name="today-outline" size={18} color="#14b8a6" />
+                <Text style={styles.moreItemText}>Word</Text>
+              </TouchableOpacity>
+            )}
+            {onStats && (
+              <TouchableOpacity style={styles.moreItem} onPress={onStats}>
+                <Ionicons name="bar-chart-outline" size={18} color="#6366f1" />
+                <Text style={styles.moreItemText}>Stats</Text>
+              </TouchableOpacity>
+            )}
+            {onWatchAdForCoins && (
+              <TouchableOpacity style={styles.moreItem} onPress={onWatchAdForCoins}>
+                <Ionicons name="videocam-outline" size={18} color="#22c55e" />
+                <Text style={styles.moreItemText}>Bonus</Text>
+              </TouchableOpacity>
+            )}
+            {onLanguageSelect && (
+              <TouchableOpacity style={styles.moreItem} onPress={onLanguageSelect}>
+                <Text style={styles.langFlag}>{getLanguageFlag()}</Text>
+                <Text style={styles.moreItemText}>Lang</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         )}
 
-        {/* Footer */}
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>
-            {theme.name !== 'default' ? `${theme.emoji} Happy ${theme.name}! ${theme.emoji}` : ''}
-          </Text>
-        </View>
-      </ScrollView>
+        <View style={styles.footer} />
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 };
 
 // ============================================
-// STYLES
+// STYLES - Clean Professional Design
 // ============================================
 const styles = StyleSheet.create({
   container: {
@@ -737,421 +529,343 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: 20,
-    paddingBottom: 40,
+    paddingBottom: 30,
   },
-  particle: {
+  glowOrb: {
     position: 'absolute',
-    fontSize: 20,
+    borderRadius: 999,
   },
-  headerBar: {
+  
+  // Header
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
+    paddingVertical: 8,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 6,
   },
-  settingsBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  headerRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  iconBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255,255,255,0.04)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  soundToggle: {
-    marginLeft: 8,
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-  },
-  resourcesRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-  },
-  streakContainer: {
-    marginRight: 8,
-  },
-  resourceItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  resourceText: {
-    color: '#fff',
-    fontSize: 14,
-    fontWeight: '600',
-    marginLeft: 6,
-  },
-  resourceDivider: {
-    width: 1,
-    height: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    marginHorizontal: 12,
-  },
-  logoSection: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 16,
-  },
-  logoEmoji: {
-    fontSize: 48,
-    marginBottom: 4,
-  },
-  appTitle: {
-    fontSize: 36,
-    fontWeight: '800',
-    color: '#fff',
-    letterSpacing: 2,
-  },
-  appSubtitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: '#8892b0',
-    letterSpacing: 6,
-    marginTop: 2,
-  },
-  seasonalBadge: {
-    marginTop: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 4,
+  soundBtn: {
+    backgroundColor: 'rgba(255,255,255,0.04)',
     borderRadius: 12,
   },
-  seasonalText: {
+  streakBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(251, 146, 60, 0.15)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 10,
+    gap: 2,
+  },
+  streakIcon: {
+    fontSize: 12,
+  },
+  streakText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: '#fb923c',
+  },
+  resourcePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.04)',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
+    gap: 4,
+  },
+  resourceValue: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#e2e8f0',
+  },
+
+  // Brand
+  brandSection: {
+    alignItems: 'center',
+    marginTop: 16,
+    marginBottom: 20,
+  },
+  logoContainer: {
+    width: 64,
+    height: 64,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  logoIcon: {
+    fontSize: 36,
+  },
+  brandName: {
+    fontSize: 32,
+    fontWeight: '800',
+    color: '#f8fafc',
+    letterSpacing: 1,
+  },
+  brandTagline: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#64748b',
+    letterSpacing: 4,
+    marginTop: 2,
+  },
+  seasonBadge: {
+    marginTop: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 10,
+  },
+  seasonText: {
     fontSize: 11,
     fontWeight: '600',
   },
-  globalStats: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 16,
-    padding: 12,
+
+  // Stats
+  statsBar: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderRadius: 14,
+    padding: 14,
     marginBottom: 16,
   },
-  globalStatsHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  liveDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#10b981',
-    marginRight: 6,
-  },
-  globalStatsTitle: {
-    fontSize: 12,
-    color: '#8892b0',
-    fontWeight: '600',
-  },
-  statsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
   statItem: {
-    alignItems: 'center',
     flex: 1,
+    alignItems: 'center',
   },
   statValue: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
-    color: '#fff',
+    color: '#f1f5f9',
   },
   statLabel: {
     fontSize: 10,
-    color: '#8892b0',
+    color: '#64748b',
     marginTop: 2,
   },
   statDivider: {
     width: 1,
-    height: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
+    marginVertical: 4,
   },
-  levelCard: {
+
+  // Progress
+  progressCard: {
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 16,
-    overflow: 'hidden',
-    marginBottom: 12,
-  },
-  levelCardGradient: {
     padding: 16,
+    marginBottom: 20,
+  },
+  progressHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginBottom: 12,
   },
-  levelInfo: {},
-  categoryLabel: {
-    fontSize: 12,
-    color: '#8892b0',
+  categoryName: {
+    fontSize: 13,
+    color: '#94a3b8',
     marginBottom: 2,
   },
-  levelNumber: {
-    fontSize: 24,
+  levelText: {
+    fontSize: 26,
     fontWeight: '700',
-    color: '#fff',
+    color: '#f8fafc',
   },
-  progressMini: {
+  progressRight: {
     alignItems: 'flex-end',
   },
-  progressBarMini: {
-    width: 80,
+  progressPercent: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#f8fafc',
+  },
+  progressLabel: {
+    fontSize: 11,
+    color: '#64748b',
+  },
+  progressBarContainer: {
+    marginBottom: 8,
+  },
+  progressBarBg: {
     height: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: 'rgba(255,255,255,0.06)',
     borderRadius: 3,
     overflow: 'hidden',
   },
-  progressFillMini: {
+  progressBarFill: {
     height: '100%',
     borderRadius: 3,
   },
-  progressTextMini: {
-    fontSize: 10,
-    color: '#8892b0',
-    marginTop: 4,
-  },
-  levelPreview: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 16,
-  },
-  levelPreviewHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  levelPreviewTitle: {
+  nextCategory: {
     fontSize: 11,
-    color: '#8892b0',
-    fontWeight: '600',
+    color: '#64748b',
   },
-  newThemeBadge: {
-    backgroundColor: '#10b98130',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-  },
-  newThemeText: {
-    fontSize: 9,
-    color: '#10b981',
-    fontWeight: '700',
-  },
-  levelPreviewContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  levelPreviewIcon: {
-    fontSize: 28,
-    marginRight: 12,
-  },
-  levelPreviewInfo: {
-    flex: 1,
-  },
-  levelPreviewName: {
-    fontSize: 14,
-    color: '#fff',
-    fontWeight: '600',
-  },
-  difficultyBadge: {
-    alignSelf: 'flex-start',
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
-    marginTop: 4,
-  },
-  difficultyText: {
-    fontSize: 10,
-    color: '#8892b0',
-  },
-  playButton: {
-    borderRadius: 30,
-    marginVertical: 16,
+
+  // Play Button
+  playBtn: {
+    marginBottom: 20,
+    borderRadius: 16,
+    overflow: 'hidden',
     elevation: 8,
+    shadowColor: '#6366f1',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 8,
+    shadowRadius: 12,
   },
-  playButtonGradient: {
+  playBtnGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 18,
-    borderRadius: 30,
+    gap: 10,
   },
-  playButtonText: {
-    fontSize: 22,
+  playBtnText: {
+    fontSize: 20,
     fontWeight: '800',
     color: '#fff',
-    marginLeft: 10,
     letterSpacing: 2,
   },
-  quickActionsRow: {
+
+  // Quick Actions
+  quickActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 16,
   },
-  quickAction: {
+  quickBtn: {
     alignItems: 'center',
     flex: 1,
   },
-  quickActionIcon: {
+  quickIcon: {
     width: 48,
     height: 48,
-    borderRadius: 16,
+    borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 6,
   },
-  quickActionText: {
+  quickLabel: {
     fontSize: 11,
-    color: '#8892b0',
+    color: '#94a3b8',
+    fontWeight: '500',
   },
-  notificationDot: {
+  quickDot: {
     position: 'absolute',
-    top: 0,
-    right: 10,
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+    top: 2,
+    right: 12,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
     backgroundColor: '#ef4444',
-    borderWidth: 2,
-    borderColor: '#1a1a2e',
   },
-  spinCountdown: {
+
+  // Challenge
+  challengeBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(236, 72, 153, 0.08)',
     borderRadius: 12,
-    padding: 12,
-    marginBottom: 12,
-  },
-  spinCountdownReady: {
-    backgroundColor: 'rgba(251, 191, 36, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(251, 191, 36, 0.3)',
-  },
-  spinIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  spinTextContainer: {
-    flex: 1,
-    marginLeft: 12,
-  },
-  spinLabel: {
-    fontSize: 14,
-    color: '#8892b0',
-    fontWeight: '600',
-  },
-  spinLabelReady: {
-    color: '#fbbf24',
-  },
-  spinTimer: {
-    fontSize: 12,
-    color: '#667',
-    marginTop: 2,
-  },
-  spinBadge: {
-    backgroundColor: '#fbbf24',
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  spinBadgeText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#1a1a2e',
-  },
-  challengeButton: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 12,
-  },
-  challengeGradient: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     paddingVertical: 14,
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
+    marginBottom: 12,
+    gap: 10,
   },
   challengeText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '600',
-    color: '#fff',
-    marginLeft: 10,
+    color: '#f1f5f9',
   },
-  puzzleModesBtn: {
+
+  // Modes
+  modesBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 12,
-    padding: 14,
-    marginBottom: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
-  puzzleModesBtnContent: {
+  modesBtnLeft: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 12,
   },
-  puzzleModesText: {
+  modesBtnText: {
     fontSize: 15,
-    color: '#fff',
-    marginLeft: 12,
-    fontWeight: '500',
+    fontWeight: '600',
+    color: '#f1f5f9',
   },
+  modesBadge: {
+    backgroundColor: 'rgba(99, 102, 241, 0.2)',
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+  },
+  modesBadgeText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#818cf8',
+  },
+
+  // More
   moreToggle: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
+    paddingVertical: 10,
+    gap: 4,
   },
   moreToggleText: {
     fontSize: 13,
-    color: '#8892b0',
-    marginRight: 4,
-  },
-  moreSection: {
-    marginTop: 8,
+    color: '#64748b',
   },
   moreGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-between',
+    gap: 10,
+    marginTop: 8,
   },
   moreItem: {
-    width: '30%',
+    width: (width - 60) / 4,
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 12,
-    padding: 14,
-    marginBottom: 12,
+    paddingVertical: 14,
+    gap: 6,
   },
   moreItemText: {
-    fontSize: 11,
-    color: '#8892b0',
-    marginTop: 6,
+    fontSize: 10,
+    color: '#94a3b8',
+    fontWeight: '500',
   },
-  languageFlag: {
-    fontSize: 20,
+  langFlag: {
+    fontSize: 18,
   },
+
   footer: {
-    alignItems: 'center',
-    paddingTop: 20,
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#8892b0',
+    height: 20,
   },
 });
 
