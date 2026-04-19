@@ -132,6 +132,18 @@ import SoundToggle from '../src/components/SoundToggle';
 import StreakFlame from '../src/components/StreakFlame';
 import LanguageSelector from '../src/components/LanguageSelector';
 
+// NEW: Import enhanced game components
+import {
+  ComboMeter,
+  FloatingWordToast,
+  MiniProgressRing,
+  StarRatingPreview,
+  FloatingActionMenu,
+  ShakeWrapper,
+  CelebrationBurst,
+  GameHeader,
+} from '../src/components/EnhancedGameComponents';
+
 // NEW: Import enhanced game features
 import TimedChallengeModal from '../src/components/TimedChallengeModal';
 import PhrasePuzzleModal from '../src/components/PhrasePuzzleModal';
@@ -270,6 +282,13 @@ export default function GameScreen() {
   const [showRateApp, setShowRateApp] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [currentLanguage, setCurrentLanguage] = useState('en');
+  
+  // NEW: Enhanced game component states
+  const [showFloatingToast, setShowFloatingToast] = useState(false);
+  const [floatingToastData, setFloatingToastData] = useState({ word: '', points: 0, type: 'success' as 'success' | 'bonus' | 'combo' | 'error' });
+  const [celebrationTrigger, setCelebrationTrigger] = useState(0);
+  const [shakeGrid, setShakeGrid] = useState(false);
+  const [hintsUsedThisLevel, setHintsUsedThisLevel] = useState(0);
   
   // NEW FEATURES: Game enhancements
   const [recentWordsFound, setRecentWordsFound] = useState<string[]>([]);
@@ -597,12 +616,22 @@ export default function GameScreen() {
       soundManager.playWordChime();
       successVibrate();
       
+      // Show floating toast with points
+      const coinsEarned = Math.round(10 * comboMultiplier);
+      const toastType = lastWordResult.isBonus ? 'bonus' : comboCount >= 3 ? 'combo' : 'success';
+      setFloatingToastData({ word: lastWordResult.word, points: coinsEarned, type: toastType });
+      setShowFloatingToast(true);
+      
+      // Trigger celebration burst on combo
+      if (comboCount >= 3) {
+        setCelebrationTrigger(prev => prev + 1);
+      }
+      
       // Update mascot mood
       setMascotMood('happy');
       setTimeout(() => setMascotMood('neutral'), 2000);
       
       // Show coin animation
-      const coinsEarned = 10 * comboMultiplier;
       setCoinAnimationAmount(coinsEarned);
       setShowCoinAnimation(true);
       setTimeout(() => setShowCoinAnimation(false), 1500);
@@ -613,6 +642,15 @@ export default function GameScreen() {
       resetCombo();
       soundManager.playWrongWord();
       errorVibrate();
+      
+      // Shake grid on wrong word
+      setShakeGrid(true);
+      setTimeout(() => setShakeGrid(false), 300);
+      
+      // Show error toast
+      setFloatingToastData({ word: lastWordResult.word, points: 0, type: 'error' });
+      setShowFloatingToast(true);
+      
       setMascotMood('sad');
       setTimeout(() => setMascotMood('neutral'), 2000);
     }
@@ -1410,10 +1448,21 @@ export default function GameScreen() {
           </View>
         )}
 
-        {/* Crossword Grid */}
-        <View style={styles.gridContainer}>
-          <CrosswordGrid />
-        </View>
+        {/* Combo Meter - Shows combo streak */}
+        <ComboMeter 
+          combo={comboCount} 
+          multiplier={comboMultiplier} 
+        />
+
+        {/* Crossword Grid with Shake Animation */}
+        <ShakeWrapper trigger={shakeGrid}>
+          <View style={styles.gridContainer}>
+            <CrosswordGrid />
+          </View>
+        </ShakeWrapper>
+
+        {/* Celebration Burst on Combos */}
+        <CelebrationBurst trigger={celebrationTrigger} color="#fbbf24" />
 
         {/* Word Placeholders - Shows found words and locked placeholders with hint glow */}
         <WordPlaceholders
@@ -1457,6 +1506,15 @@ export default function GameScreen() {
             </Text>
           </View>
         )}
+
+        {/* Floating Word Toast - Beautiful feedback */}
+        <FloatingWordToast
+          visible={showFloatingToast}
+          word={floatingToastData.word}
+          points={floatingToastData.points}
+          type={floatingToastData.type}
+          onHide={() => setShowFloatingToast(false)}
+        />
 
         {/* Letter Wheel - Clean, centered, bigger */}
         <View style={styles.cleanWheelContainer}>
