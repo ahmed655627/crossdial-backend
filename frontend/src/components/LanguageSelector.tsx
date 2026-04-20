@@ -36,7 +36,33 @@ interface LanguageSelectorProps {
   currentLanguage?: string;
 }
 
-const API_URL = Constants.expoConfig?.extra?.EXPO_BACKEND_URL || '';
+// Get API URL from environment
+const getApiUrl = () => {
+  // Try process.env first (works on web and with dotenv)
+  if (process.env.EXPO_PUBLIC_BACKEND_URL) {
+    return process.env.EXPO_PUBLIC_BACKEND_URL;
+  }
+  // Fallback to Constants for native builds
+  return Constants.expoConfig?.extra?.EXPO_BACKEND_URL || '';
+};
+
+const API_URL = getApiUrl();
+
+// Default/fallback languages list
+const DEFAULT_LANGUAGES: Language[] = [
+  { code: 'en', name: 'English', flag: '🇺🇸', direction: 'ltr', levelCount: 150 },
+  { code: 'it', name: 'Italiano', flag: '🇮🇹', direction: 'ltr', levelCount: 15 },
+  { code: 'es', name: 'Español', flag: '🇪🇸', direction: 'ltr', levelCount: 15 },
+  { code: 'fr', name: 'Français', flag: '🇫🇷', direction: 'ltr', levelCount: 15 },
+  { code: 'de', name: 'Deutsch', flag: '🇩🇪', direction: 'ltr', levelCount: 15 },
+  { code: 'pt', name: 'Português', flag: '🇧🇷', direction: 'ltr', levelCount: 15 },
+  { code: 'nl', name: 'Nederlands', flag: '🇳🇱', direction: 'ltr', levelCount: 15 },
+  { code: 'ar', name: 'العربية', flag: '🇸🇦', direction: 'rtl', levelCount: 10 },
+  { code: 'hi', name: 'हिंदी', flag: '🇮🇳', direction: 'ltr', levelCount: 10 },
+  { code: 'ja', name: '日本語', flag: '🇯🇵', direction: 'ltr', levelCount: 10 },
+  { code: 'ko', name: '한국어', flag: '🇰🇷', direction: 'ltr', levelCount: 10 },
+  { code: 'zh', name: '中文', flag: '🇨🇳', direction: 'ltr', levelCount: 10 },
+];
 
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   visible,
@@ -44,7 +70,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   onSelectLanguage,
   currentLanguage = 'en',
 }) => {
-  const [languages, setLanguages] = useState<Language[]>([]);
+  const [languages, setLanguages] = useState<Language[]>(DEFAULT_LANGUAGES);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -58,7 +84,13 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${API_URL}/api/languages`);
+      const response = await fetch(`${API_URL}/api/languages`, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
       if (!response.ok) throw new Error('Failed to fetch languages');
       const data = await response.json();
       
@@ -68,24 +100,12 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
         ...data.languages
       ];
       setLanguages(allLanguages);
+      setError(null);
     } catch (err) {
       console.error('Error fetching languages:', err);
-      setError('Failed to load languages');
-      // Fallback to default languages
-      setLanguages([
-        { code: 'en', name: 'English', flag: '🇺🇸', direction: 'ltr', levelCount: 150 },
-        { code: 'it', name: 'Italiano', flag: '🇮🇹', direction: 'ltr', levelCount: 3 },
-        { code: 'es', name: 'Español', flag: '🇪🇸', direction: 'ltr', levelCount: 3 },
-        { code: 'fr', name: 'Français', flag: '🇫🇷', direction: 'ltr', levelCount: 3 },
-        { code: 'de', name: 'Deutsch', flag: '🇩🇪', direction: 'ltr', levelCount: 3 },
-        { code: 'pt', name: 'Português', flag: '🇧🇷', direction: 'ltr', levelCount: 3 },
-        { code: 'nl', name: 'Nederlands', flag: '🇳🇱', direction: 'ltr', levelCount: 3 },
-        { code: 'ar', name: 'العربية', flag: '🇸🇦', direction: 'rtl', levelCount: 1 },
-        { code: 'hi', name: 'हिंदी', flag: '🇮🇳', direction: 'ltr', levelCount: 1 },
-        { code: 'ja', name: '日本語', flag: '🇯🇵', direction: 'ltr', levelCount: 1 },
-        { code: 'ko', name: '한국어', flag: '🇰🇷', direction: 'ltr', levelCount: 1 },
-        { code: 'zh', name: '中文', flag: '🇨🇳', direction: 'ltr', levelCount: 1 },
-      ]);
+      // Use fallback languages - don't show error since we have defaults
+      setLanguages(DEFAULT_LANGUAGES);
+      setError(null); // Clear error since we have fallback
     } finally {
       setLoading(false);
     }

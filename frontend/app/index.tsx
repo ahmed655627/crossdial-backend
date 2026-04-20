@@ -2220,10 +2220,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   gridContainer: {
-    flex: 0,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 4,
+    minHeight: 200,
+    maxHeight: 350,
   },
   wordFeedback: {
     position: 'absolute',
@@ -2268,8 +2270,9 @@ const styles = StyleSheet.create({
   cleanWheelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    marginBottom: 16,
+    paddingVertical: 4,
+    marginBottom: 8,
+    minHeight: 180,
   },
   wheelContainer: {
     alignItems: 'center',
@@ -2420,7 +2423,8 @@ const styles = StyleSheet.create({
   },
   timerContainer: {
     alignItems: 'center',
-    marginVertical: 8,
+    marginVertical: 4,
+    zIndex: 10,
   },
   timerGradient: {
     flexDirection: 'row',
