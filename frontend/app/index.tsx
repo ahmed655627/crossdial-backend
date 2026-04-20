@@ -1591,7 +1591,10 @@ export default function GameScreen() {
           onHide={() => setShowFloatingToast(false)}
         />
 
-        {/* Letter Wheel - Clean, centered, bigger */}
+        {/* Spacer to push wheel to bottom */}
+        <View style={{ flex: 1 }} />
+
+        {/* Letter Wheel - Clean, centered, at bottom */}
         <View style={styles.cleanWheelContainer}>
           <LetterWheel />
           {/* Bonus Words Counter - small badge on wheel */}
@@ -2220,12 +2223,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   gridContainer: {
-    flex: 1,
+    flex: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 4,
-    minHeight: 200,
-    maxHeight: 350,
+    paddingVertical: 8,
   },
   wordFeedback: {
     position: 'absolute',
@@ -2270,9 +2271,8 @@ const styles = StyleSheet.create({
   cleanWheelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
-    marginBottom: 8,
-    minHeight: 180,
+    paddingVertical: 8,
+    marginBottom: 16,
   },
   wheelContainer: {
     alignItems: 'center',
