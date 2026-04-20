@@ -1531,8 +1531,8 @@ export default function GameScreen() {
 
         {/* Crossword Grid with Shake Animation */}
         <ShakeWrapper trigger={shakeGrid}>
-          <View style={styles.gridContainer}>
-            <CrosswordGrid />
+          <View style={[styles.gridContainer, timeChallengeActive && styles.compactGridContainer]}>
+            <CrosswordGrid compact={timeChallengeActive} />
           </View>
         </ShakeWrapper>
 
@@ -1582,12 +1582,12 @@ export default function GameScreen() {
           onHide={() => setShowFloatingToast(false)}
         />
 
-        {/* Spacer to push wheel to bottom */}
-        <View style={{ flex: 1 }} />
+        {/* Spacer to push wheel to bottom - smaller when timer active */}
+        <View style={{ flex: timeChallengeActive ? 0.3 : 1, minHeight: timeChallengeActive ? 10 : 20 }} />
 
         {/* Letter Wheel - Clean, centered, at bottom */}
-        <View style={styles.cleanWheelContainer}>
-          <LetterWheel />
+        <View style={[styles.cleanWheelContainer, timeChallengeActive && styles.compactWheelContainer]}>
+          <LetterWheel compact={timeChallengeActive} />
           {/* Bonus Words Counter - small badge on wheel */}
           {bonusWordsFound.length > 0 && (
             <View style={styles.bonusBadge}>
@@ -2219,6 +2219,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 8,
   },
+  compactGridContainer: {
+    paddingVertical: 2,
+    transform: [{ scale: 0.9 }],
+  },
   wordFeedback: {
     position: 'absolute',
     top: height * 0.32,
@@ -2264,6 +2268,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 8,
     marginBottom: 16,
+  },
+  compactWheelContainer: {
+    paddingVertical: 2,
+    marginBottom: 8,
+    transform: [{ scale: 0.85 }],
   },
   wheelContainer: {
     alignItems: 'center',
@@ -2416,6 +2425,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 4,
     zIndex: 10,
+    paddingHorizontal: 20,
+  },
+  compactTimerContainer: {
+    marginVertical: 2,
   },
   timerGradient: {
     flexDirection: 'row',
