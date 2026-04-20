@@ -20,9 +20,10 @@ interface PrivacyPolicyModalProps {
 }
 
 export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible, onClose }) => {
-  const lastUpdated = 'March 28, 2025';
-  const appName = 'Words of Wonders';
-  const contactEmail = 'privacy@wordsofwonders.app';
+  const lastUpdated = 'April 20, 2025';
+  const appName = 'CrossDial Puzzles';
+  const contactEmail = 'CrossDialsupport@gmail.com';
+  const privacyPolicyUrl = 'https://sites.google.com/view/crossdial-puzzles-privacy';
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -206,6 +207,39 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
               <Text style={styles.contactText}>{contactEmail}</Text>
             </TouchableOpacity>
 
+            {/* Data Deletion Request */}
+            <View style={styles.importantSection}>
+              <Ionicons name="trash" size={20} color="#e74c3c" />
+              <Text style={styles.importantTitle}>Request Data Deletion</Text>
+            </View>
+            <Text style={styles.paragraph}>
+              You have the right to request deletion of all your personal data. To request data deletion:
+            </Text>
+            <Text style={styles.bulletPoint}>• Email us at {contactEmail}</Text>
+            <Text style={styles.bulletPoint}>• Include "DATA DELETION REQUEST" in the subject line</Text>
+            <Text style={styles.bulletPoint}>• Provide your device ID or account email</Text>
+            <Text style={styles.bulletPoint}>• We will process your request within 30 days</Text>
+            <TouchableOpacity 
+              style={styles.deleteRequestButton}
+              onPress={() => Linking.openURL(`mailto:${contactEmail}?subject=DATA%20DELETION%20REQUEST&body=I%20request%20deletion%20of%20all%20my%20personal%20data%20from%20CrossDial%20Puzzles.%0A%0ADevice%20ID%20or%20Account%20Email:%20`)}
+            >
+              <Ionicons name="trash-outline" size={18} color="#fff" />
+              <Text style={styles.deleteRequestText}>Request Data Deletion</Text>
+            </TouchableOpacity>
+
+            {/* Privacy Policy URL */}
+            <Text style={styles.sectionTitle}>Full Privacy Policy</Text>
+            <Text style={styles.paragraph}>
+              You can also view our full Privacy Policy online:
+            </Text>
+            <TouchableOpacity 
+              style={styles.contactButton}
+              onPress={() => Linking.openURL(privacyPolicyUrl)}
+            >
+              <Ionicons name="link" size={18} color="#3498db" />
+              <Text style={styles.contactText}>{privacyPolicyUrl}</Text>
+            </TouchableOpacity>
+
             {/* Changes */}
             <Text style={styles.sectionTitle}>Changes to This Policy</Text>
             <Text style={styles.paragraph}>
@@ -340,6 +374,22 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#3498db',
     fontWeight: '500',
+    marginLeft: 10,
+  },
+  deleteRequestButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#e74c3c',
+    padding: 14,
+    borderRadius: 10,
+    marginTop: 10,
+    justifyContent: 'center',
+  },
+  deleteRequestText: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '600',
+    marginLeft: 10,
   },
   bottomPadding: {
     height: 30,
