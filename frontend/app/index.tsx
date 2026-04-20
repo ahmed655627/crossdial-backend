@@ -1582,9 +1582,6 @@ export default function GameScreen() {
           onHide={() => setShowFloatingToast(false)}
         />
 
-        {/* Spacer to push wheel to bottom - minimal when timer active */}
-        <View style={{ flex: timeChallengeActive ? 0.1 : 1, minHeight: timeChallengeActive ? 4 : 10 }} />
-
         {/* Letter Wheel - Clean, centered, at bottom */}
         <View style={[styles.cleanWheelContainer, timeChallengeActive && styles.compactWheelContainer]}>
           <LetterWheel compact={timeChallengeActive} />
@@ -2214,13 +2211,21 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   gridContainer: {
-    flex: 0,
-    justifyContent: 'center',
+    width: '88%',
+    alignSelf: 'center',
+    backgroundColor: 'rgba(20, 20, 35, 0.85)',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    padding: 12,
     alignItems: 'center',
-    paddingVertical: 8,
+    justifyContent: 'center',
+    marginTop: 20,
+    minHeight: 180,
   },
   compactGridContainer: {
-    paddingVertical: 2,
+    padding: 8,
+    marginTop: 12,
     transform: [{ scale: 0.9 }],
   },
   wordFeedback: {
@@ -2266,12 +2271,14 @@ const styles = StyleSheet.create({
   cleanWheelContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
-    marginBottom: 8,
+    paddingVertical: 0,
+    marginTop: 24,
+    marginBottom: 16,
   },
   compactWheelContainer: {
     paddingVertical: 0,
-    marginBottom: 4,
+    marginTop: 12,
+    marginBottom: 8,
     transform: [{ scale: 0.85 }],
   },
   wheelContainer: {

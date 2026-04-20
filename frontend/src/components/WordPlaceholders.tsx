@@ -113,39 +113,48 @@ const WordPlaceholders: React.FC<WordPlaceholdersProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    minHeight: 48,
+    width: '100%',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginTop: 16,
   },
   scrollContent: {
     alignItems: 'center',
+    justifyContent: 'center',
     paddingHorizontal: 4,
   },
   wordChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(30, 30, 50, 0.85)',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(30, 30, 50, 0.7)',
     paddingHorizontal: 14,
     paddingVertical: 10,
-    borderRadius: 20,
-    marginHorizontal: 5,
+    borderRadius: 22,
+    marginHorizontal: 4,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    minWidth: 60,
+    minHeight: 44, // Touch target
+    opacity: 0.6, // Disabled state for locked
   },
   foundChip: {
-    backgroundColor: 'rgba(76, 175, 80, 0.3)',
-    borderColor: 'rgba(76, 175, 80, 0.6)',
+    backgroundColor: 'rgba(76, 175, 80, 0.25)',
+    borderColor: 'rgba(76, 175, 80, 0.7)',
+    opacity: 1, // Active state
   },
   checkmark: {
     color: '#4CAF50',
     fontSize: 14,
     marginRight: 5,
+    fontWeight: 'bold',
   },
   foundWord: {
     color: '#4CAF50',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold',
-    letterSpacing: 1,
+    letterSpacing: 0.5,
   },
   lockIcon: {
     fontSize: 12,
@@ -155,9 +164,11 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 14,
     fontWeight: '700',
+    opacity: 0.8,
   },
   hintWordLength: {
     color: '#00d4aa',
+    opacity: 1,
   },
 });
 
