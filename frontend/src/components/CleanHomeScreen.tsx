@@ -520,7 +520,6 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
 // ============================================
 // STYLES - Clean Professional Design (Polished)
 // ============================================
-const BRAND_PURPLE = '#7B61FF';
 const SAFE_MARGIN = 16;
 
 const styles = StyleSheet.create({
