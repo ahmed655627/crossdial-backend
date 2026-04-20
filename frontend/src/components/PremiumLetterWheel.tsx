@@ -392,6 +392,10 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
       const length = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
       const angle = Math.atan2(end.y - start.y, end.x - start.x) * (180 / Math.PI);
       
+      // Calculate center point of the line for proper rotation
+      const centerX = (start.x + end.x) / 2;
+      const centerY = (start.y + end.y) / 2;
+      
       return (
         <View key={`line-${i}`} style={styles.lineContainer}>
           {/* Outer glow */}
@@ -400,8 +404,8 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
               styles.lineGlow,
               {
                 width: length + 10,
-                left: start.x - 5,
-                top: start.y - 8,
+                left: centerX - (length + 10) / 2,
+                top: centerY - 8,
                 transform: [{ rotate: `${angle}deg` }],
                 backgroundColor: theme.glowColor,
                 opacity: 0.3,
@@ -417,8 +421,8 @@ export const PremiumLetterWheel: React.FC<PremiumLetterWheelProps> = ({
               styles.connectionLine,
               {
                 width: length,
-                left: start.x,
-                top: start.y - 4,
+                left: centerX - length / 2,
+                top: centerY - 4,
                 transform: [{ rotate: `${angle}deg` }],
               },
             ]}
