@@ -25,6 +25,9 @@ import OfflineIndicator from './OfflineIndicator';
 
 const { width, height } = Dimensions.get('window');
 
+// Brand colors
+const BRAND_PURPLE = '#7B61FF';
+
 // ============================================
 // SEASONAL THEMES
 // ============================================
@@ -429,41 +432,38 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
           </TouchableOpacity>
         </View>
 
-        {/* Challenge Friend */}
+        {/* Challenge Friend - Gradient bg */}
         <TouchableOpacity style={styles.challengeBtn} onPress={handleChallenge}>
-          <Ionicons name="paper-plane-outline" size={18} color="#ec4899" />
+          <LinearGradient
+            colors={['#FF6B9D', '#C44DFF']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            style={StyleSheet.absoluteFill}
+          />
+          <Ionicons name="paper-plane" size={18} color="#fff" />
           <Text style={styles.challengeText}>Challenge a Friend</Text>
-          <Ionicons name="chevron-forward" size={16} color="#64748b" />
+          <Ionicons name="arrow-forward" size={18} color="#fff" />
         </TouchableOpacity>
 
-        {/* Puzzle Modes */}
+        {/* Puzzle Modes - with chevron and actual count */}
         {onPuzzleModes && (
-          <TouchableOpacity style={styles.modesBtn} onPress={onPuzzleModes}>
+          <TouchableOpacity style={styles.modesBtn} onPress={() => setShowMore(!showMore)}>
             <View style={styles.modesBtnLeft}>
-              <Ionicons name="apps-outline" size={20} color={theme.accent} />
+              <Ionicons name="apps-outline" size={22} color={BRAND_PURPLE} />
               <Text style={styles.modesBtnText}>Puzzle Modes</Text>
             </View>
             <View style={styles.modesBadge}>
-              <Text style={styles.modesBadgeText}>12+</Text>
+              <Text style={styles.modesBadgeText}>7</Text>
+              <Ionicons 
+                name={showMore ? 'chevron-up' : 'chevron-down'} 
+                size={14} 
+                color={BRAND_PURPLE} 
+              />
             </View>
           </TouchableOpacity>
         )}
 
-        {/* More Options */}
-        <TouchableOpacity 
-          style={styles.moreToggle}
-          onPress={() => setShowMore(!showMore)}
-        >
-          <Text style={styles.moreToggleText}>
-            {showMore ? 'Show Less' : 'More Options'}
-          </Text>
-          <Ionicons 
-            name={showMore ? 'chevron-up' : 'chevron-down'} 
-            size={16} 
-            color="#64748b" 
-          />
-        </TouchableOpacity>
-
+        {/* More Options Grid - shows when Puzzle Modes is expanded */}
         {showMore && (
           <View style={styles.moreGrid}>
             {onTimedChallenge && (
@@ -518,8 +518,11 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
 };
 
 // ============================================
-// STYLES - Clean Professional Design
+// STYLES - Clean Professional Design (Polished)
 // ============================================
+const BRAND_PURPLE = '#7B61FF';
+const SAFE_MARGIN = 16;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -528,7 +531,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: SAFE_MARGIN,
     paddingBottom: 30,
   },
   glowOrb: {
@@ -542,11 +545,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 8,
+    marginBottom: 16,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 8,
   },
   headerRight: {
     flexDirection: 'row',
@@ -554,8 +558,8 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   iconBtn: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     borderRadius: 12,
     backgroundColor: 'rgba(255,255,255,0.04)',
     alignItems: 'center',
@@ -569,16 +573,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(251, 146, 60, 0.15)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 10,
-    gap: 2,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 12,
+    gap: 4,
   },
   streakIcon: {
-    fontSize: 12,
+    fontSize: 14,
   },
   streakText: {
-    fontSize: 12,
+    fontSize: 13,
     fontWeight: '700',
     color: '#fb923c',
   },
@@ -586,13 +590,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.04)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    gap: 4,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 12,
+    gap: 6,
   },
   resourceValue: {
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
     color: '#e2e8f0',
   },
@@ -600,8 +604,7 @@ const styles = StyleSheet.create({
   // Brand
   brandSection: {
     alignItems: 'center',
-    marginTop: 16,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   logoContainer: {
     width: 64,
@@ -617,7 +620,7 @@ const styles = StyleSheet.create({
   },
   brandName: {
     fontSize: 32,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#f8fafc',
     letterSpacing: 1,
   },
@@ -639,11 +642,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  // Stats
+  // Stats Bar with dividers
   statsBar: {
     flexDirection: 'row',
     backgroundColor: 'rgba(255,255,255,0.03)',
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 14,
     marginBottom: 16,
   },
@@ -660,19 +663,20 @@ const styles = StyleSheet.create({
     fontSize: 10,
     color: '#64748b',
     marginTop: 2,
+    fontWeight: '400',
   },
   statDivider: {
     width: 1,
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: 'rgba(255,255,255,0.1)', // 10% opacity divider
     marginVertical: 4,
   },
 
-  // Progress
+  // Progress Card - Level Card
   progressCard: {
     backgroundColor: 'rgba(255,255,255,0.03)',
     borderRadius: 16,
     padding: 16,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   progressHeader: {
     flexDirection: 'row',
@@ -684,6 +688,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#94a3b8',
     marginBottom: 2,
+    fontWeight: '400',
   },
   levelText: {
     fontSize: 26,
@@ -701,32 +706,35 @@ const styles = StyleSheet.create({
   progressLabel: {
     fontSize: 11,
     color: '#64748b',
+    fontWeight: '400',
   },
   progressBarContainer: {
     marginBottom: 8,
   },
   progressBarBg: {
-    height: 6,
+    height: 8,
     backgroundColor: 'rgba(255,255,255,0.06)',
-    borderRadius: 3,
+    borderRadius: 4, // 4px corner radius
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: 4,
+    backgroundColor: BRAND_PURPLE, // Brand purple #7B61FF
   },
   nextCategory: {
     fontSize: 11,
     color: '#64748b',
+    fontWeight: '400',
   },
 
-  // Play Button
+  // Play Button - 28px corner radius
   playBtn: {
-    marginBottom: 20,
-    borderRadius: 16,
+    marginBottom: 16,
+    borderRadius: 28,
     overflow: 'hidden',
     elevation: 8,
-    shadowColor: '#6366f1',
+    shadowColor: BRAND_PURPLE,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -740,12 +748,12 @@ const styles = StyleSheet.create({
   },
   playBtnText: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '700',
     color: '#fff',
     letterSpacing: 2,
   },
 
-  // Quick Actions
+  // Quick Actions - 56x56px icons, 11px labels
   quickActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -754,58 +762,63 @@ const styles = StyleSheet.create({
   quickBtn: {
     alignItems: 'center',
     flex: 1,
+    minHeight: 80,
   },
   quickIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
+    width: 56,
+    height: 56,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   quickLabel: {
     fontSize: 11,
     color: '#94a3b8',
-    fontWeight: '500',
+    fontWeight: '600',
   },
   quickDot: {
     position: 'absolute',
     top: 2,
-    right: 12,
+    right: '20%',
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: '#ef4444',
   },
 
-  // Challenge
+  // Challenge Button - Gradient bg #FF6B9D to #C44DFF
   challengeBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(236, 72, 153, 0.08)',
-    borderRadius: 12,
+    borderRadius: 16,
     paddingVertical: 14,
-    paddingHorizontal: 16,
-    marginBottom: 12,
+    paddingLeft: 16,
+    paddingRight: 20, // 20px right padding
+    marginBottom: 16,
     gap: 10,
+    overflow: 'hidden',
+  },
+  challengeGradient: {
+    ...StyleSheet.absoluteFillObject,
   },
   challengeText: {
     flex: 1,
     fontSize: 14,
     fontWeight: '600',
-    color: '#f1f5f9',
+    color: '#fff',
   },
 
-  // Modes
+  // Puzzle Modes - with chevron and actual count
   modesBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: 'rgba(255,255,255,0.03)',
-    borderRadius: 12,
+    borderRadius: 16,
     paddingVertical: 14,
     paddingHorizontal: 16,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   modesBtnLeft: {
     flexDirection: 'row',
@@ -818,52 +831,58 @@ const styles = StyleSheet.create({
     color: '#f1f5f9',
   },
   modesBadge: {
-    backgroundColor: 'rgba(99, 102, 241, 0.2)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(123, 97, 255, 0.2)',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 10,
+    gap: 4,
   },
   modesBadgeText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '600',
-    color: '#818cf8',
+    color: BRAND_PURPLE,
   },
 
-  // More
+  // More Toggle - removed, integrated into modes
   moreToggle: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 10,
+    paddingVertical: 8,
     gap: 4,
   },
   moreToggleText: {
     fontSize: 13,
     color: '#64748b',
+    fontWeight: '400',
   },
+  
+  // More Grid - 24px icons, 11px labels, 2px stroke icons
   moreGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     marginTop: 8,
-    paddingHorizontal: 4,
   },
   moreItem: {
     width: '23%',
     alignItems: 'center',
     backgroundColor: 'rgba(255,255,255,0.03)',
-    borderRadius: 12,
+    borderRadius: 16,
     paddingVertical: 14,
-    marginBottom: 10,
+    marginBottom: 8,
+    minHeight: 70,
   },
   moreItemText: {
-    fontSize: 10,
+    fontSize: 11,
     color: '#94a3b8',
-    fontWeight: '500',
+    fontWeight: '600',
     marginTop: 6,
   },
   langFlag: {
-    fontSize: 18,
+    fontSize: 24,
   },
 
   footer: {
