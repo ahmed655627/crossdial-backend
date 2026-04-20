@@ -20,7 +20,7 @@ from routers.puzzle_modes import router as puzzle_modes_router
 from routers.multilingual import router as multilingual_router
 
 # Import database client for shutdown
-from core.database import client
+from core.database import client, create_indexes
 
 # Create the main app
 app = FastAPI(
@@ -66,6 +66,11 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+@app.on_event("startup")
+async def startup_db_indexes():
+    """Create database indexes on startup for optimized performance"""
+    await create_indexes()
 
 @app.on_event("shutdown")
 async def shutdown_db_client():

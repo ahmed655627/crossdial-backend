@@ -81,6 +81,10 @@ memory/test_credentials.md
 # Mobile development
 android-sdk/
 -e 
-# Environment files
-*.env
-*.env.*
+# Environment files (keep .env.example for documentation)
+*.env.local
+*.env.*.local
+.env.production
+.env.staging
+# Note: .env files in frontend/ and backend/ are managed by the deployment system
+# Do NOT add *.env here - it breaks EAS builds and Emergent deployments
