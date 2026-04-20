@@ -1559,15 +1559,6 @@ export default function GameScreen() {
           canUndo={selectedLetterIndices && selectedLetterIndices.length > 0}
         />
 
-        {/* Word Being Formed Display */}
-        {currentWord && currentWord.length > 0 && (
-          <WordFormingDisplay
-            letters={currentWord.split('')}
-            isValid={isWordValid}
-            isInvalid={isWordInvalid}
-          />
-        )}
-
         {/* Fancy Word Feedback */}
         {showWordFeedback && lastWordResult && (
           <View style={styles.fancyFeedbackContainer}>
