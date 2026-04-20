@@ -88,3 +88,12 @@ android-sdk/
 .env.staging
 # Note: .env files in frontend/ and backend/ are managed by the deployment system
 # Do NOT add *.env here - it breaks EAS builds and Emergent deployments
+-e 
+# Environment and credential files
+.env
+.env.*
+*.env
+credentials.json
+*.pem
+*.key
+.credentials
