@@ -23,7 +23,8 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
   const lastUpdated = 'April 20, 2025';
   const appName = 'CrossDial Puzzles';
   const contactEmail = 'CrossDialsupport@gmail.com';
-  const privacyPolicyUrl = 'https://sites.google.com/view/crossdial-puzzles-privacy';
+  const privacyPolicyUrl = 'https://crossdial-backend.onrender.com/api/privacy-policy';
+  const deleteAccountUrl = 'https://crossdial-backend.onrender.com/api/delete-account';
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
@@ -213,18 +214,17 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
               <Text style={styles.importantTitle}>Request Data Deletion</Text>
             </View>
             <Text style={styles.paragraph}>
-              You have the right to request deletion of all your personal data. To request data deletion:
+              You have the right to request deletion of all your personal data. You can:
             </Text>
-            <Text style={styles.bulletPoint}>• Email us at {contactEmail}</Text>
-            <Text style={styles.bulletPoint}>• Include "DATA DELETION REQUEST" in the subject line</Text>
-            <Text style={styles.bulletPoint}>• Provide your device ID or account email</Text>
+            <Text style={styles.bulletPoint}>• Use the button below to request account deletion</Text>
+            <Text style={styles.bulletPoint}>• Or email us at {contactEmail}</Text>
             <Text style={styles.bulletPoint}>• We will process your request within 30 days</Text>
             <TouchableOpacity 
               style={styles.deleteRequestButton}
-              onPress={() => Linking.openURL(`mailto:${contactEmail}?subject=DATA%20DELETION%20REQUEST&body=I%20request%20deletion%20of%20all%20my%20personal%20data%20from%20CrossDial%20Puzzles.%0A%0ADevice%20ID%20or%20Account%20Email:%20`)}
+              onPress={() => Linking.openURL(deleteAccountUrl)}
             >
               <Ionicons name="trash-outline" size={18} color="#fff" />
-              <Text style={styles.deleteRequestText}>Request Data Deletion</Text>
+              <Text style={styles.deleteRequestText}>Delete My Account</Text>
             </TouchableOpacity>
 
             {/* Privacy Policy URL */}
