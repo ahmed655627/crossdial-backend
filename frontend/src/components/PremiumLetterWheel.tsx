@@ -27,10 +27,11 @@ import * as Haptics from 'expo-haptics';
 import { useGameStore } from '../store/gameStore';
 import { useGameSettings } from '../stores/gameSettingsStore';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const WHEEL_SIZE = Math.min(SCREEN_WIDTH * 0.85, 320);
-const LETTER_SIZE = 54;
-const LETTER_RADIUS = (WHEEL_SIZE / 2) - LETTER_SIZE / 2 - 30; // Keep letters inside wheel
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+const isSmallScreen = SCREEN_HEIGHT < 750;
+const WHEEL_SIZE = isSmallScreen ? Math.min(SCREEN_WIDTH * 0.7, 260) : Math.min(SCREEN_WIDTH * 0.8, 300);
+const LETTER_SIZE = isSmallScreen ? 46 : 52;
+const LETTER_RADIUS = (WHEEL_SIZE / 2) - LETTER_SIZE / 2 - (isSmallScreen ? 20 : 28); // Keep letters inside wheel
 
 // Particle Component - Hooks must be called at top level
 const Particle: React.FC<{
