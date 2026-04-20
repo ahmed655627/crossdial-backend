@@ -23,7 +23,6 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
   const lastUpdated = 'April 20, 2025';
   const appName = 'CrossDial Puzzles';
   const contactEmail = 'CrossDialsupport@gmail.com';
-  const privacyPolicyUrl = 'https://crossdial-backend.onrender.com/api/privacy-policy';
   const deleteAccountUrl = 'https://crossdial-backend.onrender.com/api/delete-account';
 
   return (
@@ -225,19 +224,6 @@ export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible,
             >
               <Ionicons name="trash-outline" size={18} color="#fff" />
               <Text style={styles.deleteRequestText}>Delete My Account</Text>
-            </TouchableOpacity>
-
-            {/* Privacy Policy URL */}
-            <Text style={styles.sectionTitle}>Full Privacy Policy</Text>
-            <Text style={styles.paragraph}>
-              You can also view our full Privacy Policy online:
-            </Text>
-            <TouchableOpacity 
-              style={styles.contactButton}
-              onPress={() => Linking.openURL(privacyPolicyUrl)}
-            >
-              <Ionicons name="link" size={18} color="#3498db" />
-              <Text style={styles.contactText}>{privacyPolicyUrl}</Text>
             </TouchableOpacity>
 
             {/* Changes */}
