@@ -48,10 +48,10 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
     return { x, y };
   };
   
-  // Calculate letter center positions for lines
+  // Calculate letter center positions for connection lines
   const getLetterCenter = (index: number) => {
     const angle = (index * 2 * Math.PI) / numLetters - Math.PI / 2;
-    const radius = (wheelSize - letterSize) / 2 - 12;
+    const radius = (wheelSize - letterSize) / 2 - 8; // Same radius as getLetterPosition
     const x = Math.cos(angle) * radius + wheelSize / 2;
     const y = Math.sin(angle) * radius + wheelSize / 2;
     return { x, y };
@@ -66,7 +66,7 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
     }
   };
   
-  // Draw orange connection lines between selected letters
+  // Draw vibrant connection lines between selected letters
   const renderLines = () => {
     if (selectedLetterIndices.length < 2) return null;
     
@@ -78,36 +78,59 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
       const length = Math.sqrt(Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2));
       const angle = Math.atan2(end.y - start.y, end.x - start.x) * (180 / Math.PI);
       
-      // Calculate center for proper rotation
-      const centerX = (start.x + end.x) / 2;
-      const centerY = (start.y + end.y) / 2;
-      
       lines.push(
-        <View key={`line-glow-${i}`}>
-          {/* Glow effect */}
+        <View key={`line-container-${i}`} style={styles.lineContainer}>
+          {/* Outer glow effect */}
           <View
             style={[
-              styles.lineGlow,
+              styles.lineGlowOuter,
               {
-                width: length + 8,
-                left: centerX - (length + 8) / 2,
-                top: centerY - 6,
-                transform: [{ rotate: `${angle}deg` }],
+                width: length + 16,
+                height: 16,
+                left: start.x - 8,
+                top: start.y - 8,
+                transform: [
+                  { translateX: (end.x - start.x) / 2 - length / 2 },
+                  { translateY: (end.y - start.y) / 2 },
+                  { rotate: `${angle}deg` },
+                ],
               },
             ]}
           />
-          {/* Main line - colorful gradient */}
+          {/* Inner glow */}
+          <View
+            style={[
+              styles.lineGlowInner,
+              {
+                width: length + 8,
+                height: 10,
+                left: start.x - 4,
+                top: start.y - 5,
+                transform: [
+                  { translateX: (end.x - start.x) / 2 - length / 2 },
+                  { translateY: (end.y - start.y) / 2 },
+                  { rotate: `${angle}deg` },
+                ],
+              },
+            ]}
+          />
+          {/* Main colored line */}
           <LinearGradient
-            colors={['#FF9800', '#E91E63', '#9C27B0']}
+            colors={['#FF6B6B', '#FFE66D', '#4ECDC4']}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={[
-              styles.line,
+              styles.lineMain,
               {
                 width: length,
-                left: centerX - length / 2,
-                top: centerY - 3,
-                transform: [{ rotate: `${angle}deg` }],
+                height: 6,
+                left: start.x,
+                top: start.y - 3,
+                transform: [
+                  { translateX: (end.x - start.x) / 2 - length / 2 },
+                  { translateY: (end.y - start.y) / 2 },
+                  { rotate: `${angle}deg` },
+                ],
               },
             ]}
           />
@@ -403,6 +426,33 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '800',
     color: '#FFFFFF',
+  },
+  lineContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 1,
+  },
+  lineGlowOuter: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255, 107, 107, 0.25)',
+    borderRadius: 8,
+  },
+  lineGlowInner: {
+    position: 'absolute',
+    backgroundColor: 'rgba(255, 230, 109, 0.35)',
+    borderRadius: 5,
+  },
+  lineMain: {
+    position: 'absolute',
+    borderRadius: 3,
+    shadowColor: '#FF6B6B',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 4,
+    elevation: 5,
   },
   lineGlow: {
     position: 'absolute',
