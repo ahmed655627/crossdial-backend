@@ -1373,7 +1373,7 @@ export default function GameScreen() {
   // Add safety check for currentLevel
   if (!currentLevel) {
     return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
+      <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#0a0e1a' }}>
         <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
           <ActivityIndicator size="large" color="#4fc3f7" />
           <Text style={{ color: '#fff', marginTop: 20 }}>Loading game...</Text>
@@ -1386,7 +1386,7 @@ export default function GameScreen() {
   const gameTheme = getGameTheme(currentLevel?.id || 1) || { colors: ['#1a1a2e', '#16213e'], icon: '🎯' };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: '#0a0e1a' }}>
       {/* Colorful Outer Frame */}
       <LinearGradient
         colors={gameTheme.colors}
@@ -1978,9 +1978,11 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 20,
     overflow: 'hidden',
+    backgroundColor: '#0a0e1a', // Prevent white screen flash during loading
   },
   container: {
     flex: 1,
+    backgroundColor: '#0a0e1a', // Dark background to prevent white flash
   },
   // CLEAN UI STYLES
   cleanHeader: {

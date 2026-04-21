@@ -374,6 +374,7 @@ export const SimpleBackground: React.FC<SimpleBackgroundProps> = memo(({ level, 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#0a0e1a', // Prevent white flash during image loading
   },
   particle: {
     position: 'absolute',
