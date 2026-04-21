@@ -54,7 +54,7 @@ const RateAppModal: React.FC<RateAppModalProps> = ({
     // Open app store
     const storeUrl = Platform.select({
       ios: 'https://apps.apple.com/app/id123456789', // Replace with real ID
-      android: 'https://play.google.com/store/apps/details?id=com.crossdial.puzzles',
+      android: 'https://play.google.com/store/apps/details?id=com.wonderwordsquest.app',
       default: '',
     });
     

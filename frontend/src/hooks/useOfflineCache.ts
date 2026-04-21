@@ -6,8 +6,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const CACHE_KEY = 'crossdial_levels_cache';
-const CACHE_EXPIRY_KEY = 'crossdial_cache_expiry';
+const CACHE_KEY = 'wonderwordquest_levels_cache';
+const CACHE_EXPIRY_KEY = 'wonderwordquest_cache_expiry';
 const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours
 
 interface Level {

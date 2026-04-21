@@ -1,4 +1,4 @@
-// Sound Manager for CrossDial Puzzles
+// Sound Manager for WonderWordQuest
 // Handles all game sounds and background music
 
 import { Audio } from 'expo-av';

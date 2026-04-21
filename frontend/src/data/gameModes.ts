@@ -1,4 +1,4 @@
-// Game Modes for CrossDial Puzzles
+// Game Modes for WonderWordQuest
 // Classic, Zen, Speed, Endless, Match modes
 
 export type GameModeType = 'classic' | 'zen' | 'speed' | 'endless' | 'match';
