@@ -386,19 +386,24 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
         </View>
 
         {/* PLAY Button */}
-        <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
-          <TouchableOpacity style={styles.playBtn} onPress={onPlay} activeOpacity={0.9}>
-            <LinearGradient
-              colors={[theme.accent, theme.glow]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.playBtnGradient}
-            >
-              <Ionicons name="play" size={28} color="#fff" />
-              <Text style={styles.playBtnText}>PLAY</Text>
-            </LinearGradient>
-          </TouchableOpacity>
-        </Animated.View>
+        <TouchableOpacity 
+          style={[styles.playBtn, { transform: [{ scale: 1 }] }]} 
+          onPress={() => {
+            console.log('PLAY pressed!');
+            onPlay();
+          }} 
+          activeOpacity={0.8}
+        >
+          <LinearGradient
+            colors={[theme.accent, theme.glow]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.playBtnGradient}
+          >
+            <Ionicons name="play" size={28} color="#fff" />
+            <Text style={styles.playBtnText}>PLAY</Text>
+          </LinearGradient>
+        </TouchableOpacity>
 
         {/* Quick Actions */}
         <View style={styles.quickActions}>

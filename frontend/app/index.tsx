@@ -1061,9 +1061,12 @@ export default function GameScreen() {
         {useCleanHomeScreen ? (
           <CleanHomeScreen
             onPlay={() => {
+              console.log('Play button clicked! currentLevel:', currentLevel ? 'loaded' : 'null');
               if (currentLevel) {
+                console.log('Setting showHomeScreen to false');
                 setShowHomeScreen(false);
               } else {
+                console.log('currentLevel is null, showing loading alert');
                 Alert.alert('Loading', 'Game is still loading, please wait a moment...');
               }
             }}
