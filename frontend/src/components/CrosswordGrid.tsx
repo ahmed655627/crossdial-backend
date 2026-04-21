@@ -149,11 +149,14 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   gridWrapper: {
-    backgroundColor: 'rgba(30, 30, 50, 0.75)',
+    backgroundColor: '#1a1a2e', // Solid dark background - no transparency
     borderRadius: 16,
     padding: 8,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    // Ensure grid is always on top of background images
+    zIndex: 10,
+    elevation: 10,
   },
   row: {
     flexDirection: 'row',

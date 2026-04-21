@@ -2213,16 +2213,18 @@ const styles = StyleSheet.create({
   gridContainer: {
     width: '88%',
     alignSelf: 'center',
-    backgroundColor: 'rgba(20, 20, 35, 0.85)',
+    backgroundColor: '#14142b', // Solid dark background - no transparency
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.12)',
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 12,
     minHeight: 160,
     maxHeight: 280,
+    zIndex: 10,
+    elevation: 10,
   },
   compactGridContainer: {
     padding: 6,
