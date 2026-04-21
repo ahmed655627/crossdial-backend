@@ -434,6 +434,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     zIndex: 1,
+    pointerEvents: 'none', // Allow touches to pass through to letters
   },
   lineGlowOuter: {
     position: 'absolute',
