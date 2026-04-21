@@ -2272,8 +2272,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 0,
-    marginTop: 16,
-    marginBottom: 80,
+    marginTop: 10,
+    marginBottom: 100, // Extra margin to prevent wheel cutoff at bottom
   },
   compactWheelContainer: {
     paddingVertical: 0,

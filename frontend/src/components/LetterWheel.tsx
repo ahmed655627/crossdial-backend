@@ -7,8 +7,9 @@ import { soundManager } from '../utils/sounds';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = height < 750;
-const WHEEL_SIZE = isSmallScreen ? Math.min(width * 0.62, 235) : Math.min(width * 0.68, 270);
-const LETTER_SIZE = isSmallScreen ? 46 : 52;
+// Reduced wheel size to fit on screen without cutting off
+const WHEEL_SIZE = isSmallScreen ? Math.min(width * 0.55, 210) : Math.min(width * 0.58, 240);
+const LETTER_SIZE = isSmallScreen ? 42 : 48;
 
 interface LetterWheelProps {
   compact?: boolean;
@@ -24,10 +25,10 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
   const wheelSize = compact ? WHEEL_SIZE * 0.85 : WHEEL_SIZE;
   const letterSize = compact ? LETTER_SIZE * 0.9 : LETTER_SIZE;
   
-  // Calculate positions in a circle
+  // Calculate positions in a circle - keep letters well inside
   const getLetterPosition = (index: number) => {
     const angle = (index * 2 * Math.PI) / numLetters - Math.PI / 2;
-    const radius = (wheelSize - letterSize) / 2 - 12;
+    const radius = (wheelSize - letterSize) / 2 - 8; // Tighter fit
     const x = Math.cos(angle) * radius + wheelSize / 2 - letterSize / 2;
     const y = Math.sin(angle) * radius + wheelSize / 2 - letterSize / 2;
     return { x, y };
