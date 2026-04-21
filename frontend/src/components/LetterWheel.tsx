@@ -82,9 +82,9 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
               },
             ]}
           />
-          {/* Main line */}
+          {/* Main line - colorful gradient */}
           <LinearGradient
-            colors={['#FF8C42', '#FF6B35', '#F45D22']}
+            colors={['#FF9800', '#E91E63', '#9C27B0']}
             start={{ x: 0, y: 0.5 }}
             end={{ x: 1, y: 0.5 }}
             style={[
@@ -115,7 +115,7 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
       >
         <LinearGradient
           colors={isValidWord 
-            ? ['#FF8C42', '#FF6B35', '#F45D22'] 
+            ? ['#FF9800', '#E91E63', '#9C27B0'] // Colorful orange-pink-purple gradient
             : ['rgba(255, 255, 255, 0.2)', 'rgba(255, 255, 255, 0.1)']}
           style={[styles.wordDisplay, isValidWord && styles.wordDisplayValid]}
           start={{ x: 0, y: 0 }}
@@ -176,8 +176,8 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
                 >
                   <LinearGradient
                     colors={isSelected 
-                      ? ['#F45D22', '#E64A19', '#D84315'] // Darker orange when selected
-                      : ['#FF9A56', '#FF8C42', '#FF7A2F'] // Bright orange normally
+                      ? ['#E91E63', '#C2185B', '#AD1457'] // Vibrant pink/magenta when selected
+                      : ['#FF9800', '#FF5722', '#F44336'] // Orange to red gradient normally
                     }
                     style={[
                       styles.letterCircle, 
@@ -185,7 +185,7 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
                       isSelected && styles.letterSelected
                     ]}
                     start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 1 }}
                   >
                     {/* Top shine effect */}
                     <View style={[styles.letterShine, { borderTopLeftRadius: letterSize / 2, borderTopRightRadius: letterSize / 2 }]} />
@@ -319,14 +319,14 @@ const styles = StyleSheet.create({
   letterCircle: {
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#D84315',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.35,
-    shadowRadius: 5,
-    elevation: 6,
+    shadowColor: '#E91E63',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.45,
+    shadowRadius: 6,
+    elevation: 8,
     overflow: 'hidden',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 150, 100, 0.3)',
+    borderWidth: 2,
+    borderColor: 'rgba(255, 200, 100, 0.4)',
   },
   letterSelected: {
     shadowOpacity: 0.5,
