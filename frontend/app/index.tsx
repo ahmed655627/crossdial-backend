@@ -432,8 +432,7 @@ export default function GameScreen() {
   // NEW: Haptic Feedback Hook
   const { lightTap, successVibrate, errorVibrate } = useHaptics();
   
-  // NEW: Interactive Tutorial State
-  const [showTutorial, setShowTutorial] = useState(false);
+  // NOTE: showTutorial already declared at line 350
   // hintPreviewWord already declared above
 
   // Check for tutorial on first load
