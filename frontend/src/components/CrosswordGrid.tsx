@@ -146,17 +146,13 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
+    paddingVertical: 0, // Remove extra padding since parent handles it
   },
   gridWrapper: {
-    backgroundColor: '#1a1a2e', // Solid dark background - no transparency
-    borderRadius: 16,
-    padding: 8,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    // Ensure grid is always on top of background images
-    zIndex: 10,
-    elevation: 10,
+    // No background here - parent gridContainer has the background
+    // This prevents the "double grid" visual artifact
+    borderRadius: 12,
+    padding: 6,
   },
   row: {
     flexDirection: 'row',

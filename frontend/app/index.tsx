@@ -2220,7 +2220,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 12,
+    marginTop: 20, // Increased spacing from clue bar (was 12)
     minHeight: 160,
     maxHeight: 280,
     zIndex: 10,
