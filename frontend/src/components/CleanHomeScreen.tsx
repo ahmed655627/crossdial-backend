@@ -265,8 +265,8 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
   const handleChallenge = async () => {
     try {
       await Share.share({
-        message: `🎮 Beat my Level ${currentLevel} on CrossDial Puzzles!\n\n🏆 ${coins} coins collected\n\nDownload: https://crossdial.app`,
-        title: 'CrossDial Challenge',
+        message: `🎮 Beat my Level ${currentLevel} on WonderWordQuest!\n\n🏆 ${coins} coins collected\n\nDownload: https://wonderwordquest.app`,
+        title: 'WonderWordQuest Challenge',
       });
     } catch (e) {}
   };
@@ -327,7 +327,7 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
           <View style={styles.logoContainer}>
             <Text style={styles.logoIcon}>{theme.icon}</Text>
           </View>
-          <Text style={styles.brandName}>CrossDial</Text>
+          <Text style={styles.brandName}>WonderWord</Text>
           <Text style={styles.brandTagline}>WORD PUZZLES</Text>
           {theme.name && (
             <View style={[styles.seasonBadge, { backgroundColor: theme.accent + '20' }]}>

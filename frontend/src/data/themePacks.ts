@@ -38,7 +38,7 @@ export const THEME_PACKS: ThemePack[] = [
   {
     id: 'default',
     name: 'Classic',
-    description: 'The original CrossDial experience',
+    description: 'The original WonderWordQuest experience',
     icon: '🎯',
     previewImage: 'classic_preview',
     unlockRequirement: { type: 'level', value: 1 },

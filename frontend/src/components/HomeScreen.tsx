@@ -180,7 +180,7 @@ export const HomeScreen: React.FC<HomeScreenProps> = ({
             </LinearGradient>
             <View style={styles.logoGlow} />
           </View>
-          <Text style={styles.title}>CrossDial</Text>
+          <Text style={styles.title}>WonderWord</Text>
           <Text style={styles.subtitle}>PUZZLES</Text>
         </Animated.View>
 

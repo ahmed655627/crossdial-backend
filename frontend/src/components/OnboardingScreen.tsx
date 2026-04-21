@@ -27,7 +27,7 @@ interface OnboardingSlide {
 const SLIDES: OnboardingSlide[] = [
   {
     id: '1',
-    title: 'Welcome to CrossDial',
+    title: 'Welcome to WonderWordQuest',
     description: 'Discover the world through words! Explore famous landmarks while solving fun crossword puzzles.',
     icon: '🌍',
     gradient: ['#667eea', '#764ba2'],

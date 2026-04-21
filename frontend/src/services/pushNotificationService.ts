@@ -143,7 +143,7 @@ class PushNotificationService {
   async sendTestNotification() {
     await Notifications.scheduleNotificationAsync({
       content: {
-        title: '🌍 CrossDial Puzzles',
+        title: '🌍 WonderWordQuest',
         body: 'Notifications are working!',
         sound: 'default',
       },

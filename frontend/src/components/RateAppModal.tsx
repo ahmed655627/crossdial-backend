@@ -85,7 +85,7 @@ const RateAppModal: React.FC<RateAppModalProps> = ({
           ]}
         >
           <Text style={styles.emoji}>⭐</Text>
-          <Text style={styles.title}>Enjoying CrossDial?</Text>
+          <Text style={styles.title}>Enjoying WonderWordQuest?</Text>
           <Text style={styles.subtitle}>
             You've completed {currentLevel} levels! Would you mind rating us?
           </Text>

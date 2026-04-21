@@ -21,9 +21,9 @@ interface PrivacyPolicyModalProps {
 
 export const PrivacyPolicyModal: React.FC<PrivacyPolicyModalProps> = ({ visible, onClose }) => {
   const lastUpdated = 'April 20, 2025';
-  const appName = 'CrossDial Puzzles';
-  const contactEmail = 'CrossDialsupport@gmail.com';
-  const deleteAccountUrl = 'https://crossdial-backend.onrender.com/api/delete-account';
+  const appName = 'WonderWordQuest';
+  const contactEmail = 'wonderwordquest@gmail.com';
+  const deleteAccountUrl = 'https://wonderwordquest.app/api/delete-account';
 
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>

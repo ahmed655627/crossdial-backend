@@ -32,7 +32,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     const stars = wordsFound === totalWords ? '⭐⭐⭐' : wordsFound >= totalWords * 0.6 ? '⭐⭐' : '⭐';
     const timeText = timeSpent ? `in ${Math.floor(timeSpent / 60)}m ${timeSpent % 60}s` : '';
     
-    const message = `🌍 CrossDial Puzzles\n\n` +
+    const message = `🌍 WonderWordQuest\n\n` +
       `I completed Level ${level} ${timeText}!\n` +
       `${stars} ${wordsFound}/${totalWords} words found\n\n` +
       `Can you beat my score? 🎯`;
@@ -40,7 +40,7 @@ const ShareButton: React.FC<ShareButtonProps> = ({
     try {
       await Share.share({
         message,
-        title: 'CrossDial Puzzles',
+        title: 'WonderWordQuest',
       });
     } catch (error) {
       console.log('Share error:', error);

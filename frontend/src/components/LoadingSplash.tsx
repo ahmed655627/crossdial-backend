@@ -82,7 +82,7 @@ const LoadingSplash: React.FC<LoadingSplashProps> = ({ onFinish }) => {
 
       {/* App Name */}
       <Animated.View style={{ opacity: textOpacity }}>
-        <Text style={styles.appName}>CrossDial</Text>
+        <Text style={styles.appName}>WonderWord</Text>
         <Text style={styles.appSubtitle}>PUZZLES</Text>
       </Animated.View>
 

@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Wonder Words Quest",
-    "slug": "wonder-words-quest",
+    "name": "WonderWordQuest",
+    "slug": "wonderwordquest",
     "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "wonderwordsquest",
+    "scheme": "wonderwordquest",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

@@ -1,4 +1,4 @@
-// Multi-language Support for CrossDial Puzzles
+// Multi-language Support for WonderWordQuest
 // Supported: English, Italian, Spanish, French, German, Portuguese
 
 export type Language = 'en' | 'it' | 'es' | 'fr' | 'de' | 'pt';
@@ -82,7 +82,7 @@ export interface Translations {
 const translations: Record<Language, Translations> = {
   // ENGLISH
   en: {
-    appName: 'CrossDial Puzzles',
+    appName: 'WonderWordQuest',
     play: 'PLAY',
     settings: 'Settings',
     back: 'Back',
@@ -151,7 +151,7 @@ const translations: Record<Language, Translations> = {
   
   // ITALIAN
   it: {
-    appName: 'CrossDial Puzzle',
+    appName: 'WonderWordQuest',
     play: 'GIOCA',
     settings: 'Impostazioni',
     back: 'Indietro',
@@ -220,7 +220,7 @@ const translations: Record<Language, Translations> = {
   
   // SPANISH
   es: {
-    appName: 'CrossDial Puzzles',
+    appName: 'WonderWordQuest',
     play: 'JUGAR',
     settings: 'Ajustes',
     back: 'Atrás',
@@ -289,7 +289,7 @@ const translations: Record<Language, Translations> = {
   
   // FRENCH
   fr: {
-    appName: 'CrossDial Puzzles',
+    appName: 'WonderWordQuest',
     play: 'JOUER',
     settings: 'Paramètres',
     back: 'Retour',
@@ -358,7 +358,7 @@ const translations: Record<Language, Translations> = {
   
   // GERMAN
   de: {
-    appName: 'CrossDial Puzzles',
+    appName: 'WonderWordQuest',
     play: 'SPIELEN',
     settings: 'Einstellungen',
     back: 'Zurück',
@@ -427,7 +427,7 @@ const translations: Record<Language, Translations> = {
   
   // PORTUGUESE
   pt: {
-    appName: 'CrossDial Puzzles',
+    appName: 'WonderWordQuest',
     play: 'JOGAR',
     settings: 'Configurações',
     back: 'Voltar',
