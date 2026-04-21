@@ -385,9 +385,9 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
           )}
         </View>
 
-        {/* PLAY Button */}
+        {/* PLAY Button - Fixed: LinearGradient as sibling, not wrapper */}
         <TouchableOpacity 
-          style={[styles.playBtn, { transform: [{ scale: 1 }] }]} 
+          style={styles.playBtn} 
           onPress={() => {
             console.log('PLAY pressed!');
             onPlay();
@@ -398,11 +398,13 @@ export const CleanHomeScreen: React.FC<CleanHomeScreenProps> = ({
             colors={[theme.accent, theme.glow]}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            style={styles.playBtnGradient}
-          >
+            style={StyleSheet.absoluteFill}
+            pointerEvents="none"
+          />
+          <View style={styles.playBtnContent}>
             <Ionicons name="play" size={28} color="#fff" />
             <Text style={styles.playBtnText}>PLAY</Text>
-          </LinearGradient>
+          </View>
         </TouchableOpacity>
 
         {/* Quick Actions */}
@@ -742,6 +744,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
+    height: 60, // Fixed height for consistent sizing
   },
   playBtnGradient: {
     flexDirection: 'row',
@@ -749,6 +752,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 18,
     gap: 10,
+  },
+  playBtnContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 18,
+    gap: 10,
+    zIndex: 1, // Above the gradient
   },
   playBtnText: {
     fontSize: 20,
