@@ -7,9 +7,23 @@ import { soundManager } from '../utils/sounds';
 
 const { width, height } = Dimensions.get('window');
 const isSmallScreen = height < 750;
-// Reduced wheel size to fit on screen without cutting off
-const WHEEL_SIZE = isSmallScreen ? Math.min(width * 0.55, 210) : Math.min(width * 0.58, 240);
-const LETTER_SIZE = isSmallScreen ? 42 : 48;
+// Further reduced wheel size to prevent bottom cutoff
+const WHEEL_SIZE = isSmallScreen ? Math.min(width * 0.50, 190) : Math.min(width * 0.52, 210);
+const LETTER_SIZE = isSmallScreen ? 40 : 44;
+
+// Different colors for each letter position - vibrant rainbow colors
+const LETTER_COLORS = [
+  ['#FF6B6B', '#EE5A5A', '#DD4949'], // Red
+  ['#4ECDC4', '#3DBDB5', '#2CADA6'], // Teal
+  ['#FFE66D', '#FFD93D', '#FFCC00'], // Yellow
+  ['#95E1D3', '#7DD3C4', '#65C5B5'], // Mint
+  ['#FF9F43', '#FF8C2A', '#FF7911'], // Orange
+  ['#A29BFE', '#8B82FD', '#7469FC'], // Purple
+  ['#FD79A8', '#FC5C94', '#FB3F80'], // Pink
+  ['#00CEC9', '#00B5B0', '#009C97'], // Cyan
+  ['#6C5CE7', '#5B4BD6', '#4A3AC5'], // Indigo
+  ['#E17055', '#D35F44', '#C54E33'], // Coral
+];
 
 interface LetterWheelProps {
   compact?: boolean;
@@ -153,11 +167,23 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
               <View style={styles.centerInner} />
             </View>
             
-            {/* Letters - Orange circles */}
+            {/* Letters - Different colors for each letter */}
             {letters.map((letter, index) => {
               const position = getLetterPosition(index);
               const isSelected = selectedLetterIndices.includes(index);
               const selectionOrder = selectedLetterIndices.indexOf(index);
+              
+              // Get unique color for this letter position
+              const letterColors = LETTER_COLORS[index % LETTER_COLORS.length];
+              // Darker version when selected
+              const selectedColors = letterColors.map(c => {
+                // Darken by reducing brightness
+                const r = parseInt(c.slice(1, 3), 16);
+                const g = parseInt(c.slice(3, 5), 16);
+                const b = parseInt(c.slice(5, 7), 16);
+                const darken = 0.75;
+                return `#${Math.round(r * darken).toString(16).padStart(2, '0')}${Math.round(g * darken).toString(16).padStart(2, '0')}${Math.round(b * darken).toString(16).padStart(2, '0')}`;
+              });
               
               return (
                 <TouchableOpacity
@@ -175,10 +201,7 @@ export const LetterWheel: React.FC<LetterWheelProps> = ({ compact = false }) => 
                   activeOpacity={0.8}
                 >
                   <LinearGradient
-                    colors={isSelected 
-                      ? ['#E91E63', '#C2185B', '#AD1457'] // Vibrant pink/magenta when selected
-                      : ['#FF9800', '#FF5722', '#F44336'] // Orange to red gradient normally
-                    }
+                    colors={isSelected ? selectedColors : letterColors}
                     style={[
                       styles.letterCircle, 
                       { width: letterSize, height: letterSize, borderRadius: letterSize / 2 },
