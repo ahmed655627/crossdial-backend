@@ -690,14 +690,25 @@ export default function GameScreen() {
           // Trigger confetti on level complete
           setConfettiTrigger(prev => prev + 1);
           
-          // Show interstitial ad every 3 levels (Play Store compliant)
+          // NEW: Show interstitial ad after EVERY level completion
+          // This ensures monetization while user is engaged
           await adManager.onLevelComplete();
+          
+          // Calculate stars based on hints used
+          const hintsUsed = progress?.hints_remaining || 3;
+          const starsEarned = hintsUsed >= 3 ? 3 : hintsUsed >= 2 ? 2 : 1;
+          const coinsEarned = starsEarned * 25 + 25; // Base 25 + bonus
+          
+          // Show level complete animation
+          setLevelCompleteStars(starsEarned);
+          setLevelCompleteCoins(coinsEarned);
+          setShowLevelCompleteAnim(true);
           
           // Check if should show rate app modal (at level 10, 20, 30, etc.)
           const currentLevelNum = progress?.current_level || 1;
           const shouldShowRate = await shouldShowRateModal(currentLevelNum);
           if (shouldShowRate) {
-            setTimeout(() => setShowRateApp(true), 2000); // Delay to not interrupt celebration
+            setTimeout(() => setShowRateApp(true), 4000); // Delay more to not interrupt celebration
           }
         }
       }
