@@ -2211,20 +2211,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   gridContainer: {
-    width: '88%',
+    width: '92%',
     alignSelf: 'center',
-    backgroundColor: '#14142b', // Solid dark background - no transparency
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-    padding: 10,
+    // No background - grid floats over scenic background like Wordscapes
+    backgroundColor: 'transparent',
+    padding: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 20, // Increased spacing from clue bar (was 12)
-    minHeight: 160,
-    maxHeight: 280,
-    zIndex: 10,
-    elevation: 10,
+    marginTop: 16,
+    minHeight: 140,
+    maxHeight: 320,
   },
   compactGridContainer: {
     padding: 6,

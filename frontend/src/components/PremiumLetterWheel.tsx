@@ -69,6 +69,19 @@ const Particle: React.FC<{
 
 // Premium wheel themes
 export const PREMIUM_WHEELS = {
+  // NEW: Wordscapes-style frosted white wheel with orange accents
+  wordscape: {
+    outerRing: ['rgba(255,255,255,0.95)', 'rgba(245,245,250,0.9)', 'rgba(240,240,245,0.85)', 'rgba(235,235,240,0.8)'],
+    innerRing: ['rgba(255,255,255,0.85)', 'rgba(250,250,255,0.8)', 'rgba(245,245,250,0.75)', 'rgba(240,240,245,0.7)'],
+    centerGradient: ['#FFFFFF', '#F8F9FA', '#F0F1F2'],
+    letterButton: ['#FF8C42', '#FF7A2F', '#FF6B1A'], // Orange letters
+    letterButtonSelected: ['#FF5722', '#E64A19', '#D84315'], // Darker orange when selected
+    glowColor: '#FF8C42',
+    textColor: '#FFFFFF', // White text on orange
+    textColorSelected: '#FFFFFF',
+    woodGrain: false,
+    frostedGlass: true, // New flag for frosted look
+  },
   wooden: {
     outerRing: ['#8B4513', '#654321', '#5D4037', '#3E2723'],
     innerRing: ['#DEB887', '#D2691E', '#CD853F', '#A0522D'],
@@ -79,6 +92,7 @@ export const PREMIUM_WHEELS = {
     textColor: '#3E2723',
     textColorSelected: '#1a1a2e',
     woodGrain: true,
+    frostedGlass: false,
   },
   golden: {
     outerRing: ['#FFD700', '#DAA520', '#B8860B', '#8B7500'],
@@ -90,6 +104,7 @@ export const PREMIUM_WHEELS = {
     textColor: '#8B4513',
     textColorSelected: '#FFFFFF',
     woodGrain: false,
+    frostedGlass: false,
   },
   crystal: {
     outerRing: ['#E0E7FF', '#C7D2FE', '#A5B4FC', '#818CF8'],
@@ -101,6 +116,7 @@ export const PREMIUM_WHEELS = {
     textColor: '#1E3A5F',
     textColorSelected: '#FFFFFF',
     woodGrain: false,
+    frostedGlass: false,
   },
   emerald: {
     outerRing: ['#059669', '#047857', '#065F46', '#064E3B'],
@@ -112,6 +128,7 @@ export const PREMIUM_WHEELS = {
     textColor: '#064E3B',
     textColorSelected: '#FFFFFF',
     woodGrain: false,
+    frostedGlass: false,
   },
 };
 
