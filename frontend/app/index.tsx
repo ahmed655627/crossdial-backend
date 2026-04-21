@@ -118,6 +118,14 @@ import { useContextualHint } from '../src/hooks/useContextualHint';
 // NEW: Clean Home Screen (decluttered)
 import { CleanHomeScreen } from '../src/components/CleanHomeScreen';
 
+// NEW: Professional animations and features
+import { WordFoundAnimation } from '../src/components/WordFoundAnimation';
+import { LevelCompleteAnimation } from '../src/components/LevelCompleteAnimation';
+import { ShuffleButton } from '../src/components/ShuffleButton';
+import { TutorialOverlay } from '../src/components/TutorialOverlay';
+import { StatisticsScreen } from '../src/components/StatisticsScreen';
+import * as Haptics from 'expo-haptics';
+
 // NEW: Import feature modals
 import { PowerUpsModal } from '../src/components/PowerUpsModal';
 import { CombosModal } from '../src/components/CombosModal';
@@ -332,6 +340,16 @@ export default function GameScreen() {
   const [selectedThemePack, setSelectedThemePack] = useState('default');
   const [unlockedAchievementIds, setUnlockedAchievementIds] = useState<string[]>(['first_word']);
   const [showWordDefinitionPopup, setShowWordDefinitionPopup] = useState(false);
+  
+  // NEW: Professional animation states
+  const [showWordFoundAnim, setShowWordFoundAnim] = useState(false);
+  const [wordFoundAnimWord, setWordFoundAnimWord] = useState('');
+  const [showLevelCompleteAnim, setShowLevelCompleteAnim] = useState(false);
+  const [levelCompleteStars, setLevelCompleteStars] = useState(3);
+  const [levelCompleteCoins, setLevelCompleteCoins] = useState(50);
+  const [showTutorial, setShowTutorial] = useState(true);
+  const [showStatisticsScreen, setShowStatisticsScreen] = useState(false);
+  
   // lastFoundWord already declared above in Clean UI state
   const [playerStats, setPlayerStats] = useState({
     wordsFound: 0,
@@ -616,6 +634,10 @@ export default function GameScreen() {
       // Play sound effect and haptic feedback
       soundManager.playWordChime();
       successVibrate();
+      
+      // NEW: Trigger word found animation
+      setWordFoundAnimWord(lastWordResult.word);
+      setShowWordFoundAnim(true);
       
       // Show floating toast with points
       const coinsEarned = Math.round(10 * comboMultiplier);
@@ -1591,6 +1613,10 @@ export default function GameScreen() {
               <Text style={styles.bonusBadgeText}>+{bonusWordsFound.length}</Text>
             </View>
           )}
+          {/* Shuffle Button - positioned bottom-left of wheel */}
+          <View style={styles.shuffleButtonContainer}>
+            <ShuffleButton onPress={shuffleLetters} />
+          </View>
         </View>
 
         {/* Clear Button - Ghost style, only visible when letters selected */}
@@ -1892,6 +1918,34 @@ export default function GameScreen() {
           visible={showRateApp}
           onClose={() => setShowRateApp(false)}
           currentLevel={progress?.current_level || 1}
+        />
+        
+        {/* NEW: Word Found Animation - shows when word is found */}
+        <WordFoundAnimation
+          word={wordFoundAnimWord}
+          visible={showWordFoundAnim}
+          onComplete={() => setShowWordFoundAnim(false)}
+        />
+        
+        {/* NEW: Level Complete Animation - celebration screen */}
+        <LevelCompleteAnimation
+          visible={showLevelCompleteAnim}
+          level={currentLevelIndex + 1}
+          stars={levelCompleteStars}
+          coins={levelCompleteCoins}
+          onContinue={() => {
+            setShowLevelCompleteAnim(false);
+            nextLevel();
+          }}
+        />
+        
+        {/* NEW: Tutorial Overlay - first time user guide */}
+        <TutorialOverlay onComplete={() => setShowTutorial(false)} />
+        
+        {/* NEW: Statistics Screen */}
+        <StatisticsScreen
+          visible={showStatisticsScreen}
+          onClose={() => setShowStatisticsScreen(false)}
         />
         </SafeAreaView>
       </GameBackground>
@@ -2320,6 +2374,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  shuffleButtonContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    zIndex: 100,
   },
   clearButtonText: {
     color: '#fff',
